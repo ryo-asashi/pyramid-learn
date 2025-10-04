@@ -155,7 +155,7 @@ def _call_r_mid_breakdown(
     """ Wrapper function for midr::mid.breakdown() """
     r_kwargs = {
         'object': r_object,
-        'row': ro.NULL if row is None else row + 1
+        'row': ro.NULL if row is None else (row + 1),
         **kwargs
     }
     try:
