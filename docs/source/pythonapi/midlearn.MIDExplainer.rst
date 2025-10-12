@@ -1,0 +1,50 @@
+﻿midlearn.MIDExplainer
+=====================
+
+.. currentmodule:: midlearn
+
+.. autoclass:: MIDExplainer
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MIDExplainer.__init__
+      ~MIDExplainer.breakdown
+      ~MIDExplainer.conditional
+      ~MIDExplainer.effect
+      ~MIDExplainer.fidelity_score
+      ~MIDExplainer.fit
+      ~MIDExplainer.get_metadata_routing
+      ~MIDExplainer.get_params
+      ~MIDExplainer.importance
+      ~MIDExplainer.interactions
+      ~MIDExplainer.main_effects
+      ~MIDExplainer.plot
+      ~MIDExplainer.predict
+      ~MIDExplainer.score
+      ~MIDExplainer.set_fit_request
+      ~MIDExplainer.set_params
+      ~MIDExplainer.set_score_request
+      ~MIDExplainer.terms
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MIDExplainer.fitted_matrix
+      ~MIDExplainer.fitted_values
+      ~MIDExplainer.intercept
+      ~MIDExplainer.ratio
+      ~MIDExplainer.residuals
+      ~MIDExplainer.weights
+   
+   

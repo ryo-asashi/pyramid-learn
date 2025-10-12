@@ -1,0 +1,49 @@
+﻿midlearn.MIDRegressor
+=====================
+
+.. currentmodule:: midlearn
+
+.. autoclass:: MIDRegressor
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MIDRegressor.__init__
+      ~MIDRegressor.breakdown
+      ~MIDRegressor.conditional
+      ~MIDRegressor.effect
+      ~MIDRegressor.fit
+      ~MIDRegressor.get_metadata_routing
+      ~MIDRegressor.get_params
+      ~MIDRegressor.importance
+      ~MIDRegressor.interactions
+      ~MIDRegressor.main_effects
+      ~MIDRegressor.plot
+      ~MIDRegressor.predict
+      ~MIDRegressor.score
+      ~MIDRegressor.set_fit_request
+      ~MIDRegressor.set_params
+      ~MIDRegressor.set_score_request
+      ~MIDRegressor.terms
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MIDRegressor.fitted_matrix
+      ~MIDRegressor.fitted_values
+      ~MIDRegressor.intercept
+      ~MIDRegressor.ratio
+      ~MIDRegressor.residuals
+      ~MIDRegressor.weights
+   
+   

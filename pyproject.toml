@@ -1,0 +1,32 @@
+# pyproject.toml
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyramid-learn"
+version = "0.1.0"
+authors = [
+  { name="Ryoichi Asashiba", email="ryoichi.asashiba@gmail.com" },
+]
+description = "Python Wrapper of the 'midr' R package to interpret black-box models."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Framework :: Scikit-learn",
+]
+dependencies = [
+    "numpy",
+    "pandas",
+    "scikit-learn",
+    "rpy2>=3.5.0",
+    "plotnine",
+    "mizani"
+]
+
+[project.urls]
+Issues = "https://github.com/ryo-asashi/pyramid-learn/issues"

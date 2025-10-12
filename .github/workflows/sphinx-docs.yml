@@ -1,0 +1,55 @@
+on:
+  workflow_dispatch:
+
+name: Deploy Sphinx Docs to GitHub Pages
+
+permissions: read-all
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+  
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Python Environment
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      # R Environment
+      - name: Set up R environment
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+
+      # Python Dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          pip install sphinx sphinx-rtd-theme myst-nb lightgbm scikit-learn pandas plotnine rpy2
+
+      # R Dependencies
+      - name: Install R dependencies
+        run: R -e "install.packages(c('midr', 'khroma'), repos='https://cloud.r-project.org')"
+
+      # Build
+      - name: Build Sphinx Documentation
+        run: |
+          sphinx-build -b html docs/source docs/build/html
+          touch docs/build/html/.nojekyll
+      
+      # Deploy
+      - name: Deploy to GitHub Pages 🚀
+        if: github.event_name != 'pull_request' 
+        uses: JamesIves/github-pages-deploy-action@v4.5.0
+        with:
+          clean: false
+          branch: gh-pages 
+          folder: docs/build/html
