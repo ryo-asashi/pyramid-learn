@@ -49,9 +49,9 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#train-a-black-box-lightgbm-model">1. Train a Black-Box LightGBM Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#use-pyramid-learn-to-explain-the-model">2. Use pyramid-learn to Explain the Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#visualize-and-analyze-the-results">3. Visualize and Analyze the Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#train-a-black-box-model">1. Train a Black-Box Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-an-explaination-model">2. Create an Explaination Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#visualize-the-explanation-model">3. Visualize the Explanation Model</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Python API</a></li>
@@ -88,7 +88,7 @@
 <p>Here’s a basic example of how to use <strong>pyramid-learn</strong>, or <strong>midlearn</strong>, to explain a trained LightGBM model, utilizing the familiar scikit-learn API.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_california_housing</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_config</span>
@@ -105,13 +105,19 @@
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error importing in API mode: ImportError(&#39;On Windows, cffi mode &quot;ANY&quot; is only &quot;ABI&quot;.&#39;)
+Trying to import in ABI mode.
+</pre></div>
 </div>
-<section id="train-a-black-box-lightgbm-model">
-<h2>1. Train a Black-Box LightGBM Model<a class="headerlink" href="#train-a-black-box-lightgbm-model" title="Link to this heading"></a></h2>
+</div>
+</div>
+<section id="train-a-black-box-model">
+<h2>1. Train a Black-Box Model<a class="headerlink" href="#train-a-black-box-model" title="Link to this heading"></a></h2>
 <p>We use the California Housing dataset to train a LightGBM Regressor, which will serve as our black-box model.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load and prepare data</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load and prepare data</span>
 <span class="n">housing</span> <span class="o">=</span> <span class="n">fetch_california_housing</span><span class="p">()</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">housing</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">housing</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">housing</span><span class="o">.</span><span class="n">target</span>
@@ -126,7 +132,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000422 seconds.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000277 seconds.
 You can set `force_col_wise=true` to remove the overhead.
 [LightGBM] [Info] Total Bins 1838
 [LightGBM] [Info] Number of data points in the train set: 15480, number of used features: 8
@@ -137,12 +143,12 @@ LGBMRegressor(random_state=42)
 </div>
 </div>
 </section>
-<section id="use-pyramid-learn-to-explain-the-model">
-<h2>2. Use pyramid-learn to Explain the Model<a class="headerlink" href="#use-pyramid-learn-to-explain-the-model" title="Link to this heading"></a></h2>
+<section id="create-an-explaination-model">
+<h2>2. Create an Explaination Model<a class="headerlink" href="#create-an-explaination-model" title="Link to this heading"></a></h2>
 <p>We fit the <code class="docutils literal notranslate"><span class="pre">MIDExplainer</span></code> to the training data to create a globally faithful, interpretable surrogate model (MID).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize and fit the MID model</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize and fit the MID model</span>
 <span class="n">explainer</span> <span class="o">=</span> <span class="n">mid</span><span class="o">.</span><span class="n">MIDExplainer</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span>
     <span class="n">interaction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -158,9 +164,7 @@ LGBMRegressor(random_state=42)
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Generating predictions from the estimator...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MIDExplainer(estimator=LGBMRegressor(random_state=42), params_main=70,
+MIDExplainer(estimator=LGBMRegressor(random_state=42), params_main=70,
              penalty=0.01)
 </pre></div>
 </div>
@@ -168,7 +172,7 @@ LGBMRegressor(random_state=42)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the fidelity of the surrogate model to the original model</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the fidelity of the surrogate model to the original model</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R-squared score:&quot;</span><span class="p">,</span> <span class="n">explainer</span><span class="o">.</span><span class="n">fidelity_score</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
 
 <span class="c1"># Visualize the fidelity</span>
@@ -186,21 +190,19 @@ LGBMRegressor(random_state=42)
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Generating predictions from the estimator...
+R-squared score: 0.955195534503637
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R-squared score: 0.955195534503637
-</pre></div>
-</div>
-<img alt="_images/295550e280a346535f741bef3d0b1b428d9c8bbe5d4b6a8a98870b240a91b14c.png" src="_images/295550e280a346535f741bef3d0b1b428d9c8bbe5d4b6a8a98870b240a91b14c.png" />
+<img alt="_images/746c72fd3fd2143fd8c0c1870f46f863302db4defebe24acf14da4011f8d72e7.png" src="_images/746c72fd3fd2143fd8c0c1870f46f863302db4defebe24acf14da4011f8d72e7.png" />
 </div>
 </div>
 </section>
-<section id="visualize-and-analyze-the-results">
-<h2>3. Visualize and Analyze the Results<a class="headerlink" href="#visualize-and-analyze-the-results" title="Link to this heading"></a></h2>
+<section id="visualize-the-explanation-model">
+<h2>3. Visualize the Explanation Model<a class="headerlink" href="#visualize-the-explanation-model" title="Link to this heading"></a></h2>
 <p>The MID model allows for clear visualization of feature importance, individual effects, and local prediction breakdowns.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate and plot overall feature importance (default bar plot and heatmap)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate and plot overall feature importance (default bar plot and heatmap)</span>
 <span class="n">imp</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">importance</span><span class="p">()</span>
 <span class="n">imp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="s1">&#39;muted&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 <span class="n">imp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;heatmap&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#808080&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
@@ -208,12 +210,12 @@ LGBMRegressor(random_state=42)
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/82b3fc541f0107ea50b06f694a31e86fc2179e9db42c9843577711233ba327d7.png" src="_images/82b3fc541f0107ea50b06f694a31e86fc2179e9db42c9843577711233ba327d7.png" />
+<img alt="_images/14deadc6e24a77fa4cb8c8f66777cb489617bbb7e7482ed77348e33ec3324f47.png" src="_images/14deadc6e24a77fa4cb8c8f66777cb489617bbb7e7482ed77348e33ec3324f47.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the top 3 important main effects (Component Functions)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the top 3 important main effects (Component Functions)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- Top 3 Main Effects ---&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">imp</span><span class="o">.</span><span class="n">terms</span><span class="p">(</span><span class="n">interactions</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Plotting </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -227,27 +229,24 @@ LGBMRegressor(random_state=42)
 Plotting 1: Latitude
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/86874ef5d3af388ff89127682b2c0e1315e69527600fe69aa04fff151878a9f8.png"><img alt="_images/86874ef5d3af388ff89127682b2c0e1315e69527600fe69aa04fff151878a9f8.png" src="_images/86874ef5d3af388ff89127682b2c0e1315e69527600fe69aa04fff151878a9f8.png" style="width: 640px; height: 480px;" />
-</a>
+<img alt="_images/bcbbe4a0e5c58da8c5cfa3c1015e526e2691dfbea11cba0d7a4a5bf2c5baf791.png" src="_images/bcbbe4a0e5c58da8c5cfa3c1015e526e2691dfbea11cba0d7a4a5bf2c5baf791.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Plotting 2: Longitude
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/f7550d41b02b61f062d3fb8caeeba1ee534f3a9e0aa83c57b1c8c0e101cbdaed.png"><img alt="_images/f7550d41b02b61f062d3fb8caeeba1ee534f3a9e0aa83c57b1c8c0e101cbdaed.png" src="_images/f7550d41b02b61f062d3fb8caeeba1ee534f3a9e0aa83c57b1c8c0e101cbdaed.png" style="width: 640px; height: 480px;" />
-</a>
+<img alt="_images/78ceaa6c7ef8d68b93a30f398db48ed36c2e10a14aa3e3e7c008da913a351422.png" src="_images/78ceaa6c7ef8d68b93a30f398db48ed36c2e10a14aa3e3e7c008da913a351422.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Plotting 3: MedInc
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/6101e205787c5f6f40cda66b3280bb9b390320df1bfc1f41fdbf916ae259cbc5.png"><img alt="_images/6101e205787c5f6f40cda66b3280bb9b390320df1bfc1f41fdbf916ae259cbc5.png" src="_images/6101e205787c5f6f40cda66b3280bb9b390320df1bfc1f41fdbf916ae259cbc5.png" style="width: 640px; height: 480px;" />
-</a>
+<img alt="_images/4621eb3237cb5f571c89446359a1e543e513ee20543fad68e1fd59cfee627dc7.png" src="_images/4621eb3237cb5f571c89446359a1e543e513ee20543fad68e1fd59cfee627dc7.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot prediction breakdowns for the first three test samples (Local Interpretability)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot prediction breakdowns for the first three test samples (Local Interpretability)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- Breakdown Plots for First 3 Test Samples ---&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Row </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> Breakdown:&quot;</span><span class="p">)</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">breakdown</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">X_test</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="s1">&#39;muted_r&#39;</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">breakdown</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">X_test</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="s2">&quot;midr@qual&quot;</span><span class="p">)</span>
     <span class="n">display</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -257,24 +256,21 @@ Plotting 1: Latitude
 Row 0 Breakdown:
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/8b2e5ea70c06ef5233d4dc06499a2013eecb7a0f3ccfcf08df7e0f843110d4fe.png"><img alt="_images/8b2e5ea70c06ef5233d4dc06499a2013eecb7a0f3ccfcf08df7e0f843110d4fe.png" src="_images/8b2e5ea70c06ef5233d4dc06499a2013eecb7a0f3ccfcf08df7e0f843110d4fe.png" style="width: 640px; height: 480px;" />
-</a>
+<img alt="_images/ffb2277a683284f830b034b404a11d99b9e2151425f94690b4415c33272d5507.png" src="_images/ffb2277a683284f830b034b404a11d99b9e2151425f94690b4415c33272d5507.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Row 1 Breakdown:
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/2b07a1e01cc851d1d9de97a4753c049e114444c119fcf9e34df919c2db44c612.png"><img alt="_images/2b07a1e01cc851d1d9de97a4753c049e114444c119fcf9e34df919c2db44c612.png" src="_images/2b07a1e01cc851d1d9de97a4753c049e114444c119fcf9e34df919c2db44c612.png" style="width: 640px; height: 480px;" />
-</a>
+<img alt="_images/5e6c8acc79b0e74b15be742a864774ddcd7993ec60f8427645f68a5e0c6677e5.png" src="_images/5e6c8acc79b0e74b15be742a864774ddcd7993ec60f8427645f68a5e0c6677e5.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Row 2 Breakdown:
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/394e340e6ec9b9d23dcf9440cece718d690e23c79e771e0d51b19815df206ee7.png"><img alt="_images/394e340e6ec9b9d23dcf9440cece718d690e23c79e771e0d51b19815df206ee7.png" src="_images/394e340e6ec9b9d23dcf9440cece718d690e23c79e771e0d51b19815df206ee7.png" style="width: 640px; height: 480px;" />
-</a>
+<img alt="_images/75088ffadb788829baab2628a0819bc79870dc205260fb1ade372c0c4d732ce3.png" src="_images/75088ffadb788829baab2628a0819bc79870dc205260fb1ade372c0c4d732ce3.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot individual conditional expectations (ICE) with color encoding</span>
-<span class="n">explainer</span><span class="o">.</span><span class="n">conditional</span><span class="p">(</span><span class="s1">&#39;Latitude&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">var_color</span><span class="o">=</span><span class="s1">&#39;Longitude&#39;</span><span class="p">,</span> <span class="n">theme</span><span class="o">=</span><span class="s1">&#39;mako&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot individual conditional expectations (ICE) with color encoding</span>
+<span class="n">explainer</span><span class="o">.</span><span class="n">conditional</span><span class="p">(</span><span class="s1">&#39;Latitude&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">var_color</span><span class="o">=</span><span class="s1">&#39;Longitude&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -283,83 +279,7 @@ Row 0 Breakdown:
   
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R callback write-console: Error in get.theme(parsed$name, ifnot.null(parsed$source, source), env) : 
-  &#39;mako&#39; is not found in the color theme environment
-  
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">RRuntimeError</span><span class="g g-Whitespace">                             </span>Traceback (most recent call last)
-<span class="nn">File ~/work/pyramid-learn/pyramid-learn/src/midlearn/_r_interface.py:239,</span> in <span class="ni">_call_r_color_theme</span><span class="nt">(theme, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">238</span> <span class="k">with</span> <span class="n">conversion</span><span class="o">.</span><span class="n">localconverter</span><span class="p">(</span><span class="n">pandas2ri</span><span class="o">.</span><span class="n">converter</span> <span class="o">+</span> <span class="n">numpy2ri</span><span class="o">.</span><span class="n">converter</span> <span class="o">+</span> <span class="n">cv</span><span class="p">):</span>
-<span class="ne">--&gt; </span><span class="mi">239</span>     <span class="n">res</span> <span class="o">=</span> <span class="n">midr</span><span class="o">.</span><span class="n">color_theme</span><span class="p">(</span><span class="o">**</span><span class="n">r_kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">240</span> <span class="k">return</span> <span class="n">res</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/rpy2/robjects/functions.py:208,</span> in <span class="ni">SignatureTranslatedFunction.__call__</span><span class="nt">(self, *args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">207</span>         <span class="n">kwargs</span><span class="p">[</span><span class="n">r_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
-<span class="ne">--&gt; </span><span class="mi">208</span> <span class="k">return</span> <span class="p">(</span><span class="nb">super</span><span class="p">(</span><span class="n">SignatureTranslatedFunction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">209</span>         <span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/rpy2/robjects/functions.py:131,</span> in <span class="ni">Function.__call__</span><span class="nt">(self, *args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">130</span>         <span class="n">new_kwargs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">cv</span><span class="o">.</span><span class="n">py2rpy</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">131</span> <span class="n">res</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Function</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="o">*</span><span class="n">new_args</span><span class="p">,</span> <span class="o">**</span><span class="n">new_kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">132</span> <span class="n">res</span> <span class="o">=</span> <span class="n">cv</span><span class="o">.</span><span class="n">rpy2py</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/rpy2/rinterface_lib/conversion.py:46,</span> in <span class="ni">_cdata_res_to_rinterface.&lt;locals&gt;._</span><span class="nt">(*args, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">45</span> <span class="k">def</span><span class="w"> </span><span class="nf">_</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="ne">---&gt; </span><span class="mi">46</span>     <span class="n">cdata</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">47</span>     <span class="c1"># TODO: test cdata is of the expected CType</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/rpy2/rinterface/__init__.py:926,</span> in <span class="ni">SexpClosure.__call__</span><span class="nt">(self, *args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">925</span>     <span class="k">if</span> <span class="n">error_occured</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-<span class="ne">--&gt; </span><span class="mi">926</span>         <span class="k">raise</span> <span class="n">embedded</span><span class="o">.</span><span class="n">RRuntimeError</span><span class="p">(</span><span class="n">_rinterface</span><span class="o">.</span><span class="n">_geterrmessage</span><span class="p">())</span>
-<span class="g g-Whitespace">    </span><span class="mi">927</span> <span class="k">return</span> <span class="n">res</span>
-
-<span class="ne">RRuntimeError</span>: Error in get.theme(parsed$name, ifnot.null(parsed$source, source), env) : 
-  <span class="s1">&#39;mako&#39;</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">found</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">color</span> <span class="n">theme</span> <span class="n">environment</span>
-
-
-<span class="n">During</span> <span class="n">handling</span> <span class="n">of</span> <span class="n">the</span> <span class="n">above</span> <span class="n">exception</span><span class="p">,</span> <span class="n">another</span> <span class="n">exception</span> <span class="n">occurred</span><span class="p">:</span>
-
-<span class="ne">RExecutionError</span><span class="g g-Whitespace">                           </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># Plot individual conditional expectations (ICE) with color encoding</span>
-<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">explainer</span><span class="o">.</span><span class="n">conditional</span><span class="p">(</span><span class="s1">&#39;Latitude&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">var_color</span><span class="o">=</span><span class="s1">&#39;Longitude&#39;</span><span class="p">,</span> <span class="n">theme</span><span class="o">=</span><span class="s1">&#39;mako&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
-
-<span class="nn">File ~/work/pyramid-learn/pyramid-learn/src/midlearn/plotting.py:269,</span> in <span class="ni">plot_conditional</span><span class="nt">(conditional, style, theme, var_color, dots, reference, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">267</span>     <span class="n">p</span> <span class="o">+=</span> <span class="n">p9</span><span class="o">.</span><span class="n">aes</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">var_color</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">268</span> <span class="k">if</span> <span class="n">theme</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">269</span>     <span class="n">p</span> <span class="o">+=</span> <span class="n">scale_color_theme</span><span class="p">(</span><span class="n">theme</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">270</span> <span class="k">return</span> <span class="n">p</span>
-
-<span class="nn">File ~/work/pyramid-learn/pyramid-learn/src/midlearn/plotting_theme.py:44,</span> in <span class="ni">scale_color_theme</span><span class="nt">(theme, midpoint, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">39</span> <span class="k">def</span><span class="w"> </span><span class="nf">scale_color_theme</span><span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">40</span>     <span class="n">theme</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">color_theme</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">41</span>     <span class="n">midpoint</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">42</span>     <span class="o">**</span><span class="n">kwargs</span>
-<span class="g g-Whitespace">     </span><span class="mi">43</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">scale_color_theme_d</span> <span class="o">|</span> <span class="n">scale_color_theme_c</span><span class="p">:</span>
-<span class="ne">---&gt; </span><span class="mi">44</span>     <span class="n">theme</span> <span class="o">=</span> <span class="n">color_theme</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="n">theme</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">45</span>     <span class="k">if</span> <span class="n">theme</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;qualitative&#39;</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">46</span>         <span class="k">return</span> <span class="n">scale_color_theme_d</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="n">theme</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-<span class="nn">File ~/work/pyramid-learn/pyramid-learn/src/midlearn/plotting_theme.py:15,</span> in <span class="ni">color_theme.__init__</span><span class="nt">(self, theme, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">14</span> <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theme</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">color_theme</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="ne">---&gt; </span><span class="mi">15</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span> <span class="o">=</span> <span class="n">_r_interface</span><span class="o">.</span><span class="n">_call_r_color_theme</span><span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">16</span>         <span class="n">theme</span> <span class="o">=</span> <span class="n">theme</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">17</span>         <span class="o">**</span><span class="n">kwargs</span>
-<span class="g g-Whitespace">     </span><span class="mi">18</span>     <span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">19</span>     <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-<span class="g g-Whitespace">     </span><span class="mi">20</span>     <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-
-<span class="nn">File ~/work/pyramid-learn/pyramid-learn/src/midlearn/_r_interface.py:242,</span> in <span class="ni">_call_r_color_theme</span><span class="nt">(theme, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">240</span>     <span class="k">return</span> <span class="n">res</span>
-<span class="g g-Whitespace">    </span><span class="mi">241</span> <span class="k">except</span> <span class="n">RRuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<span class="nn">--&gt; 242     raise RExecutionError(f&quot;Error</span> in <span class="ni">R&#39;s midr::color_theme</span><span class="nt">() function: {e}&quot;)</span>
-
-<span class="ne">RExecutionError</span>: Error in R&#39;s midr::color_theme() function: Error in get.theme(parsed$name, ifnot.null(parsed$source, source), env) : 
-  <span class="s1">&#39;mako&#39;</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">found</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">color</span> <span class="n">theme</span> <span class="n">environment</span>
-</pre></div>
-</div>
+<img alt="_images/3d424e1d3adb20a5e3d579a60b72cff9a50ad152acb4bb6c80c3c714d96eae2e.png" src="_images/3d424e1d3adb20a5e3d579a60b72cff9a50ad152acb4bb6c80c3c714d96eae2e.png" />
 </div>
 </div>
 </section>
