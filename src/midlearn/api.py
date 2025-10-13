@@ -63,18 +63,22 @@ class MIDRegressor(BaseEstimator, RegressorMixin):
         self.is_fitted_ = True
         return self
 
-    def predict(
+    def r_predict(
         self,
-        X
+        X,
+        output_type: str = 'response',
+        terms: list[str] | None = None,
+        **kwargs
     ) -> np.ndarray:
         """
-        Predicts target values for new data X using the fitted MID model.
+        A low-level method to call the R predict.mid function with arbitrary arguments. The kwargs are passed directly to the R function.
 
         Args:
             X (pd.DataFrame or np.ndarray): New data for which to make predictions.
+            **kwargs: Arguments passed directly to R's predict.mid (e.g., type, terms).
 
         Returns:
-            np.ndarray: A NumPy array of predicted values from the MID model.
+            np.ndarray: The prediction result from R.
         """
         check_is_fitted(self)
         if not isinstance(X, pd.DataFrame):
@@ -86,10 +90,31 @@ class MIDRegressor(BaseEstimator, RegressorMixin):
             raise ValueError(f"The following columns are missing: {list(missing_cols)}") from e
         res = _r_interface._call_r_predict(
             r_object=self.mid_,
-            X=X
+            X=X,
+            output_type=output_type,
+            terms=terms,
+            **kwargs
         )
         return np.asarray(res)
-    
+
+    def predict(
+        self,
+        X
+    ) -> np.ndarray:
+        """
+        Predicts target values for new data X using the fitted MID model.
+        """
+        return self.r_predict(X, type='response')
+
+    def predict_terms(
+        self,
+        X
+    ) -> np.ndarray:
+        """
+        Predicts the contribution of each term for new data X.
+        """
+        return self.r_predict(X, type='terms')
+
     def effect(
         self,
         term: str,
@@ -117,7 +142,7 @@ class MIDRegressor(BaseEstimator, RegressorMixin):
 
     @property
     def intercept(self):
-        return _r_interface._extract_and_convert(r_object=self.mid_, name='intercept')
+        return _r_interface._extract_and_convert(r_object=self.mid_, name='intercept').item()
 
     @property
     def weights(self):
@@ -137,10 +162,10 @@ class MIDRegressor(BaseEstimator, RegressorMixin):
 
     @property
     def ratio(self):
-        return _r_interface._extract_and_convert(r_object=self.mid_, name='ratio')
+        return _r_interface._extract_and_convert(r_object=self.mid_, name='ratio').item()
 
     def terms(self, **kwargs):
-        return np.asarray(_r_interface._call_r_mid_terms(r_object=self.mid_, **kwargs))
+        return list(_r_interface._call_r_mid_terms(r_object=self.mid_, **kwargs))
 
     def main_effects(self, term: str):
         effects = _r_interface._extract_and_convert(r_object=self.mid_, name='main.effects')
@@ -173,6 +198,7 @@ class MIDExplainer(MIDRegressor, MetaEstimatorMixin):
     def __init__(
         self,
         estimator,
+        target_classes: str | list[str] | None = None,
         params_main=None,
         params_inter=None,
         penalty=0,
@@ -187,6 +213,8 @@ class MIDExplainer(MIDRegressor, MetaEstimatorMixin):
             kwargs: Advanced fitting options passed to midr's interpret().
         """
         self.estimator = estimator
+        if is_classifier(self.estimator):
+            self.target_classes = target_classes
         super().__init__(
             params_main = params_main,
             params_inter = params_inter,
@@ -204,7 +232,24 @@ class MIDExplainer(MIDRegressor, MetaEstimatorMixin):
         if is_classifier(self.estimator):
             if not hasattr(self.estimator, "predict_proba"):
                 raise TypeError("The provided estimator must have a 'predict_proba' method.")
-            return 1 - self.estimator.predict_proba(X)[:, 0]
+            probas = self.estimator.predict_proba(X)
+            if self.target_classes is not None:
+                if not hasattr(self.estimator, 'classes_'):
+                    raise TypeError(
+                        "Estimator must have a 'classes_' attribute to use 'target_classes'."
+                    )
+                class_labels = np.asarray(self.estimator.classes_)
+                target_classes = self.target_classes
+                if not isinstance(target_classes, list):
+                    target_classes = [target_classes]
+                target_indices = np.where(np.isin(class_labels, target_classes))[0]
+                if len(target_indices) != len(set(target_classes)):
+                    raise ValueError(
+                        "The 'target_classes' were not appropriately found in the estimator's classes."
+                    )
+                return probas[:, target_indices].sum(axis=1)
+            else:
+                return 1 - probas[:, 0]
         else:
             if not hasattr(self.estimator, "predict"):
                 raise TypeError("The provided estimator must have a 'predict' method.")
@@ -285,7 +330,7 @@ class MIDImportance(object):
         return _r_interface._extract_and_convert(r_object=self._obj, name='measure')
 
     def terms(self, **kwargs):
-        return np.asarray(_r_interface._call_r_mid_terms(r_object=self._obj, **kwargs))
+        return list(_r_interface._call_r_mid_terms(r_object=self._obj, **kwargs))
 
 
 class MIDBreakdown(object):
@@ -321,7 +366,7 @@ class MIDBreakdown(object):
         return _r_interface._extract_and_convert(r_object=self._obj, name='prediction')
 
     def terms(self, **kwargs):
-        return np.asarray(_r_interface._call_r_mid_terms(r_object=self._obj, **kwargs))
+        return list(_r_interface._call_r_mid_terms(r_object=self._obj, **kwargs))
 
 
 class MIDConditional(object):
@@ -354,4 +399,4 @@ class MIDConditional(object):
         return _r_interface._extract_and_convert(r_object=self._obj, name='values')
     
     def terms(self, **kwargs):
-        return np.asarray(_r_interface._call_r_mid_terms(r_object=self._obj, **kwargs))
+        return list(_r_interface._call_r_mid_terms(r_object=self._obj, **kwargs))

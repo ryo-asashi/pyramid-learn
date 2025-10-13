@@ -32,3 +32,14 @@ Plotting
    plot_importance
    plot_breakdown
    plot_conditional
+
+Color Themes
+------------
+
+.. autosummary::
+   :toctree: pythonapi/
+
+   color_theme
+   scale_color_theme
+   scale_colour_theme
+   scale_fill_theme

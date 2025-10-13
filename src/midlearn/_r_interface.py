@@ -15,6 +15,7 @@ from .plotting_theme import color_theme
 
 stats = importr('stats')
 utils = importr('utils')
+grDevices = importr('grDevices')
 
 try:
     midr = importr('midr')
@@ -75,15 +76,20 @@ def _call_r_interpret(
 
 def _call_r_predict(
     r_object: ListVector,
-    X,
+    X: pd.DataFrame,
+    output_type: str = 'response',
+    terms: list[str] | None = None,
     **kwargs
 ) -> np.ndarray:
     """ Wrapper function for stats::predict() """
     r_kwargs = {
         'object': r_object,
         'newdata': X,
+        'type': output_type,
         **kwargs
     }
+    if terms is not None:
+        r_kwargs['terms'] = _as_r_vector(terms, 'character')
     try:
         with conversion.localconverter(pandas2ri.converter + numpy2ri.converter + cv):
             res = stats.predict(**r_kwargs)
@@ -257,3 +263,15 @@ def _as_r_vector(
     if mode == 'logical':
         return ro.BoolVector(x)
     raise ValueError(f"Invalid mode '{mode}'.")
+
+
+_R_COLOR_MAP = None
+
+def _convert_r_color(color: str) -> str:
+    global _R_COLOR_MAP
+    if _R_COLOR_MAP is None:
+        colors = grDevices.colors()
+        mat = np.array(grDevices.col2rgb(colors), dtype=np.uint8).T
+        hexrgb = [f"#{r:02X}{g:02X}{b:02X}" for r, g, b in mat]
+        _R_COLOR_MAP = {color: rgb for color, rgb in zip(colors, hexrgb)}
+    return _R_COLOR_MAP.get(color, color)

@@ -6,7 +6,8 @@ import numpy as np
 import pandas as pd
 import plotnine as p9
 from typing import TYPE_CHECKING, Literal
-from .plotting_theme import color_theme, scale_color_theme, scale_fill_theme
+
+from . import plotting_theme as pt
 from . import utils
 
 if TYPE_CHECKING:
@@ -21,10 +22,12 @@ if TYPE_CHECKING:
 def plot_effect(
     estimator: MIDRegressor | MIDExplainer,
     term: str,
-    style: Literal['effect'] = 'effect',
-    theme: str | color_theme | None = None,
+    style: Literal['effect', 'data'] = 'effect',
+    theme: str | pt.color_theme | None = None,
     intercept: bool = False,
     main_effects: bool = False,
+    data: pd.DataFrame | None = None,
+    jitter: float = 0.3,
     resolution: int | tuple[int, int] = 100,
     **kwargs
 ):
@@ -39,29 +42,44 @@ def plot_effect(
         main_effects: If True, main effects are included in the interaction plot.
         resolution: The resolution of the raster plot for interactions.
     """
-    style = utils.match_arg(style, ['effect'])
+    style = utils.match_arg(style, ['effect', 'data'])
     tags = term.split(':')
+    if style == 'data':
+        if data is None:
+            raise ValueError
+        data = data.copy()
+        terms = [term] + (tags if (len(tags) == 2 and main_effects) else [])
+        data['mid'] = (
+            estimator.r_predict(X=data, output_type='terms', terms=terms).sum(axis=1)
+            + (estimator.intercept if intercept else 0)
+        )
     if len(tags) == 1:
         eff_df = estimator.main_effects(term)
         if intercept:
             eff_df['mid'] += estimator.intercept
-        p = p9.ggplot(eff_df, p9.aes(x=term, y='mid'))
+        p = p9.ggplot(data=eff_df, mapping=p9.aes(x=term, y='mid'))
         enc = estimator._encoding_type(tag=term, order=1)
-        if enc == 'linear':
-            p = p + p9.geom_line(**kwargs)
+        if style == 'effect':
+            if enc == 'linear':
+                p = p + p9.geom_line(**kwargs)
+                if theme is not None:
+                    p = p + p9.aes(color='mid') + pt.scale_pt.color_theme(theme)
+            elif enc == 'constant':
+                xval = eff_df[[f'{term}_min', f'{term}_max']].to_numpy().ravel('C')
+                yval = np.repeat(eff_df['mid'].to_numpy(), 2)
+                path_df = pd.DataFrame({term: xval, 'mid': yval})
+                p += p9.geom_path(data=path_df, **kwargs)
+                if theme is not None:
+                    p = p + p9.aes(color='mid') + pt.scale_pt.color_theme(theme)
+            else:
+                p += p9.geom_col(**kwargs)
+                if theme is not None:
+                    p = p + p9.aes(fill='mid') + pt.scale_fill_theme(theme)
+        if style == 'data':
+            jit = jitter[0] if enc == 'factor' else 0
+            p += p9.geom_jitter(p9.aes(y = "mid"), data=data, width=jit, height=0, **kwargs)
             if theme is not None:
-                p = p + p9.aes(color='mid') + scale_color_theme(theme)
-        elif enc == 'constant':
-            xval = eff_df[[f'{term}_min', f'{term}_max']].to_numpy().ravel('C')
-            yval = np.repeat(eff_df['mid'].to_numpy(), 2)
-            path_df = pd.DataFrame({term: xval, 'mid': yval})
-            p += p9.geom_path(data=path_df, **kwargs)
-            if theme is not None:
-                p = p + p9.aes(color='mid') + scale_color_theme(theme)
-        else:
-            p += p9.geom_col(**kwargs)
-            if theme is not None:
-                p = p + p9.aes(fill='mid') + scale_fill_theme(theme)
+                p = p + p9.aes(color='mid') + pt.scale_color_theme(theme)
     elif len(tags) == 2:
         xtag, ytag = tags[0], tags[1]
         try:
@@ -76,37 +94,48 @@ def plot_effect(
         if main_effects:
             eff_df['mid'] += estimator.effect(term=xtag, x=eff_df) + estimator.effect(term=ytag, x=eff_df)
         p = p9.ggplot(eff_df, p9.aes(x=xtag, y=ytag))
-        xres, yres = (resolution, resolution) if isinstance(resolution, int) else (resolution, resolution)
         xenc = estimator._encoding_type(tag=xtag, order=2)
         yenc = estimator._encoding_type(tag=ytag, order=2)
-        if xenc == 'factor':
-            xval = eff_df[xtag].unique()
-        else:
-            xmin, xmax = eff_df[f'{xtag}_min'].min(), eff_df[f'{xtag}_max'].max()
-            xval = np.linspace(xmin, xmax, xres)
-        if yenc == 'factor':
-            yval = eff_df[ytag].unique()
-        else:
-            ymin, ymax = eff_df[f'{ytag}_min'].min(), eff_df[f'{ytag}_max'].max()
-            yval = np.linspace(ymin, ymax, yres)
-        grid_df = pd.DataFrame({
-            xtag: np.repeat(xval, len(yval)),
-            ytag: np.tile(yval, len(xval))
-        })
-        grid_df['mid'] = estimator.effect(term=term, x=grid_df)
-        if intercept:
-            grid_df['mid'] += estimator.intercept
-        if main_effects:
-            grid_df['mid'] += estimator.effect(term=xtag, x=grid_df) + estimator.effect(term=ytag, x=grid_df)
-        p += p9.geom_raster(p9.aes(x=xtag, y=ytag, fill='mid'), data=grid_df)
-        p += scale_fill_theme(theme if theme is not None else 'midr')
+        if style == 'effect':
+            xres, yres = (resolution, resolution) if isinstance(resolution, int) else (resolution, resolution)
+            if xenc == 'factor':
+                xval = eff_df[xtag].unique()
+            else:
+                xmin, xmax = eff_df[f'{xtag}_min'].min(), eff_df[f'{xtag}_max'].max()
+                xval = np.linspace(xmin, xmax, xres)
+            if yenc == 'factor':
+                yval = eff_df[ytag].unique()
+            else:
+                ymin, ymax = eff_df[f'{ytag}_min'].min(), eff_df[f'{ytag}_max'].max()
+                yval = np.linspace(ymin, ymax, yres)
+            grid_df = pd.DataFrame({
+                xtag: np.repeat(xval, len(yval)),
+                ytag: np.tile(yval, len(xval))
+            })
+            grid_df['mid'] = estimator.effect(term=term, x=grid_df)
+            if intercept:
+                grid_df['mid'] += estimator.intercept
+            if main_effects:
+                grid_df['mid'] += estimator.effect(term=xtag, x=grid_df) + estimator.effect(term=ytag, x=grid_df)
+            p += p9.geom_raster(p9.aes(x=xtag, y=ytag, fill='mid'), data=grid_df)
+            p += pt.scale_fill_theme(theme if theme is not None else 'midr')
+        if style == 'data':
+            xjit = jitter[0] if xenc == 'factor' else 0
+            yjit = jitter[1] if yenc == 'factor' else 0
+            p += p9.geom_jitter(
+                mapping=p9.aes(color='mid'), data=data, width=xjit, height=yjit, **kwargs
+            )
+            if theme is not None:
+                p += pt.scale_color_theme(theme)
+            else:
+                p += p9.scale_color_continuous()
     return p
 
 
 def plot_importance(
     importance: MIDImportance,
     style: Literal['barplot', 'heatmap'] = 'barplot',
-    theme: str | color_theme | None = None,
+    theme: str | pt.color_theme | None = None,
     max_nterms: int | None = 30,
     **kwargs
 ):
@@ -130,9 +159,9 @@ def plot_importance(
             + p9.labs(x="")
         )
         if theme is not None:
-            theme = color_theme(theme)
+            theme = pt.color_theme(theme)
             var_fill = 'order' if theme.type == 'qualitative' else 'importance'
-            p = p + p9.aes(fill=var_fill) + scale_fill_theme(theme)
+            p = p + p9.aes(fill=var_fill) + pt.scale_fill_theme(theme)
     elif style == 'heatmap':
         terms = imp_df['term'].str.split(':', expand=True)
         if terms.shape[1] == 1:
@@ -153,14 +182,14 @@ def plot_importance(
             + p9.geom_tile(**kwargs)
             + p9.labs(x="", y="")
         )
-        p += scale_fill_theme(theme if theme is not None else 'grayscale')
+        p += pt.scale_fill_theme(theme if theme is not None else 'grayscale')
     return p
 
 
 def plot_breakdown(
     breakdown: MIDBreakdown,
     style: Literal['waterfall', 'barplot'] = 'waterfall',
-    theme: str | color_theme | None = None,
+    theme: str | pt.color_theme | None = None,
     max_nterms: int | None = 15,
     catchall: str = 'others',
     format: tuple[str, str] = ('%t=%v', '%t'),
@@ -216,19 +245,19 @@ def plot_breakdown(
             + p9.labs(x="")
         )
     if theme is not None:
-        theme = color_theme(theme)
+        theme = pt.color_theme(theme)
         if theme.type == 'qualitative':
             mid_sign = np.where(brk_df['mid'] > 0, '> 0', '< 0')
-            p = p + p9.aes(fill=mid_sign) + scale_fill_theme(theme) + p9.labs(fill='mid')
+            p = p + p9.aes(fill=mid_sign) + pt.scale_fill_theme(theme) + p9.labs(fill='mid')
         else:
-            p = p + p9.aes(fill='mid') + scale_fill_theme(theme)
+            p = p + p9.aes(fill='mid') + pt.scale_fill_theme(theme)
     return p
 
 
 def plot_conditional(
     conditional: MIDConditional,
     style: Literal['ice', 'centered'] = 'ice',
-    theme: str | color_theme | None = None,
+    theme: str | pt.color_theme | None = None,
     var_color: str | None = None,
     dots: bool = True,
     reference: int = 0,
@@ -266,5 +295,5 @@ def plot_conditional(
     if var_color is not None:
         p += p9.aes(color=var_color)
     if theme is not None:
-        p += scale_color_theme(theme)
+        p += pt.scale_pt.color_theme(theme)
     return p

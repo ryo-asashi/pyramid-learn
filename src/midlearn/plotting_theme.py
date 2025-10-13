@@ -24,13 +24,13 @@ class color_theme(object):
     def palette(self, n: int) -> list[str]:
         if not isinstance(n, int):
             n = int(n)
-        return list(self._palette(n))
+        return [_r_interface._convert_r_color(v) for v in self._palette(n)]
 
     def ramp(self, x: float | list[float]) -> list[str]:
         if isinstance(x, float):
             x = [x]
         x = _r_interface._as_r_vector(x, mode='numeric')
-        return list(self._ramp(x))
+        return [_r_interface._convert_r_color(v) for v in self._ramp(x)]
 
     def __repr__(self) -> str:
         return f"<color_theme name='{self.name}' type='{self.type}'>"
