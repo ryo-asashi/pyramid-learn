@@ -98,17 +98,28 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="midlearn.MIDImportance">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">midlearn.</span></span><span class="sig-name descname"><span class="pre">MIDImportance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="midlearn.MIDRegressor.html#midlearn.MIDRegressor" title="midlearn.api.MIDRegressor"><span class="pre">MIDRegressor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="midlearn.MIDExplainer.html#midlearn.MIDExplainer" title="midlearn.api.MIDExplainer"><span class="pre">MIDExplainer</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#midlearn.MIDImportance" title="Link to this definition"></a></dt>
-<dd><p>Class for MID Importance</p>
+<dd><p>Class for MID Importance.</p>
+<p>This object is returned by the <cite>MIDRegressor.importance()</cite> method and holds
+the results of the feature importance calculation.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="midlearn.MIDImportance.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="midlearn.MIDRegressor.html#midlearn.MIDRegressor" title="midlearn.api.MIDRegressor"><span class="pre">MIDRegressor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="midlearn.MIDExplainer.html#midlearn.MIDExplainer" title="midlearn.api.MIDExplainer"><span class="pre">MIDExplainer</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#midlearn.MIDImportance.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Initializes the MIDImportance object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>estimator</strong> (<a class="reference internal" href="midlearn.MIDRegressor.html#midlearn.MIDRegressor" title="midlearn.MIDRegressor"><em>MIDRegressor</em></a><em> or </em><a class="reference internal" href="midlearn.MIDExplainer.html#midlearn.MIDExplainer" title="midlearn.MIDExplainer"><em>MIDExplainer</em></a>) – The fitted MID model instance from which to calculate importance.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional keyword arguments passed to the <cite>midr::mid.importance()</cite> function in R.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#midlearn.MIDImportance.__init__" title="midlearn.MIDImportance.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(estimator, **kwargs)</p></td>
-<td><p></p></td>
+<td><p>Initializes the MIDImportance object.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>([style, theme, max_nterms])</p></td>
 <td><p>Porting function for midr::ggmid.mid.importance()</p></td>

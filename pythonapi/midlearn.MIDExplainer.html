@@ -101,15 +101,23 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="midlearn.MIDExplainer.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_main</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_inter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">penalty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#midlearn.MIDExplainer.__init__" title="Link to this definition"></a></dt>
-<dd><p>Creates a MID model.</p>
+<dd><p>Create a surrogate MID model to explain a pre-trained black-box model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>estimator</strong> – The pre-trained black-box model to be explained.</p></li>
-<li><p><strong>params_main</strong> – Hyperparameters for the MID fitting process.</p></li>
-<li><p><strong>params_inter</strong> – Hyperparameters for the MID fitting process.</p></li>
-<li><p><strong>penalty</strong> – Hyperparameters for the MID fitting process.</p></li>
-<li><p><strong>kwargs</strong> – Advanced fitting options passed to midr’s interpret().</p></li>
+<li><p><strong>estimator</strong> (<em>object</em>) – The pre-trained black-box model to be explained.</p></li>
+<li><p><strong>target_classes</strong> (<em>list</em><em> of </em><em>str</em><em>, </em><em>optional</em>) – For classification estimators only.
+Specifies the target class or classes for which the probability is to be explained.
+If a list is provided, the sum of probabilities is used.
+If None (the default), the model explains 1 - P(class 0).</p></li>
+<li><p><strong>params_main</strong> (<em>int</em><em>, </em><em>optional</em>) – An integer specifying the maximum number of sample points for main effects.
+This corresponds to the ‘k[1]’ argument in R’s <cite>midr::interpret()</cite>.</p></li>
+<li><p><strong>params_inter</strong> (<em>int</em><em>, </em><em>optional</em>) – An integer specifying the maximum number of sample points for interactions.
+This corresponds to the ‘k[2]’ argument in R’s <cite>midr::interpret()</cite>.</p></li>
+<li><p><strong>penalty</strong> (<em>float</em><em>, </em><em>optional</em>) – The regularization penalty for pseudo-smoothing, corresponding to the
+‘lambda’ argument in R’s <cite>midr::interpret()</cite>. Defaults to 0.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional keyword arguments to be passed directly to the underlying
+<cite>midr::interpret()</cite> function for advanced fitting options.</p></li>
 </ul>
 </dd>
 </dl>
@@ -119,16 +127,16 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#midlearn.MIDExplainer.__init__" title="midlearn.MIDExplainer.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(estimator[, target_classes, ...])</p></td>
-<td><p>Creates a MID model.</p></td>
+<td><p>Create a surrogate MID model to explain a pre-trained black-box model.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">breakdown</span></code>(**kwargs)</p></td>
-<td><p></p></td>
+<td><p>Create MIDBreakdown object from the fitted estimator.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">conditional</span></code>(variable, **kwargs)</p></td>
-<td><p></p></td>
+<td><p>Create MIDConditional object from the fitted estimator.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">effect</span></code>(term, x[, y])</p></td>
-<td><p>Evaluate single MID component functions for new data.</p></td>
+<td><p>Evaluate a single MID component function for new data.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fidelity_score</span></code>(X[, y, sample_weight])</p></td>
 <td><p>Calculate the fidelity of the surrogate model.</p></td>
@@ -143,25 +151,25 @@
 <td><p>Get parameters for this estimator.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">importance</span></code>(**kwargs)</p></td>
-<td><p></p></td>
+<td><p>Create MIDImportance object from the fitted estimator.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">interactions</span></code>(term)</p></td>
-<td><p></p></td>
+<td><p>Extract a pd.DataFrame representing the interaction of the specified 'term'.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">main_effects</span></code>(term)</p></td>
-<td><p></p></td>
+<td><p>Extract a pd.DataFrame representing the main effect of the specified 'term'.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>(term[, style, theme, intercept, ...])</p></td>
 <td><p>Porting function for midr::ggmid.mid()</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code>(X)</p></td>
-<td><p>Predicts target values for new data X using the fitted MID model.</p></td>
+<td><p>Predict target values for new data X using the fitted MID model.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_terms</span></code>(X)</p></td>
-<td><p>Predicts the contribution of each term for new data X.</p></td>
+<td><p>Predict the contribution of each term for new data X.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">r_predict</span></code>(X[, output_type, terms])</p></td>
-<td><p>A low-level method to call the R predict.mid function with arbitrary arguments.</p></td>
+<td><p>A low-level method to call the R predict.mid function.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code>(X, y[, sample_weight])</p></td>
 <td><p>Return <a class="reference external" href="https://scikit-learn.org/stable/modules/model_evaluation.html#r2-score" title="(in scikit-learn v1.7)"><span class="xref std std-ref">coefficient of determination</span></a> on test data.</p></td>
@@ -176,7 +184,7 @@
 <td><p>Configure whether metadata should be requested to be passed to the <code class="docutils literal notranslate"><span class="pre">score</span></code> method.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terms</span></code>(**kwargs)</p></td>
-<td><p></p></td>
+<td><p>Extract term labels from the fitted model.</p></td>
 </tr>
 </tbody>
 </table>
@@ -184,22 +192,22 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fitted_matrix</span></code></p></td>
-<td><p></p></td>
+<td><p>A pandas DataFrame showing the breakdown of the fitted values into the effects of the component functions.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fitted_values</span></code></p></td>
-<td><p></p></td>
+<td><p>A NumPy array of the fitted values.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">intercept</span></code></p></td>
-<td><p></p></td>
+<td><p>The intercept of the fitted model.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ratio</span></code></p></td>
-<td><p></p></td>
+<td><p>The ratio of the sum of squared error between the target model predictions and the fitted values, to the sum of squared deviations of the target model predictions.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">residuals</span></code></p></td>
-<td><p></p></td>
+<td><p>A NumPy array of the working residuals.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">weights</span></code></p></td>
-<td><p></p></td>
+<td><p>Sample weights used to fit the model.</p></td>
 </tr>
 </tbody>
 </table>

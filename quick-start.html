@@ -126,7 +126,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.001023 seconds.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000861 seconds.
 You can set `force_col_wise=true` to remove the overhead.
 [LightGBM] [Info] Total Bins 1838
 [LightGBM] [Info] Number of data points in the train set: 15480, number of used features: 8
@@ -160,78 +160,8 @@ LGBMRegressor(random_state=42)
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Generating predictions from the estimator...
 </pre></div>
 </div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">11</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">explainer</span> <span class="o">=</span> <span class="n">mid</span><span class="o">.</span><span class="n">MIDExplainer</span><span class="p">(</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span>     <span class="n">interaction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-   <span class="p">(</span><span class="o">...</span><span class="p">)</span>      <span class="mi">7</span>     <span class="n">singular_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="n">explainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">11</span> <span class="nb">print</span><span class="p">(</span><span class="n">explainer</span><span class="p">)</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/sklearn/base.py:381,</span> in <span class="ni">BaseEstimator.__repr__</span><span class="nt">(self, N_CHAR_MAX)</span>
-<span class="g g-Whitespace">    </span><span class="mi">373</span> <span class="c1"># use ellipsis for sequences with a lot of elements</span>
-<span class="g g-Whitespace">    </span><span class="mi">374</span> <span class="n">pp</span> <span class="o">=</span> <span class="n">_EstimatorPrettyPrinter</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">375</span>     <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">376</span>     <span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">377</span>     <span class="n">indent_at_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">378</span>     <span class="n">n_max_elements_to_show</span><span class="o">=</span><span class="n">N_MAX_ELEMENTS_TO_SHOW</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">379</span> <span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">381</span> <span class="n">repr_</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">383</span> <span class="c1"># Use bruteforce ellipsis when there are a lot of non-blank characters</span>
-<span class="g g-Whitespace">    </span><span class="mi">384</span> <span class="n">n_nonblank</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">repr_</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/pprint.py:161,</span> in <span class="ni">PrettyPrinter.pformat</span><span class="nt">(self, object)</span>
-<span class="g g-Whitespace">    </span><span class="mi">159</span> <span class="k">def</span><span class="w"> </span><span class="nf">pformat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">160</span>     <span class="n">sio</span> <span class="o">=</span> <span class="n">_StringIO</span><span class="p">()</span>
-<span class="ne">--&gt; </span><span class="mi">161</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_format</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">sio</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">{},</span> <span class="mi">0</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">162</span>     <span class="k">return</span> <span class="n">sio</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/pprint.py:178,</span> in <span class="ni">PrettyPrinter._format</span><span class="nt">(self, object, stream, indent, allowance, context, level)</span>
-<span class="g g-Whitespace">    </span><span class="mi">176</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_readable</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="g g-Whitespace">    </span><span class="mi">177</span>     <span class="k">return</span>
-<span class="ne">--&gt; </span><span class="mi">178</span> <span class="n">rep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">179</span> <span class="n">max_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_width</span> <span class="o">-</span> <span class="n">indent</span> <span class="o">-</span> <span class="n">allowance</span>
-<span class="g g-Whitespace">    </span><span class="mi">180</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rep</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_width</span><span class="p">:</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/pprint.py:458,</span> in <span class="ni">PrettyPrinter._repr</span><span class="nt">(self, object, context, level)</span>
-<span class="g g-Whitespace">    </span><span class="mi">457</span> <span class="k">def</span><span class="w"> </span><span class="nf">_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">level</span><span class="p">):</span>
-<span class="ne">--&gt; </span><span class="mi">458</span>     <span class="nb">repr</span><span class="p">,</span> <span class="n">readable</span><span class="p">,</span> <span class="n">recursive</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
-<span class="g g-Whitespace">    </span><span class="mi">459</span>                                             <span class="bp">self</span><span class="o">.</span><span class="n">_depth</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">460</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">readable</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">461</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_readable</span> <span class="o">=</span> <span class="kc">False</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/sklearn/utils/_pprint.py:191,</span> in <span class="ni">_EstimatorPrettyPrinter.format</span><span class="nt">(self, object, context, maxlevels, level)</span>
-<span class="g g-Whitespace">    </span><span class="mi">190</span> <span class="k">def</span><span class="w"> </span><span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">maxlevels</span><span class="p">,</span> <span class="n">level</span><span class="p">):</span>
-<span class="ne">--&gt; </span><span class="mi">191</span>     <span class="k">return</span> <span class="n">_safe_repr</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">192</span>         <span class="nb">object</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">maxlevels</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">changed_only</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_changed_only</span>
-<span class="g g-Whitespace">    </span><span class="mi">193</span>     <span class="p">)</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/sklearn/utils/_pprint.py:440,</span> in <span class="ni">_safe_repr</span><span class="nt">(object, context, maxlevels, level, changed_only)</span>
-<span class="g g-Whitespace">    </span><span class="mi">438</span> <span class="n">recursive</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="g g-Whitespace">    </span><span class="mi">439</span> <span class="k">if</span> <span class="n">changed_only</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">440</span>     <span class="n">params</span> <span class="o">=</span> <span class="n">_changed_params</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">441</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">442</span>     <span class="n">params</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/sklearn/utils/_pprint.py:95,</span> in <span class="ni">_changed_params</span><span class="nt">(estimator)</span>
-<span class="g g-Whitespace">     </span><span class="mi">91</span> <span class="k">def</span><span class="w"> </span><span class="nf">_changed_params</span><span class="p">(</span><span class="n">estimator</span><span class="p">):</span>
-<span class="g g-Whitespace">     </span><span class="mi">92</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;Return dict (param_name: value) of parameters that were given to</span>
-<span class="g g-Whitespace">     </span><span class="mi">93</span><span class="sd">     estimator with non-default values.&quot;&quot;&quot;</span>
-<span class="ne">---&gt; </span><span class="mi">95</span>     <span class="n">params</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">96</span>     <span class="n">init_func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">estimator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="s2">&quot;deprecated_original&quot;</span><span class="p">,</span> <span class="n">estimator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">97</span>     <span class="n">init_params</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">init_func</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/sklearn/base.py:250,</span> in <span class="ni">BaseEstimator.get_params</span><span class="nt">(self, deep)</span>
-<span class="g g-Whitespace">    </span><span class="mi">248</span> <span class="n">out</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">249</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_param_names</span><span class="p">():</span>
-<span class="ne">--&gt; </span><span class="mi">250</span>     <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">251</span>     <span class="k">if</span> <span class="n">deep</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;get_params&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">252</span>         <span class="n">deep_items</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-
-<span class="ne">AttributeError</span>: &#39;MIDExplainer&#39; object has no attribute &#39;target_classes&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MIDExplainer(estimator=LGBMRegressor(random_state=42), params_main=70,
+             penalty=0.01)
 </pre></div>
 </div>
 </div>
@@ -256,10 +186,12 @@ LGBMRegressor(random_state=42)
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Generating predictions from the estimator...
-R-squared score: 0.955195534503637
 </pre></div>
 </div>
-<img alt="_images/746c72fd3fd2143fd8c0c1870f46f863302db4defebe24acf14da4011f8d72e7.png" src="_images/746c72fd3fd2143fd8c0c1870f46f863302db4defebe24acf14da4011f8d72e7.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R-squared score: 0.955195534503637
+</pre></div>
+</div>
+<img alt="_images/295550e280a346535f741bef3d0b1b428d9c8bbe5d4b6a8a98870b240a91b14c.png" src="_images/295550e280a346535f741bef3d0b1b428d9c8bbe5d4b6a8a98870b240a91b14c.png" />
 </div>
 </div>
 </section>
@@ -276,7 +208,70 @@ R-squared score: 0.955195534503637
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/14deadc6e24a77fa4cb8c8f66777cb489617bbb7e7482ed77348e33ec3324f47.png" src="_images/14deadc6e24a77fa4cb8c8f66777cb489617bbb7e7482ed77348e33ec3324f47.png" />
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NotImplementedError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># Calculate and plot overall feature importance (default bar plot and heatmap)</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">imp</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">importance</span><span class="p">()</span>
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">imp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="s1">&#39;muted&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">imp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;heatmap&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#808080&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+<span class="nn">File ~/work/pyramid-learn/pyramid-learn/src/midlearn/plotting.py:151,</span> in <span class="ni">plot_importance</span><span class="nt">(importance, style, theme, max_nterms, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">142</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">143</span><span class="sd"> Porting function for midr::ggmid.mid.importance()</span>
+<span class="g g-Whitespace">    </span><span class="mi">144</span><span class="sd"> </span>
+<span class="sd">   (...)    148     max_nterms: The maximum number of terms to display.</span>
+<span class="g g-Whitespace">    </span><span class="mi">149</span><span class="sd"> &quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">150</span> <span class="n">style</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">match_arg</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;barplot&#39;</span><span class="p">,</span> <span class="s1">&#39;heatmap&#39;</span><span class="p">])</span>
+<span class="ne">--&gt; </span><span class="mi">151</span> <span class="n">imp_df</span> <span class="o">=</span> <span class="n">importance</span><span class="o">.</span><span class="n">importance</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">152</span> <span class="k">if</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;barplot&#39;</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">153</span>     <span class="k">if</span> <span class="n">max_nterms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+<span class="nn">File ~/work/pyramid-learn/pyramid-learn/src/midlearn/api.py:433,</span> in <span class="ni">MIDImportance.importance</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">431</span> <span class="nd">@property</span>
+<span class="g g-Whitespace">    </span><span class="mi">432</span> <span class="k">def</span><span class="w"> </span><span class="nf">importance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">433</span>     <span class="k">return</span> <span class="n">_r_interface</span><span class="o">.</span><span class="n">_extract_and_convert</span><span class="p">(</span><span class="n">r_object</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;importance&#39;</span><span class="p">)</span>
+
+<span class="nn">File ~/work/pyramid-learn/pyramid-learn/src/midlearn/_r_interface.py:204,</span> in <span class="ni">_extract_and_convert</span><span class="nt">(r_object, name)</span>
+<span class="g g-Whitespace">    </span><span class="mi">199</span> <span class="k">def</span><span class="w"> </span><span class="nf">_extract_and_convert</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">200</span>     <span class="n">r_object</span><span class="p">:</span> <span class="n">ListVector</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">201</span>     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="g g-Whitespace">    </span><span class="mi">202</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">203</span>     <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">204</span>         <span class="n">idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">r_object</span><span class="o">.</span><span class="n">names</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">205</span>         <span class="n">element</span> <span class="o">=</span> <span class="n">r_object</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+<span class="g g-Whitespace">    </span><span class="mi">206</span>     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/rpy2/robjects/vectors.py:309,</span> in <span class="ni">Vector.names</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">307</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;Names for the items in the vector.&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">308</span> <span class="n">res</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">names</span>
+<span class="ne">--&gt; </span><span class="mi">309</span> <span class="n">res</span> <span class="o">=</span> <span class="n">conversion</span><span class="o">.</span><span class="n">get_conversion</span><span class="p">()</span><span class="o">.</span><span class="n">rpy2py</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">310</span> <span class="k">return</span> <span class="n">res</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/functools.py:934,</span> in <span class="ni">singledispatch.&lt;locals&gt;.wrapper</span><span class="nt">(*args, **kw)</span>
+<span class="g g-Whitespace">    </span><span class="mi">931</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">932</span>     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">funcname</span><span class="si">}</span><span class="s1"> requires at least &#39;</span>
+<span class="g g-Whitespace">    </span><span class="mi">933</span>                     <span class="s1">&#39;1 positional argument&#39;</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">934</span> <span class="k">return</span> <span class="n">dispatch</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/rpy2/robjects/conversion.py:408,</span> in <span class="ni">_raise_missingconverter</span><span class="nt">(obj)</span>
+<span class="g g-Whitespace">    </span><span class="mi">401</span> <span class="k">def</span><span class="w"> </span><span class="nf">_raise_missingconverter</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">402</span>     <span class="n">_missingconverter_msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">403</span><span class="s2">     Conversion rules for `rpy2.robjects` appear to be missing. Those</span>
+<span class="g g-Whitespace">    </span><span class="mi">404</span><span class="s2">     rules are in a Python `contextvars.ContextVar`. This could be caused</span>
+<span class="g g-Whitespace">    </span><span class="mi">405</span><span class="s2">     by multithreading code not passing context to the thread.</span>
+<span class="g g-Whitespace">    </span><span class="mi">406</span><span class="s2">     Check rpy2&#39;s documentation about conversions.</span>
+<span class="g g-Whitespace">    </span><span class="mi">407</span><span class="s2">     &quot;&quot;&quot;</span>
+<span class="ne">--&gt; </span><span class="mi">408</span>     <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="n">_missingconverter_msg</span><span class="p">)</span>
+
+<span class="ne">NotImplementedError</span>: 
+    <span class="n">Conversion</span> <span class="n">rules</span> <span class="k">for</span> <span class="err">`</span><span class="n">rpy2</span><span class="o">.</span><span class="n">robjects</span><span class="err">`</span> <span class="n">appear</span> <span class="n">to</span> <span class="n">be</span> <span class="n">missing</span><span class="o">.</span> <span class="n">Those</span>
+    <span class="n">rules</span> <span class="n">are</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">Python</span> <span class="err">`</span><span class="n">contextvars</span><span class="o">.</span><span class="n">ContextVar</span><span class="err">`</span><span class="o">.</span> <span class="n">This</span> <span class="n">could</span> <span class="n">be</span> <span class="n">caused</span>
+    <span class="n">by</span> <span class="n">multithreading</span> <span class="n">code</span> <span class="ow">not</span> <span class="n">passing</span> <span class="n">context</span> <span class="n">to</span> <span class="n">the</span> <span class="n">thread</span><span class="o">.</span>
+    <span class="n">Check</span> <span class="n">rpy2</span><span class="s1">&#39;s documentation about conversions.</span>
+    
+</pre></div>
+</div>
 </div>
 </div>
 <div class="cell docutils container">
