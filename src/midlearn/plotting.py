@@ -32,7 +32,9 @@ def plot_effect(
     **kwargs
 ):
     """
-    Porting function for midr::ggmid.mid()
+    Plot MID component functions with plotnine.
+    
+    This is a porting function for `midr::ggmid.mid()`.
 
     Args:
         estimator: A fitted MIDRegressor or MIDExplainer object.
@@ -140,7 +142,9 @@ def plot_importance(
     **kwargs
 ):
     """
-    Porting function for midr::ggmid.mid.importance()
+    Plot MID importance with plotnine.
+    
+    This is a porting function for `midr::ggmid.mid.importance()`.
 
     Args:
         importance: A MIDImportance object.
@@ -196,7 +200,9 @@ def plot_breakdown(
     **kwargs
 ):
     """
-    Porting function for midr::ggmid.mid.breakdown()
+    Plot MID breakdown with plotnine.
+
+    This is a porting function for `midr::ggmid.mid.breakdown()`.
 
     Args:
         breakdown: A MIDBreakdown object.
@@ -264,7 +270,9 @@ def plot_conditional(
     **kwargs
 ):
     """
-    Porting function for midr::ggmid.mid.conditional()
+    Plot MID conditional expectations with plotnine.
+    
+    This is a porting function for `midr::ggmid.mid.conditional()`.
 
     Args:
         conditional: A MIDConditional object.

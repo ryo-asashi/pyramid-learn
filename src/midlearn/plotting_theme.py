@@ -11,6 +11,8 @@ from typing import Literal
 from . import _r_interface
 
 class color_theme(object):
+    """Color themes for graphics.
+    """
     def __init__(self, theme: str | color_theme, **kwargs):
         self._obj = _r_interface._call_r_color_theme(
             theme = theme,
@@ -41,6 +43,8 @@ def scale_color_theme(
     midpoint: float = 0,
     **kwargs
 ) -> scale_color_theme_d | scale_color_theme_c:
+    """Scale of 'color' for plotnine graphics.
+    """
     theme = color_theme(theme=theme)
     if theme.type == 'qualitative':
         return scale_color_theme_d(theme=theme, **kwargs)
@@ -51,6 +55,8 @@ def scale_fill_theme(
     theme: str | color_theme,
     **kwargs
 ) -> scale_fill_theme_d | scale_fill_theme_c:
+    """Scale of 'fill' for plotnine graphics.
+    """
     theme = color_theme(theme=theme)
     if theme.type == 'qualitative':
         return scale_fill_theme_d(theme=theme, **kwargs)
@@ -59,7 +65,8 @@ def scale_fill_theme(
 
 #alias
 scale_colour_theme = scale_color_theme
-
+"""Alias for :func:`~midlearn.plotting_theme.scale_color_theme`.
+"""
 
 @dataclass
 class scale_color_theme_d(scale_discrete):
