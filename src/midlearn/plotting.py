@@ -46,7 +46,7 @@ def plot_effect(
     tags = term.split(':')
     if style == 'data':
         if data is None:
-            raise ValueError
+            raise ValueError("The 'data' argument is required when style='data'. Please provide the pandas.DataFrame to use for plotting.")
         data = data.copy()
         terms = [term] + (tags if (len(tags) == 2 and main_effects) else [])
         data['mid'] = (
