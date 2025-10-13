@@ -1,0 +1,24 @@
+﻿midlearn.color\_theme
+=====================
+
+.. currentmodule:: midlearn
+
+.. autoclass:: color_theme
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~color_theme.__init__
+      ~color_theme.palette
+      ~color_theme.ramp
+   
+   
+
+   
+   
+   

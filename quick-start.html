@@ -88,7 +88,7 @@
 <p>Here’s a basic example of how to use <strong>pyramid-learn</strong>, or <strong>midlearn</strong>, to explain a trained LightGBM model, utilizing the familiar scikit-learn API.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_california_housing</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_config</span>
@@ -105,19 +105,13 @@
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error importing in API mode: ImportError(&#39;On Windows, cffi mode &quot;ANY&quot; is only &quot;ABI&quot;.&#39;)
-Trying to import in ABI mode.
-</pre></div>
-</div>
-</div>
 </div>
 <section id="train-a-black-box-model">
 <h2>1. Train a Black-Box Model<a class="headerlink" href="#train-a-black-box-model" title="Link to this heading"></a></h2>
 <p>We use the California Housing dataset to train a LightGBM Regressor, which will serve as our black-box model.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load and prepare data</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load and prepare data</span>
 <span class="n">housing</span> <span class="o">=</span> <span class="n">fetch_california_housing</span><span class="p">()</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">housing</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">housing</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">housing</span><span class="o">.</span><span class="n">target</span>
@@ -132,7 +126,7 @@ Trying to import in ABI mode.
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000277 seconds.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.001023 seconds.
 You can set `force_col_wise=true` to remove the overhead.
 [LightGBM] [Info] Total Bins 1838
 [LightGBM] [Info] Number of data points in the train set: 15480, number of used features: 8
@@ -148,7 +142,7 @@ LGBMRegressor(random_state=42)
 <p>We fit the <code class="docutils literal notranslate"><span class="pre">MIDExplainer</span></code> to the training data to create a globally faithful, interpretable surrogate model (MID).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize and fit the MID model</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize and fit the MID model</span>
 <span class="n">explainer</span> <span class="o">=</span> <span class="n">mid</span><span class="o">.</span><span class="n">MIDExplainer</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span>
     <span class="n">interaction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -164,15 +158,87 @@ LGBMRegressor(random_state=42)
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Generating predictions from the estimator...
-MIDExplainer(estimator=LGBMRegressor(random_state=42), params_main=70,
-             penalty=0.01)
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">11</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">explainer</span> <span class="o">=</span> <span class="n">mid</span><span class="o">.</span><span class="n">MIDExplainer</span><span class="p">(</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span>     <span class="n">interaction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>      <span class="mi">7</span>     <span class="n">singular_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="n">explainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">11</span> <span class="nb">print</span><span class="p">(</span><span class="n">explainer</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/sklearn/base.py:381,</span> in <span class="ni">BaseEstimator.__repr__</span><span class="nt">(self, N_CHAR_MAX)</span>
+<span class="g g-Whitespace">    </span><span class="mi">373</span> <span class="c1"># use ellipsis for sequences with a lot of elements</span>
+<span class="g g-Whitespace">    </span><span class="mi">374</span> <span class="n">pp</span> <span class="o">=</span> <span class="n">_EstimatorPrettyPrinter</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">375</span>     <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">376</span>     <span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">377</span>     <span class="n">indent_at_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">378</span>     <span class="n">n_max_elements_to_show</span><span class="o">=</span><span class="n">N_MAX_ELEMENTS_TO_SHOW</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">379</span> <span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">381</span> <span class="n">repr_</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">383</span> <span class="c1"># Use bruteforce ellipsis when there are a lot of non-blank characters</span>
+<span class="g g-Whitespace">    </span><span class="mi">384</span> <span class="n">n_nonblank</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">repr_</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/pprint.py:161,</span> in <span class="ni">PrettyPrinter.pformat</span><span class="nt">(self, object)</span>
+<span class="g g-Whitespace">    </span><span class="mi">159</span> <span class="k">def</span><span class="w"> </span><span class="nf">pformat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">160</span>     <span class="n">sio</span> <span class="o">=</span> <span class="n">_StringIO</span><span class="p">()</span>
+<span class="ne">--&gt; </span><span class="mi">161</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_format</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">sio</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">{},</span> <span class="mi">0</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">162</span>     <span class="k">return</span> <span class="n">sio</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/pprint.py:178,</span> in <span class="ni">PrettyPrinter._format</span><span class="nt">(self, object, stream, indent, allowance, context, level)</span>
+<span class="g g-Whitespace">    </span><span class="mi">176</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_readable</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="g g-Whitespace">    </span><span class="mi">177</span>     <span class="k">return</span>
+<span class="ne">--&gt; </span><span class="mi">178</span> <span class="n">rep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">179</span> <span class="n">max_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_width</span> <span class="o">-</span> <span class="n">indent</span> <span class="o">-</span> <span class="n">allowance</span>
+<span class="g g-Whitespace">    </span><span class="mi">180</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rep</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_width</span><span class="p">:</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/pprint.py:458,</span> in <span class="ni">PrettyPrinter._repr</span><span class="nt">(self, object, context, level)</span>
+<span class="g g-Whitespace">    </span><span class="mi">457</span> <span class="k">def</span><span class="w"> </span><span class="nf">_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">level</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">458</span>     <span class="nb">repr</span><span class="p">,</span> <span class="n">readable</span><span class="p">,</span> <span class="n">recursive</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+<span class="g g-Whitespace">    </span><span class="mi">459</span>                                             <span class="bp">self</span><span class="o">.</span><span class="n">_depth</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">460</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">readable</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">461</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_readable</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/sklearn/utils/_pprint.py:191,</span> in <span class="ni">_EstimatorPrettyPrinter.format</span><span class="nt">(self, object, context, maxlevels, level)</span>
+<span class="g g-Whitespace">    </span><span class="mi">190</span> <span class="k">def</span><span class="w"> </span><span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">maxlevels</span><span class="p">,</span> <span class="n">level</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">191</span>     <span class="k">return</span> <span class="n">_safe_repr</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">192</span>         <span class="nb">object</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">maxlevels</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">changed_only</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_changed_only</span>
+<span class="g g-Whitespace">    </span><span class="mi">193</span>     <span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/sklearn/utils/_pprint.py:440,</span> in <span class="ni">_safe_repr</span><span class="nt">(object, context, maxlevels, level, changed_only)</span>
+<span class="g g-Whitespace">    </span><span class="mi">438</span> <span class="n">recursive</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="g g-Whitespace">    </span><span class="mi">439</span> <span class="k">if</span> <span class="n">changed_only</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">440</span>     <span class="n">params</span> <span class="o">=</span> <span class="n">_changed_params</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">441</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">442</span>     <span class="n">params</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/sklearn/utils/_pprint.py:95,</span> in <span class="ni">_changed_params</span><span class="nt">(estimator)</span>
+<span class="g g-Whitespace">     </span><span class="mi">91</span> <span class="k">def</span><span class="w"> </span><span class="nf">_changed_params</span><span class="p">(</span><span class="n">estimator</span><span class="p">):</span>
+<span class="g g-Whitespace">     </span><span class="mi">92</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;Return dict (param_name: value) of parameters that were given to</span>
+<span class="g g-Whitespace">     </span><span class="mi">93</span><span class="sd">     estimator with non-default values.&quot;&quot;&quot;</span>
+<span class="ne">---&gt; </span><span class="mi">95</span>     <span class="n">params</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">96</span>     <span class="n">init_func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">estimator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="s2">&quot;deprecated_original&quot;</span><span class="p">,</span> <span class="n">estimator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">97</span>     <span class="n">init_params</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">init_func</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/sklearn/base.py:250,</span> in <span class="ni">BaseEstimator.get_params</span><span class="nt">(self, deep)</span>
+<span class="g g-Whitespace">    </span><span class="mi">248</span> <span class="n">out</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">249</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_param_names</span><span class="p">():</span>
+<span class="ne">--&gt; </span><span class="mi">250</span>     <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">251</span>     <span class="k">if</span> <span class="n">deep</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;get_params&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">252</span>         <span class="n">deep_items</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+
+<span class="ne">AttributeError</span>: &#39;MIDExplainer&#39; object has no attribute &#39;target_classes&#39;
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the fidelity of the surrogate model to the original model</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the fidelity of the surrogate model to the original model</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R-squared score:&quot;</span><span class="p">,</span> <span class="n">explainer</span><span class="o">.</span><span class="n">fidelity_score</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
 
 <span class="c1"># Visualize the fidelity</span>
@@ -202,7 +268,7 @@ R-squared score: 0.955195534503637
 <p>The MID model allows for clear visualization of feature importance, individual effects, and local prediction breakdowns.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate and plot overall feature importance (default bar plot and heatmap)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate and plot overall feature importance (default bar plot and heatmap)</span>
 <span class="n">imp</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">importance</span><span class="p">()</span>
 <span class="n">imp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="s1">&#39;muted&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 <span class="n">imp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;heatmap&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#808080&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
@@ -215,11 +281,11 @@ R-squared score: 0.955195534503637
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the top 3 important main effects (Component Functions)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the top 3 important main effects (Component Functions)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- Top 3 Main Effects ---&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">imp</span><span class="o">.</span><span class="n">terms</span><span class="p">(</span><span class="n">interactions</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Plotting </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">term</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">term</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
     <span class="n">display</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -242,11 +308,28 @@ Plotting 1: Latitude
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot prediction breakdowns for the first three test samples (Local Interpretability)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the interaction of Longitude and Latitude (Component Functions)</span>
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">explainer</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;Longitude:Latitude&quot;</span><span class="p">,</span> <span class="n">main_effects</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">explainer</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;Longitude:Latitude&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">main_effects</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/a48def39046459deee2db1541a5b0e80f72e0376c2e427930d18525737508f80.png" src="_images/a48def39046459deee2db1541a5b0e80f72e0376c2e427930d18525737508f80.png" />
+<img alt="_images/59491fe974f874697338d1169af0073e8f41cacb2b39a307de78feda16506412.png" src="_images/59491fe974f874697338d1169af0073e8f41cacb2b39a307de78feda16506412.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot prediction breakdowns for the first three test samples (Local Interpretability)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- Breakdown Plots for First 3 Test Samples ---&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Row </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> Breakdown:&quot;</span><span class="p">)</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">breakdown</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">X_test</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="s2">&quot;midr@qual&quot;</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">breakdown</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">X_test</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="s2">&quot;highlight_r&quot;</span><span class="p">)</span>
     <span class="n">display</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -256,20 +339,20 @@ Plotting 1: Latitude
 Row 0 Breakdown:
 </pre></div>
 </div>
-<img alt="_images/ffb2277a683284f830b034b404a11d99b9e2151425f94690b4415c33272d5507.png" src="_images/ffb2277a683284f830b034b404a11d99b9e2151425f94690b4415c33272d5507.png" />
+<img alt="_images/14c1631a72c35e9818077e832f169deff52d6b06863d765c93140e23584916d6.png" src="_images/14c1631a72c35e9818077e832f169deff52d6b06863d765c93140e23584916d6.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Row 1 Breakdown:
 </pre></div>
 </div>
-<img alt="_images/5e6c8acc79b0e74b15be742a864774ddcd7993ec60f8427645f68a5e0c6677e5.png" src="_images/5e6c8acc79b0e74b15be742a864774ddcd7993ec60f8427645f68a5e0c6677e5.png" />
+<img alt="_images/df2db0858ffe514f04f5cd9930bc4050396c0e7f7b057d1b1a2de79cbf0d61cd.png" src="_images/df2db0858ffe514f04f5cd9930bc4050396c0e7f7b057d1b1a2de79cbf0d61cd.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Row 2 Breakdown:
 </pre></div>
 </div>
-<img alt="_images/75088ffadb788829baab2628a0819bc79870dc205260fb1ade372c0c4d732ce3.png" src="_images/75088ffadb788829baab2628a0819bc79870dc205260fb1ade372c0c4d732ce3.png" />
+<img alt="_images/b51ef94f393ebdfbd2f672470c1d3bbb3ee5aeae78360e2f6eb5aba34bbca018.png" src="_images/b51ef94f393ebdfbd2f672470c1d3bbb3ee5aeae78360e2f6eb5aba34bbca018.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot individual conditional expectations (ICE) with color encoding</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot individual conditional expectations (ICE) with color encoding</span>
 <span class="n">explainer</span><span class="o">.</span><span class="n">conditional</span><span class="p">(</span><span class="s1">&#39;Latitude&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">var_color</span><span class="o">=</span><span class="s1">&#39;Longitude&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -279,7 +362,7 @@ Row 0 Breakdown:
   
 </pre></div>
 </div>
-<img alt="_images/3d424e1d3adb20a5e3d579a60b72cff9a50ad152acb4bb6c80c3c714d96eae2e.png" src="_images/3d424e1d3adb20a5e3d579a60b72cff9a50ad152acb4bb6c80c3c714d96eae2e.png" />
+<img alt="_images/589bc48f1e085048158c819dfad2ce53b9038a3e0efa3caf76d2f22e205f4295.png" src="_images/589bc48f1e085048158c819dfad2ce53b9038a3e0efa3caf76d2f22e205f4295.png" />
 </div>
 </div>
 </section>

@@ -1,0 +1,6 @@
+﻿midlearn.scale\_colour\_theme
+=============================
+
+.. currentmodule:: midlearn
+
+.. autofunction:: scale_colour_theme

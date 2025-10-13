@@ -26,6 +26,8 @@
       ~MIDExplainer.main_effects
       ~MIDExplainer.plot
       ~MIDExplainer.predict
+      ~MIDExplainer.predict_terms
+      ~MIDExplainer.r_predict
       ~MIDExplainer.score
       ~MIDExplainer.set_fit_request
       ~MIDExplainer.set_params

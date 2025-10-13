@@ -25,6 +25,8 @@
       ~MIDRegressor.main_effects
       ~MIDRegressor.plot
       ~MIDRegressor.predict
+      ~MIDRegressor.predict_terms
+      ~MIDRegressor.r_predict
       ~MIDRegressor.score
       ~MIDRegressor.set_fit_request
       ~MIDRegressor.set_params

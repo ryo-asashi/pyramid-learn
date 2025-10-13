@@ -60,6 +60,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#model-interpretation">Model Interpretation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#plotting">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#color-themes">Color Themes</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference external" href="https://ryo-asashi.github.io/midr/">R API - midr</a></li>
@@ -151,6 +152,12 @@
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code>(X)</p></td>
 <td><p>Predicts target values for new data X using the fitted MID model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_terms</span></code>(X)</p></td>
+<td><p>Predicts the contribution of each term for new data X.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">r_predict</span></code>(X[, output_type, terms])</p></td>
+<td><p>A low-level method to call the R predict.mid function with arbitrary arguments.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code>(X, y[, sample_weight])</p></td>
 <td><p>Return <a class="reference external" href="https://scikit-learn.org/stable/modules/model_evaluation.html#r2-score" title="(in scikit-learn v1.7)"><span class="xref std std-ref">coefficient of determination</span></a> on test data.</p></td>

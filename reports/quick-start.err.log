@@ -36,86 +36,93 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-# Plot individual conditional expectations (ICE) with color encoding
-explainer.conditional('Latitude').plot(var_color='Longitude', theme='mako').draw()
+# Initialize and fit the MID model
+explainer = mid.MIDExplainer(
+    estimator=estimator,
+    interaction=True,
+    params_main=70,
+    penalty=.01,
+    singular_ok=True,
+)
+explainer.fit(X_train)
+
+print(explainer)
 ------------------
 
------ stderr -----
-R callback write-console: the number of evaluation points exceeds the limit: the data is reduced to 1000 observations
------ stderr -----
-R callback write-console: Error in get.theme(parsed$name, ifnot.null(parsed$source, source), env) : 
-  'mako' is not found in the color theme environment
+----- stdout -----
+Generating predictions from the estimator...
 ------------------
 
 [31m---------------------------------------------------------------------------[39m
-[31mRRuntimeError[39m                             Traceback (most recent call last)
-[36mFile [39m[32m~/work/pyramid-learn/pyramid-learn/src/midlearn/_r_interface.py:239[39m, in [36m_call_r_color_theme[39m[34m(theme, **kwargs)[39m
-[32m    238[39m [38;5;28;01mwith[39;00m conversion.localconverter(pandas2ri.converter + numpy2ri.converter + cv):
-[32m--> [39m[32m239[39m     res = [43mmidr[49m[43m.[49m[43mcolor_theme[49m[43m([49m[43m*[49m[43m*[49m[43mr_kwargs[49m[43m)[49m
-[32m    240[39m [38;5;28;01mreturn[39;00m res
+[31mAttributeError[39m                            Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[3][39m[32m, line 11[39m
+[32m      2[39m explainer = mid.MIDExplainer(
+[32m      3[39m     estimator=estimator,
+[32m      4[39m     interaction=[38;5;28;01mTrue[39;00m,
+[32m   (...)[39m[32m      7[39m     singular_ok=[38;5;28;01mTrue[39;00m,
+[32m      8[39m )
+[32m      9[39m explainer.fit(X_train)
+[32m---> [39m[32m11[39m [38;5;28;43mprint[39;49m[43m([49m[43mexplainer[49m[43m)[49m
 
-[36mFile [39m[32m/opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/rpy2/robjects/functions.py:208[39m, in [36mSignatureTranslatedFunction.__call__[39m[34m(self, *args, **kwargs)[39m
-[32m    207[39m         kwargs[r_k] = v
-[32m--> [39m[32m208[39m [38;5;28;01mreturn[39;00m ([38;5;28;43msuper[39;49m[43m([49m[43mSignatureTranslatedFunction[49m[43m,[49m[43m [49m[38;5;28;43mself[39;49m[43m)[49m
-[32m    209[39m [43m        [49m[43m.[49m[34;43m__call__[39;49m[43m([49m[43m*[49m[43margs[49m[43m,[49m[43m [49m[43m*[49m[43m*[49m[43mkwargs[49m[43m)[49m)
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/sklearn/base.py:381[39m, in [36mBaseEstimator.__repr__[39m[34m(self, N_CHAR_MAX)[39m
+[32m    373[39m [38;5;66;03m# use ellipsis for sequences with a lot of elements[39;00m
+[32m    374[39m pp = _EstimatorPrettyPrinter(
+[32m    375[39m     compact=[38;5;28;01mTrue[39;00m,
+[32m    376[39m     indent=[32m1[39m,
+[32m    377[39m     indent_at_name=[38;5;28;01mTrue[39;00m,
+[32m    378[39m     n_max_elements_to_show=N_MAX_ELEMENTS_TO_SHOW,
+[32m    379[39m )
+[32m--> [39m[32m381[39m repr_ = [43mpp[49m[43m.[49m[43mpformat[49m[43m([49m[38;5;28;43mself[39;49m[43m)[49m
+[32m    383[39m [38;5;66;03m# Use bruteforce ellipsis when there are a lot of non-blank characters[39;00m
+[32m    384[39m n_nonblank = [38;5;28mlen[39m([33m"[39m[33m"[39m.join(repr_.split()))
 
-[36mFile [39m[32m/opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/rpy2/robjects/functions.py:131[39m, in [36mFunction.__call__[39m[34m(self, *args, **kwargs)[39m
-[32m    130[39m         new_kwargs[k] = cv.py2rpy(v)
-[32m--> [39m[32m131[39m res = [38;5;28;43msuper[39;49m[43m([49m[43mFunction[49m[43m,[49m[43m [49m[38;5;28;43mself[39;49m[43m)[49m[43m.[49m[34;43m__call__[39;49m[43m([49m[43m*[49m[43mnew_args[49m[43m,[49m[43m [49m[43m*[49m[43m*[49m[43mnew_kwargs[49m[43m)[49m
-[32m    132[39m res = cv.rpy2py(res)
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/pprint.py:161[39m, in [36mPrettyPrinter.pformat[39m[34m(self, object)[39m
+[32m    159[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34mpformat[39m([38;5;28mself[39m, [38;5;28mobject[39m):
+[32m    160[39m     sio = _StringIO()
+[32m--> [39m[32m161[39m     [38;5;28;43mself[39;49m[43m.[49m[43m_format[49m[43m([49m[38;5;28;43mobject[39;49m[43m,[49m[43m [49m[43msio[49m[43m,[49m[43m [49m[32;43m0[39;49m[43m,[49m[43m [49m[32;43m0[39;49m[43m,[49m[43m [49m[43m{[49m[43m}[49m[43m,[49m[43m [49m[32;43m0[39;49m[43m)[49m
+[32m    162[39m     [38;5;28;01mreturn[39;00m sio.getvalue()
 
-[36mFile [39m[32m/opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/rpy2/rinterface_lib/conversion.py:46[39m, in [36m_cdata_res_to_rinterface.<locals>._[39m[34m(*args, **kwargs)[39m
-[32m     45[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34m_[39m(*args, **kwargs):
-[32m---> [39m[32m46[39m     cdata = [43mfunction[49m[43m([49m[43m*[49m[43margs[49m[43m,[49m[43m [49m[43m*[49m[43m*[49m[43mkwargs[49m[43m)[49m
-[32m     47[39m     [38;5;66;03m# TODO: test cdata is of the expected CType[39;00m
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/pprint.py:178[39m, in [36mPrettyPrinter._format[39m[34m(self, object, stream, indent, allowance, context, level)[39m
+[32m    176[39m     [38;5;28mself[39m._readable = [38;5;28;01mFalse[39;00m
+[32m    177[39m     [38;5;28;01mreturn[39;00m
+[32m--> [39m[32m178[39m rep = [38;5;28;43mself[39;49m[43m.[49m[43m_repr[49m[43m([49m[38;5;28;43mobject[39;49m[43m,[49m[43m [49m[43mcontext[49m[43m,[49m[43m [49m[43mlevel[49m[43m)[49m
+[32m    179[39m max_width = [38;5;28mself[39m._width - indent - allowance
+[32m    180[39m [38;5;28;01mif[39;00m [38;5;28mlen[39m(rep) > max_width:
 
-[36mFile [39m[32m/opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/rpy2/rinterface/__init__.py:926[39m, in [36mSexpClosure.__call__[39m[34m(self, *args, **kwargs)[39m
-[32m    925[39m     [38;5;28;01mif[39;00m error_occured[[32m0[39m]:
-[32m--> [39m[32m926[39m         [38;5;28;01mraise[39;00m embedded.RRuntimeError(_rinterface._geterrmessage())
-[32m    927[39m [38;5;28;01mreturn[39;00m res
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/pprint.py:458[39m, in [36mPrettyPrinter._repr[39m[34m(self, object, context, level)[39m
+[32m    457[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34m_repr[39m([38;5;28mself[39m, [38;5;28mobject[39m, context, level):
+[32m--> [39m[32m458[39m     [38;5;28mrepr[39m, readable, recursive = [38;5;28;43mself[39;49m[43m.[49m[43mformat[49m[43m([49m[38;5;28;43mobject[39;49m[43m,[49m[43m [49m[43mcontext[49m[43m.[49m[43mcopy[49m[43m([49m[43m)[49m[43m,[49m
+[32m    459[39m [43m                                            [49m[38;5;28;43mself[39;49m[43m.[49m[43m_depth[49m[43m,[49m[43m [49m[43mlevel[49m[43m)[49m
+[32m    460[39m     [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m readable:
+[32m    461[39m         [38;5;28mself[39m._readable = [38;5;28;01mFalse[39;00m
 
-[31mRRuntimeError[39m: Error in get.theme(parsed$name, ifnot.null(parsed$source, source), env) : 
-  'mako' is not found in the color theme environment
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/sklearn/utils/_pprint.py:191[39m, in [36m_EstimatorPrettyPrinter.format[39m[34m(self, object, context, maxlevels, level)[39m
+[32m    190[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34mformat[39m([38;5;28mself[39m, [38;5;28mobject[39m, context, maxlevels, level):
+[32m--> [39m[32m191[39m     [38;5;28;01mreturn[39;00m [43m_safe_repr[49m[43m([49m
+[32m    192[39m [43m        [49m[38;5;28;43mobject[39;49m[43m,[49m[43m [49m[43mcontext[49m[43m,[49m[43m [49m[43mmaxlevels[49m[43m,[49m[43m [49m[43mlevel[49m[43m,[49m[43m [49m[43mchanged_only[49m[43m=[49m[38;5;28;43mself[39;49m[43m.[49m[43m_changed_only[49m
+[32m    193[39m [43m    [49m[43m)[49m
 
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/sklearn/utils/_pprint.py:440[39m, in [36m_safe_repr[39m[34m(object, context, maxlevels, level, changed_only)[39m
+[32m    438[39m recursive = [38;5;28;01mFalse[39;00m
+[32m    439[39m [38;5;28;01mif[39;00m changed_only:
+[32m--> [39m[32m440[39m     params = [43m_changed_params[49m[43m([49m[38;5;28;43mobject[39;49m[43m)[49m
+[32m    441[39m [38;5;28;01melse[39;00m:
+[32m    442[39m     params = [38;5;28mobject[39m.get_params(deep=[38;5;28;01mFalse[39;00m)
 
-During handling of the above exception, another exception occurred:
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/sklearn/utils/_pprint.py:95[39m, in [36m_changed_params[39m[34m(estimator)[39m
+[32m     91[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34m_changed_params[39m(estimator):
+[32m     92[39m [38;5;250m    [39m[33;03m"""Return dict (param_name: value) of parameters that were given to[39;00m
+[32m     93[39m [33;03m    estimator with non-default values."""[39;00m
+[32m---> [39m[32m95[39m     params = [43mestimator[49m[43m.[49m[43mget_params[49m[43m([49m[43mdeep[49m[43m=[49m[38;5;28;43;01mFalse[39;49;00m[43m)[49m
+[32m     96[39m     init_func = [38;5;28mgetattr[39m(estimator.[34m__init__[39m, [33m"[39m[33mdeprecated_original[39m[33m"[39m, estimator.[34m__init__[39m)
+[32m     97[39m     init_params = inspect.signature(init_func).parameters
 
-[31mRExecutionError[39m                           Traceback (most recent call last)
-[36mCell[39m[36m [39m[32mIn[8][39m[32m, line 2[39m
-[32m      1[39m [38;5;66;03m# Plot individual conditional expectations (ICE) with color encoding[39;00m
-[32m----> [39m[32m2[39m [43mexplainer[49m[43m.[49m[43mconditional[49m[43m([49m[33;43m'[39;49m[33;43mLatitude[39;49m[33;43m'[39;49m[43m)[49m[43m.[49m[43mplot[49m[43m([49m[43mvar_color[49m[43m=[49m[33;43m'[39;49m[33;43mLongitude[39;49m[33;43m'[39;49m[43m,[49m[43m [49m[43mtheme[49m[43m=[49m[33;43m'[39;49m[33;43mmako[39;49m[33;43m'[39;49m[43m)[49m.draw()
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/sklearn/base.py:250[39m, in [36mBaseEstimator.get_params[39m[34m(self, deep)[39m
+[32m    248[39m out = [38;5;28mdict[39m()
+[32m    249[39m [38;5;28;01mfor[39;00m key [38;5;129;01min[39;00m [38;5;28mself[39m._get_param_names():
+[32m--> [39m[32m250[39m     value = [38;5;28;43mgetattr[39;49m[43m([49m[38;5;28;43mself[39;49m[43m,[49m[43m [49m[43mkey[49m[43m)[49m
+[32m    251[39m     [38;5;28;01mif[39;00m deep [38;5;129;01mand[39;00m [38;5;28mhasattr[39m(value, [33m"[39m[33mget_params[39m[33m"[39m) [38;5;129;01mand[39;00m [38;5;129;01mnot[39;00m [38;5;28misinstance[39m(value, [38;5;28mtype[39m):
+[32m    252[39m         deep_items = value.get_params().items()
 
-[36mFile [39m[32m~/work/pyramid-learn/pyramid-learn/src/midlearn/plotting.py:269[39m, in [36mplot_conditional[39m[34m(conditional, style, theme, var_color, dots, reference, **kwargs)[39m
-[32m    267[39m     p += p9.aes(color=var_color)
-[32m    268[39m [38;5;28;01mif[39;00m theme [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
-[32m--> [39m[32m269[39m     p += [43mscale_color_theme[49m[43m([49m[43mtheme[49m[43m)[49m
-[32m    270[39m [38;5;28;01mreturn[39;00m p
-
-[36mFile [39m[32m~/work/pyramid-learn/pyramid-learn/src/midlearn/plotting_theme.py:44[39m, in [36mscale_color_theme[39m[34m(theme, midpoint, **kwargs)[39m
-[32m     39[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34mscale_color_theme[39m(
-[32m     40[39m     theme: [38;5;28mstr[39m | color_theme,
-[32m     41[39m     midpoint: [38;5;28mfloat[39m = [32m0[39m,
-[32m     42[39m     **kwargs
-[32m     43[39m ) -> scale_color_theme_d | scale_color_theme_c:
-[32m---> [39m[32m44[39m     theme = [43mcolor_theme[49m[43m([49m[43mtheme[49m[43m=[49m[43mtheme[49m[43m)[49m
-[32m     45[39m     [38;5;28;01mif[39;00m theme.type == [33m'[39m[33mqualitative[39m[33m'[39m:
-[32m     46[39m         [38;5;28;01mreturn[39;00m scale_color_theme_d(theme=theme, **kwargs)
-
-[36mFile [39m[32m~/work/pyramid-learn/pyramid-learn/src/midlearn/plotting_theme.py:15[39m, in [36mcolor_theme.__init__[39m[34m(self, theme, **kwargs)[39m
-[32m     14[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34m__init__[39m([38;5;28mself[39m, theme: [38;5;28mstr[39m | color_theme, **kwargs):
-[32m---> [39m[32m15[39m     [38;5;28mself[39m._obj = [43m_r_interface[49m[43m.[49m[43m_call_r_color_theme[49m[43m([49m
-[32m     16[39m [43m        [49m[43mtheme[49m[43m [49m[43m=[49m[43m [49m[43mtheme[49m[43m,[49m
-[32m     17[39m [43m        [49m[43m*[49m[43m*[49m[43mkwargs[49m
-[32m     18[39m [43m    [49m[43m)[49m
-[32m     19[39m     [38;5;28mself[39m.name = [38;5;28mself[39m._obj[[33m'[39m[33mname[39m[33m'[39m][[32m0[39m]
-[32m     20[39m     [38;5;28mself[39m.type = [38;5;28mself[39m._obj[[33m'[39m[33mtype[39m[33m'[39m][[32m0[39m]
-
-[36mFile [39m[32m~/work/pyramid-learn/pyramid-learn/src/midlearn/_r_interface.py:242[39m, in [36m_call_r_color_theme[39m[34m(theme, **kwargs)[39m
-[32m    240[39m     [38;5;28;01mreturn[39;00m res
-[32m    241[39m [38;5;28;01mexcept[39;00m RRuntimeError [38;5;28;01mas[39;00m e:
-[32m--> [39m[32m242[39m     [38;5;28;01mraise[39;00m RExecutionError([33mf[39m[33m"[39m[33mError in R[39m[33m'[39m[33ms midr::color_theme() function: [39m[38;5;132;01m{[39;00me[38;5;132;01m}[39;00m[33m"[39m)
-
-[31mRExecutionError[39m: Error in R's midr::color_theme() function: Error in get.theme(parsed$name, ifnot.null(parsed$source, source), env) : 
-  'mako' is not found in the color theme environment
-
+[31mAttributeError[39m: 'MIDExplainer' object has no attribute 'target_classes'
 
