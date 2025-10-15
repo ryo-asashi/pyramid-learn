@@ -1,47 +1,66 @@
 # Configuration file for the Sphinx documentation builder.
-
-import os
-import sys
-sys.path.insert(0, os.path.abspath('../src'))
-
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-# -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+# Imports
 
-project = 'pyramid-learn'
-copyright = '2025, Ryoichi Asashiba'
-author = 'Ryoichi Asashiba'
-release = '0.1.0'
+import sys
+import datetime
+from pathlib import Path
 
-# -- General configuration ---------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+# File Path : (root)/docs/source/conf.py
+
+FILE_PATH = Path(__file__).resolve()
+ROOT_PATH = FILE_PATH.parent.parent.parent
+sys.path.insert(0, str(ROOT_PATH / "src"))
+
+# Project information
+
+project = "pyramid-learn"
+author = "Ryoichi Asashiba"
+copyright = f"{datetime.datetime.now().year}, Ryoichi Asashiba"
+version = (ROOT_PATH / "VERSION.txt").read_text(encoding="utf-8").strip()
+release = version
+
+# General Configuration
+
+needs_sphinx = "2.1.0"
 
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.napoleon',
-    'sphinx_rtd_theme',
-    'myst_nb',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",
+    "sphinx_rtd_theme",
+    "myst_nb",
 ]
 
-templates_path = ['_templates']
+## Options for source files
+
 exclude_patterns = []
 
-autosummary_generate = True
+## Options for templating
 
-intersphinx_mapping = {
-    'sklearn': ('https://scikit-learn.org/stable/', None),
+templates_path = ["_templates"]
+
+# Builder options
+
+## Options for HTML output
+
+html_theme = "sphinx_rtd_theme"
+html_theme_options = {
+    "includehidden": False,
+    "logo_only": True,
 }
+html_logo = "../logo/logo_banner.png"
+html_js_files = ["custom.js"]
+html_static_path = ["_static"]
 
-nb_execute_notebooks = 'off' 
+# Extension options
 
-# -- Options for HTML output -------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
-
-html_theme = 'sphinx_rtd_theme'
-html_static_path = ['_static']
-html_logo = '../logo/logo_banner.png'
-html_css_files = ['custom.css']
+autosummary_generate = True
+intersphinx_mapping = {
+    "sklearn": ("https://scikit-learn.org/stable/", None),
+}
+nb_execute_notebooks = "off"
