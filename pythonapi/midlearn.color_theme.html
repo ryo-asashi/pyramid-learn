@@ -98,24 +98,34 @@
 <h1>midlearn.color_theme<a class="headerlink" href="#midlearn-color-theme" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="midlearn.color_theme">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">midlearn.</span></span><span class="sig-name descname"><span class="pre">color_theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#midlearn.color_theme" title="midlearn.plotting_theme.color_theme"><span class="pre">color_theme</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/midlearn/plotting_theme.html#color_theme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#midlearn.color_theme" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">midlearn.</span></span><span class="sig-name descname"><span class="pre">color_theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#midlearn.color_theme" title="midlearn.plotting_theme.color_theme"><span class="pre">color_theme</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/midlearn/plotting_theme.html#color_theme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#midlearn.color_theme" title="Link to this definition"></a></dt>
 <dd><p>Color themes for graphics.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="midlearn.color_theme.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#midlearn.color_theme" title="midlearn.plotting_theme.color_theme"><span class="pre">color_theme</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/midlearn/plotting_theme.html#color_theme.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#midlearn.color_theme.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#midlearn.color_theme" title="midlearn.plotting_theme.color_theme"><span class="pre">color_theme</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/midlearn/plotting_theme.html#color_theme.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#midlearn.color_theme.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize color theme object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theme</strong> (<em>str</em><em> or </em><em>list</em><em> of </em><em>str</em><em> or </em><a class="reference internal" href="#midlearn.color_theme" title="midlearn.color_theme"><em>color_theme</em></a>) – The name of the theme (str), a list of custom colors (list[str]),
+or an existing color_theme object.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional keyword arguments passed to the <cite>midr::color.theme()</cite> function in R.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#midlearn.color_theme.__init__" title="midlearn.color_theme.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(theme, **kwargs)</p></td>
-<td><p></p></td>
+<td><p>Initialize color theme object</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">palette</span></code>(n)</p></td>
-<td><p></p></td>
+<td><p>Return a list of colors of specified length.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ramp</span></code>(x)</p></td>
-<td><p></p></td>
+<td><p>Return a list of colors based on the specified list of values.</p></td>
 </tr>
 </tbody>
 </table>

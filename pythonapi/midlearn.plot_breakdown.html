@@ -100,16 +100,30 @@
 <dt class="sig sig-object py" id="midlearn.plot_breakdown">
 <span class="sig-prename descclassname"><span class="pre">midlearn.</span></span><span class="sig-name descname"><span class="pre">plot_breakdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">breakdown</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="midlearn.MIDBreakdown.html#midlearn.MIDBreakdown" title="midlearn.MIDBreakdown"><span class="pre">MIDBreakdown</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'waterfall'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'barplot'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'waterfall'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theme</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">pt.color_theme</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_nterms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catchall</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'others'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('%t=%v',</span> <span class="pre">'%t')</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/midlearn/plotting.html#plot_breakdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#midlearn.plot_breakdown" title="Link to this definition"></a></dt>
 <dd><p>Plot MID breakdown with plotnine.</p>
-<p>This is a porting function for <cite>midr::ggmid.mid.breakdown()</cite>.</p>
+<p>Visualize the decomposition of a single prediction into contributions from each component term.
+This is a porting function for the R function <cite>midr::ggmid.mid.breakdown()</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>breakdown</strong> – A MIDBreakdown object.</p></li>
-<li><p><strong>style</strong> – The plotting style. One of “waterfall” or “barplot”.</p></li>
-<li><p><strong>max_nterms</strong> – The maximum number of terms to display.</p></li>
-<li><p><strong>catchall</strong> – The label for the grouped “catchall” category.</p></li>
-<li><p><strong>format</strong> – A tuple of two format strings for main effects and interactions.</p></li>
+<li><p><strong>breakdown</strong> (<a class="reference internal" href="midlearn.MIDBreakdown.html#midlearn.MIDBreakdown" title="midlearn.MIDBreakdown"><em>MIDBreakdown</em></a>) – A fitted <a class="reference internal" href="midlearn.MIDBreakdown.html#midlearn.MIDBreakdown" title="midlearn.MIDBreakdown"><code class="xref py py-class docutils literal notranslate"><span class="pre">MIDBreakdown</span></code></a> object containing the term contributions for a specific data point.</p></li>
+<li><p><strong>style</strong> (<em>{'waterfall'</em><em>, </em><em>'barplot'}</em><em>, </em><em>default 'waterfall'</em>) – The plotting style.
+‘waterfall’ displays contributions as a cascading plot, showing how each term adds to the final prediction, starting from the intercept.
+‘barplot’ displays contributions as simple horizontal bars, relative to zero.</p></li>
+<li><p><strong>theme</strong> (<em>str</em><em> or </em><em>pt.color_theme</em><em> or </em><em>None</em><em>, </em><em>default None</em>) – The color theme to use for the plot.</p></li>
+<li><p><strong>max_nterms</strong> (<em>int</em><em> or </em><em>None</em><em>, </em><em>default 15</em>) – The maximum number of terms to display. Terms beyond this limit are
+grouped into a single ‘catchall’ category. If None, all terms are displayed.</p></li>
+<li><p><strong>catchall</strong> (<em>str</em><em>, </em><em>default 'others'</em>) – The label used for the grouped category when the number of terms exceeds <cite>max_nterms</cite>.</p></li>
+<li><p><strong>format</strong> (<em>tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>, </em><em>default</em><em> (</em><em>'%t=%v'</em><em>, </em><em>'%t'</em><em>)</em>) – A tuple of two format strings for labeling terms on the y-axis.
+The first string is for main effects (e.g., ‘term=value’), and the second is for interaction terms (e.g., ‘term’).
+%t is replaced by the term name, and %v is replaced by the predictor value.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional keyword arguments passed to the main layer of the plot.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A plotnine object representing the breakdown visualization.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>plotnine.ggplot.ggplot</p>
 </dd>
 </dl>
 </dd></dl>

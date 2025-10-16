@@ -97,8 +97,32 @@
 <h1>midlearn.scale_fill_theme<a class="headerlink" href="#midlearn-scale-fill-theme" title="Link to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="midlearn.scale_fill_theme">
-<span class="sig-prename descclassname"><span class="pre">midlearn.</span></span><span class="sig-name descname"><span class="pre">scale_fill_theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="midlearn.color_theme.html#midlearn.color_theme" title="midlearn.plotting_theme.color_theme"><span class="pre">color_theme</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">scale_fill_theme_d</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">scale_fill_theme_c</span></span></span><a class="reference internal" href="../_modules/midlearn/plotting_theme.html#scale_fill_theme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#midlearn.scale_fill_theme" title="Link to this definition"></a></dt>
-<dd><p>Scale of ‘fill’ for plotnine graphics.</p>
+<span class="sig-prename descclassname"><span class="pre">midlearn.</span></span><span class="sig-name descname"><span class="pre">scale_fill_theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_theme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">midpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">scale_fill_theme_d</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">scale_fill_theme_c</span></span></span><a class="reference internal" href="../_modules/midlearn/plotting_theme.html#scale_fill_theme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#midlearn.scale_fill_theme" title="Link to this definition"></a></dt>
+<dd><p>Scale for ‘fill’ aesthetics of plotnine graphics.</p>
+<p>Generate either a discrete or continuous fill scale depending on the theme type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theme</strong> (<em>str</em><em> or </em><em>list</em><em> of </em><em>str</em><em> or </em><a class="reference internal" href="midlearn.color_theme.html#midlearn.color_theme" title="midlearn.color_theme"><em>color_theme</em></a>) – The name of the theme (str), a list of custom colors (list[str]),
+or an existing color_theme object.</p></li>
+<li><p><strong>midpoint</strong> (<em>float</em><em>, </em><em>default 0</em>) – The value used as the center for the ‘diverging’ fill scale.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional keyword arguments passed to the constructor of scales.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <cite>plotnine</cite> color scale object based on the theme’s type.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>scale_fill_theme_d or scale_fill_theme_c</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="midlearn.scale_color_theme.html#midlearn.scale_color_theme" title="midlearn.scale_color_theme"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale_color_theme</span></code></a></dt><dd><p>The corresponding scale function for the ‘color’ aesthetic.</p>
+</dd>
+</dl>
+</div>
 </dd></dl>
 
 </section>

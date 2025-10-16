@@ -100,16 +100,35 @@
 <dt class="sig sig-object py" id="midlearn.plot_conditional">
 <span class="sig-prename descclassname"><span class="pre">midlearn.</span></span><span class="sig-name descname"><span class="pre">plot_conditional</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conditional</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="midlearn.MIDConditional.html#midlearn.MIDConditional" title="midlearn.MIDConditional"><span class="pre">MIDConditional</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'ice'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'centered'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ice'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theme</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">pt.color_theme</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dots</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/midlearn/plotting.html#plot_conditional"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#midlearn.plot_conditional" title="Link to this definition"></a></dt>
 <dd><p>Plot MID conditional expectations with plotnine.</p>
-<p>This is a porting function for <cite>midr::ggmid.mid.conditional()</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>conditional</strong> – A MIDConditional object.</p></li>
-<li><p><strong>style</strong> – The plotting style. One of “ice” or “centered”.</p></li>
-<li><p><strong>var_color</strong> – The name of a column to map to the line color.</p></li>
-<li><p><strong>dots</strong> – If True, plot points for the observed predictions.</p></li>
-<li><p><strong>reference</strong> – The index of the sample point to use for centering the c-ICE plot (0-indexed).</p></li>
-</ul>
+<blockquote>
+<div><p>Visualize Individual Conditional Expectation (ICE) plots or Centered ICE (c-ICE) plots
+to show how the predicted value changes if the specified variable’s value varies across different data points.
+This is a porting function for the R function <cite>midr::ggmid.mid.conditional()</cite>.</p>
+</div></blockquote>
+<dl>
+<dt>Parameters</dt><dd><dl class="simple">
+<dt>conditional<span class="classifier">MIDConditional</span></dt><dd><p>A fitted <a class="reference internal" href="midlearn.MIDConditional.html#midlearn.MIDConditional" title="midlearn.MIDConditional"><code class="xref py py-class docutils literal notranslate"><span class="pre">MIDConditional</span></code></a> object containing the ICE data.</p>
+</dd>
+<dt>style<span class="classifier">{‘ice’, ‘centered’}, default ‘ice’</span></dt><dd><p>The plotting style.
+‘ice’ plots raw predicted values ($hat{y}$) against the predictor variable.
+‘centered’ plots centered predictions ($hat{y} - hat{y}_{ref}$) against the predictor variable,
+where $hat{y}_{ref}$ is the prediction at the <cite>reference</cite> point.</p>
+</dd>
+<dt>theme<span class="classifier">str or pt.color_theme or None, default None</span></dt><dd><p>The color theme to use for the line colors.</p>
+</dd>
+<dt>var_color<span class="classifier">str or None, default None</span></dt><dd><p>The name of a column (from the original data) to map to the color aesthetic of the ICE lines. This helps visualize heterogeneity.</p>
+</dd>
+<dt>dots<span class="classifier">bool, default True</span></dt><dd><p>If True, plots points for the observed (original) predictions for each sample.</p>
+</dd>
+<dt>reference<span class="classifier">int, default 0</span></dt><dd><p>The 0-indexed sample point used as the reference prediction for centering when <cite>style=’centered’</cite> is used.</p>
+</dd>
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs<span class="classifier">dict</span></dt><dd><p>Additional keyword arguments passed to the main layer of the plot.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>plotnine.ggplot.ggplot</dt><dd><p>A plotnine object representing the conditional expectation visualization.</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>

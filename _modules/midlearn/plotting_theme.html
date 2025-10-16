@@ -95,7 +95,21 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="color_theme.__init__">
 <a class="viewcode-back" href="../../pythonapi/midlearn.color_theme.html#midlearn.color_theme.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theme</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">color_theme</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">theme</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="n">color_theme</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize color theme object</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        theme : str or list of str or color_theme</span>
+<span class="sd">            The name of the theme (str), a list of custom colors (list[str]),</span>
+<span class="sd">            or an existing color_theme object.</span>
+<span class="sd">        **kwargs : dict</span>
+<span class="sd">            Additional keyword arguments passed to the `midr::color.theme()` function in R.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span> <span class="o">=</span> <span class="n">_r_interface</span><span class="o">.</span><span class="n">_call_r_color_theme</span><span class="p">(</span>
             <span class="n">theme</span> <span class="o">=</span> <span class="n">theme</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span>
@@ -106,12 +120,42 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_palette</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">[</span><span class="s1">&#39;palette&#39;</span><span class="p">]</span></div>
 
     
-    <span class="k">def</span><span class="w"> </span><span class="nf">palette</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">palette</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">n</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a list of colors of specified length.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n : int</span>
+<span class="sd">            The number of colors to retrieve from the color palette.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[str]</span>
+<span class="sd">            A list of hexadecimal color codes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">_r_interface</span><span class="o">.</span><span class="n">_convert_r_color</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_palette</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">ramp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ramp</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a list of colors based on the specified list of values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : float or list of float</span>
+<span class="sd">            A number, or list of numbers, in the range [0, 1].</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[str]</span>
+<span class="sd">            A list of hexadecimal color codes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
             <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">_r_interface</span><span class="o">.</span><span class="n">_as_r_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;numeric&#39;</span><span class="p">)</span>
@@ -125,11 +169,37 @@
 <div class="viewcode-block" id="scale_color_theme">
 <a class="viewcode-back" href="../../pythonapi/midlearn.scale_color_theme.html#midlearn.scale_color_theme">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">scale_color_theme</span><span class="p">(</span>
-    <span class="n">theme</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">color_theme</span><span class="p">,</span>
+    <span class="n">theme</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="n">color_theme</span><span class="p">,</span>
     <span class="n">midpoint</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">scale_color_theme_d</span> <span class="o">|</span> <span class="n">scale_color_theme_c</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scale of &#39;color&#39; for plotnine graphics.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scale for &#39;color&#39; aesthetics of plotnine graphics.</span>
+
+<span class="sd">    Generate either a discrete or continuous color scale depending on the theme type.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    theme : str or list of str or color_theme</span>
+<span class="sd">        The name of the theme (str), a list of custom colors (list[str]),</span>
+<span class="sd">        or an existing color_theme object.</span>
+<span class="sd">    midpoint : float, default 0</span>
+<span class="sd">        The value used as the center for the &#39;diverging&#39; color scale.</span>
+<span class="sd">    **kwargs : dict</span>
+<span class="sd">        Additional keyword arguments passed to the constructor of scales.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    scale_color_theme_d or scale_color_theme_c</span>
+<span class="sd">        A `plotnine` color scale object based on the theme&#39;s type.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    scale_fill_theme : The corresponding scale function for the &#39;fill&#39; aesthetic.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    If the theme is &#39;qualitative&#39;, it returns :class:`scale_color_theme_d`.</span>
+<span class="sd">    Otherwise, it returns :class:`scale_color_theme_c`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">theme</span> <span class="o">=</span> <span class="n">color_theme</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="n">theme</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">theme</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;qualitative&#39;</span><span class="p">:</span>
@@ -141,15 +211,37 @@
 <div class="viewcode-block" id="scale_fill_theme">
 <a class="viewcode-back" href="../../pythonapi/midlearn.scale_fill_theme.html#midlearn.scale_fill_theme">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">scale_fill_theme</span><span class="p">(</span>
-    <span class="n">theme</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">color_theme</span><span class="p">,</span>
+    <span class="n">theme</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">color_theme</span><span class="p">,</span>
+    <span class="n">midpoint</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">scale_fill_theme_d</span> <span class="o">|</span> <span class="n">scale_fill_theme_c</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scale of &#39;fill&#39; for plotnine graphics.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scale for &#39;fill&#39; aesthetics of plotnine graphics.</span>
+
+<span class="sd">    Generate either a discrete or continuous fill scale depending on the theme type.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    theme : str or list of str or color_theme</span>
+<span class="sd">        The name of the theme (str), a list of custom colors (list[str]),</span>
+<span class="sd">        or an existing color_theme object.</span>
+<span class="sd">    midpoint : float, default 0</span>
+<span class="sd">        The value used as the center for the &#39;diverging&#39; fill scale.</span>
+<span class="sd">    **kwargs : dict</span>
+<span class="sd">        Additional keyword arguments passed to the constructor of scales.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    scale_fill_theme_d or scale_fill_theme_c</span>
+<span class="sd">        A `plotnine` color scale object based on the theme&#39;s type.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    scale_color_theme : The corresponding scale function for the &#39;color&#39; aesthetic.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">theme</span> <span class="o">=</span> <span class="n">color_theme</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="n">theme</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">theme</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;qualitative&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">scale_fill_theme_d</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="n">theme</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">scale_fill_theme_c</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="n">theme</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">scale_fill_theme_c</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="n">theme</span><span class="p">,</span> <span class="n">midpoint</span><span class="o">=</span><span class="n">midpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 

@@ -111,18 +111,44 @@
     <span class="n">resolution</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Plot MID component functions with plotnine.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot MID component functions with plotnine.</span>
 <span class="sd">    </span>
-<span class="sd">    This is a porting function for `midr::ggmid.mid()`.</span>
+<span class="sd">    Visualize the estimated main or interaction effect of a fitted MID model.</span>
+<span class="sd">    This is a porting function for the R function `midr::ggmid.mid()`.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        estimator: A fitted MIDRegressor or MIDExplainer object.</span>
-<span class="sd">        term: The name of the component function to plot.</span>
-<span class="sd">        style: The plotting style. Currently only &quot;effect&quot; is implemented.</span>
-<span class="sd">        intercept: If True, the intercept is added to the MID values.</span>
-<span class="sd">        main_effects: If True, main effects are included in the interaction plot.</span>
-<span class="sd">        resolution: The resolution of the raster plot for interactions.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    estimator : MIDRegressor or MIDExplainer</span>
+<span class="sd">        A fitted MIDRegressor or MIDExplainer object containing the model components.</span>
+<span class="sd">    term : str</span>
+<span class="sd">        The name of the component function (main effect or interaction term) to plot.</span>
+<span class="sd">    style : {&#39;effect&#39;, &#39;data&#39;}, default &#39;effect&#39;</span>
+<span class="sd">        The plotting style. </span>
+<span class="sd">        &#39;effect&#39; plots the estimated component function as a line or a surface. </span>
+<span class="sd">        &#39;data&#39; plots the specified data points (jittered for factor variables) with MID values represented by color.</span>
+<span class="sd">    theme : str or pt.color_theme or None, default None</span>
+<span class="sd">        The color theme to use for the plot.</span>
+<span class="sd">    intercept : bool, default False</span>
+<span class="sd">        If True, the global intercept term is added to the component function values.</span>
+<span class="sd">    main_effects : bool, default False</span>
+<span class="sd">        If True, main effects are included when plotting two-way interaction terms.</span>
+<span class="sd">        Ignored for single-term plots.</span>
+<span class="sd">    data : pandas.DataFrame or None, default None</span>
+<span class="sd">        The data frame to plot. Required only if `style=&#39;data&#39;`.</span>
+<span class="sd">    jitter : float, default 0.3</span>
+<span class="sd">        The amount of jitter to apply to factor variables when `style=&#39;data&#39;` is used.</span>
+<span class="sd">    resolution : int or tuple[int, int], default 100</span>
+<span class="sd">        The resolution (number of grid points) for calculating the effect. </span>
+<span class="sd">        If a single integer, it is used for both axes of a 2D interaction plot. </span>
+<span class="sd">        If a tuple (int, int), it specifies the resolution for the first and </span>
+<span class="sd">        second predictor in an interaction, respectively.</span>
+<span class="sd">    **kwargs : dict</span>
+<span class="sd">        Additional keyword arguments passed to the main layer of the plot.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    plotnine.ggplot.ggplot</span>
+<span class="sd">        A plotnine object representing the visualization of the component function.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">style</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">match_arg</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;effect&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">])</span>
     <span class="n">tags</span> <span class="o">=</span> <span class="n">term</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
@@ -224,15 +250,31 @@
     <span class="n">max_nterms</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Plot MID importance with plotnine.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot MID importance with plotnine.</span>
 <span class="sd">    </span>
-<span class="sd">    This is a porting function for `midr::ggmid.mid.importance()`.</span>
+<span class="sd">    Visualize the importance scores of the component functions from a fitted MID model.</span>
+<span class="sd">    This is a porting function for the R function `midr::ggmid.mid.importance()`.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        importance: A MIDImportance object.</span>
-<span class="sd">        style: The plotting style. One of &quot;barplot&quot; or &quot;heatmap&quot;.</span>
-<span class="sd">        max_nterms: The maximum number of terms to display.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    importance : MIDImportance</span>
+<span class="sd">        A fitted :class:`MIDImportance` object containing the component importance scores.</span>
+<span class="sd">    style : {&#39;barplot&#39;, &#39;heatmap&#39;}, default &#39;barplot&#39;</span>
+<span class="sd">        The plotting style.</span>
+<span class="sd">        &#39;barplot&#39; displays importance as horizontal bars, suitable for a large number of terms.</span>
+<span class="sd">        &#39;heatmap&#39; displays importance in a matrix format, suitable for visualizing main effects and two-way interactions simultaneously.</span>
+<span class="sd">    theme : str or pt.color_theme or None, default None</span>
+<span class="sd">        The color theme to use for the plot.</span>
+<span class="sd">    max_nterms : int or None, default 30</span>
+<span class="sd">        The maximum number of terms to display when `style=&#39;barplot&#39;`. </span>
+<span class="sd">        Terms are sorted by importance before truncation. If None, all terms are displayed.</span>
+<span class="sd">    **kwargs : dict</span>
+<span class="sd">        Additional keyword arguments passed to the main layer of the plot.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    plotnine.ggplot.ggplot</span>
+<span class="sd">        A plotnine object representing the visualization of component importance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">style</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">match_arg</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;barplot&#39;</span><span class="p">,</span> <span class="s1">&#39;heatmap&#39;</span><span class="p">])</span>
     <span class="n">imp_df</span> <span class="o">=</span> <span class="n">importance</span><span class="o">.</span><span class="n">importance</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -285,17 +327,37 @@
     <span class="nb">format</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;%t=%v&#39;</span><span class="p">,</span> <span class="s1">&#39;%t&#39;</span><span class="p">),</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Plot MID breakdown with plotnine.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot MID breakdown with plotnine.</span>
 
-<span class="sd">    This is a porting function for `midr::ggmid.mid.breakdown()`.</span>
+<span class="sd">    Visualize the decomposition of a single prediction into contributions from each component term.</span>
+<span class="sd">    This is a porting function for the R function `midr::ggmid.mid.breakdown()`.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        breakdown: A MIDBreakdown object.</span>
-<span class="sd">        style: The plotting style. One of &quot;waterfall&quot; or &quot;barplot&quot;.</span>
-<span class="sd">        max_nterms: The maximum number of terms to display.</span>
-<span class="sd">        catchall: The label for the grouped &quot;catchall&quot; category.</span>
-<span class="sd">        format: A tuple of two format strings for main effects and interactions.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    breakdown : MIDBreakdown</span>
+<span class="sd">        A fitted :class:`MIDBreakdown` object containing the term contributions for a specific data point.</span>
+<span class="sd">    style : {&#39;waterfall&#39;, &#39;barplot&#39;}, default &#39;waterfall&#39;</span>
+<span class="sd">        The plotting style.</span>
+<span class="sd">        &#39;waterfall&#39; displays contributions as a cascading plot, showing how each term adds to the final prediction, starting from the intercept.</span>
+<span class="sd">        &#39;barplot&#39; displays contributions as simple horizontal bars, relative to zero.</span>
+<span class="sd">    theme : str or pt.color_theme or None, default None</span>
+<span class="sd">        The color theme to use for the plot.</span>
+<span class="sd">    max_nterms : int or None, default 15</span>
+<span class="sd">        The maximum number of terms to display. Terms beyond this limit are </span>
+<span class="sd">        grouped into a single &#39;catchall&#39; category. If None, all terms are displayed.</span>
+<span class="sd">    catchall : str, default &#39;others&#39;</span>
+<span class="sd">        The label used for the grouped category when the number of terms exceeds `max_nterms`.</span>
+<span class="sd">    format : tuple[str, str], default (&#39;%t=%v&#39;, &#39;%t&#39;)</span>
+<span class="sd">        A tuple of two format strings for labeling terms on the y-axis.</span>
+<span class="sd">        The first string is for main effects (e.g., &#39;term=value&#39;), and the second is for interaction terms (e.g., &#39;term&#39;).</span>
+<span class="sd">        %t is replaced by the term name, and %v is replaced by the predictor value.</span>
+<span class="sd">    **kwargs : dict</span>
+<span class="sd">        Additional keyword arguments passed to the main layer of the plot.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    plotnine.ggplot.ggplot</span>
+<span class="sd">        A plotnine object representing the breakdown visualization.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">style</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">match_arg</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;waterfall&#39;</span><span class="p">,</span> <span class="s1">&#39;barplot&#39;</span><span class="p">])</span>
     <span class="n">brk_df</span> <span class="o">=</span> <span class="n">breakdown</span><span class="o">.</span><span class="n">breakdown</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -358,17 +420,36 @@
     <span class="n">reference</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Plot MID conditional expectations with plotnine.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot MID conditional expectations with plotnine.</span>
 <span class="sd">    </span>
-<span class="sd">    This is a porting function for `midr::ggmid.mid.conditional()`.</span>
+<span class="sd">    Visualize Individual Conditional Expectation (ICE) plots or Centered ICE (c-ICE) plots</span>
+<span class="sd">    to show how the predicted value changes if the specified variable&#39;s value varies across different data points.</span>
+<span class="sd">    This is a porting function for the R function `midr::ggmid.mid.conditional()`.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        conditional: A MIDConditional object.</span>
-<span class="sd">        style: The plotting style. One of &quot;ice&quot; or &quot;centered&quot;.</span>
-<span class="sd">        var_color: The name of a column to map to the line color.</span>
-<span class="sd">        dots: If True, plot points for the observed predictions.</span>
-<span class="sd">        reference: The index of the sample point to use for centering the c-ICE plot (0-indexed).</span>
+<span class="sd">Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    conditional : MIDConditional</span>
+<span class="sd">        A fitted :class:`MIDConditional` object containing the ICE data.</span>
+<span class="sd">    style : {&#39;ice&#39;, &#39;centered&#39;}, default &#39;ice&#39;</span>
+<span class="sd">        The plotting style.</span>
+<span class="sd">        &#39;ice&#39; plots raw predicted values ($\hat{y}$) against the predictor variable.</span>
+<span class="sd">        &#39;centered&#39; plots centered predictions ($\hat{y} - \hat{y}_{ref}$) against the predictor variable,</span>
+<span class="sd">        where $\hat{y}_{ref}$ is the prediction at the `reference` point.</span>
+<span class="sd">    theme : str or pt.color_theme or None, default None</span>
+<span class="sd">        The color theme to use for the line colors.</span>
+<span class="sd">    var_color : str or None, default None</span>
+<span class="sd">        The name of a column (from the original data) to map to the color aesthetic of the ICE lines. This helps visualize heterogeneity.</span>
+<span class="sd">    dots : bool, default True</span>
+<span class="sd">        If True, plots points for the observed (original) predictions for each sample.</span>
+<span class="sd">    reference : int, default 0</span>
+<span class="sd">        The 0-indexed sample point used as the reference prediction for centering when `style=&#39;centered&#39;` is used.</span>
+<span class="sd">    **kwargs : dict</span>
+<span class="sd">        Additional keyword arguments passed to the main layer of the plot.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    plotnine.ggplot.ggplot</span>
+<span class="sd">        A plotnine object representing the conditional expectation visualization.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">style</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">match_arg</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;ice&#39;</span><span class="p">,</span> <span class="s1">&#39;centered&#39;</span><span class="p">])</span>
     <span class="n">variable</span> <span class="o">=</span> <span class="n">conditional</span><span class="o">.</span><span class="n">variable</span>
