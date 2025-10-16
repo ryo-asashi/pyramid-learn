@@ -232,14 +232,18 @@ def _extract_and_convert(
 
 
 def _call_r_color_theme(
-    theme: str | color_theme,
+    theme: str | list[str] | color_theme,
     **kwargs
 ) -> object:
     """ Wrapper function for midr::color.theme() """
-    r_kwargs = {
-        'object': theme if isinstance(theme, str) else theme._obj,
-        **kwargs
-    }
+    r_kwargs = {**kwargs}
+    if isinstance(theme, str):
+        r_kwargs['object'] = theme
+    elif isinstance(theme, list):
+        r_kwargs['object'] = _as_r_vector(theme, mode='character')
+        r_kwargs.setdefault('name', 'newtheme')
+    else:
+        r_kwargs['object'] = theme._obj
     try:
         with conversion.localconverter(pandas2ri.converter + numpy2ri.converter + cv):
             res = midr.color_theme(**r_kwargs)

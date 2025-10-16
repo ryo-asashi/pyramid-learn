@@ -31,18 +31,44 @@ def plot_effect(
     resolution: int | tuple[int, int] = 100,
     **kwargs
 ):
-    """
-    Plot MID component functions with plotnine.
+    """Plot MID component functions with plotnine.
     
-    This is a porting function for `midr::ggmid.mid()`.
+    Visualize the estimated main or interaction effect of a fitted MID model.
+    This is a porting function for the R function `midr::ggmid.mid()`.
 
-    Args:
-        estimator: A fitted MIDRegressor or MIDExplainer object.
-        term: The name of the component function to plot.
-        style: The plotting style. Currently only "effect" is implemented.
-        intercept: If True, the intercept is added to the MID values.
-        main_effects: If True, main effects are included in the interaction plot.
-        resolution: The resolution of the raster plot for interactions.
+    Parameters
+    ----------
+    estimator : MIDRegressor or MIDExplainer
+        A fitted MIDRegressor or MIDExplainer object containing the model components.
+    term : str
+        The name of the component function (main effect or interaction term) to plot.
+    style : {'effect', 'data'}, default 'effect'
+        The plotting style. 
+        'effect' plots the estimated component function as a line or a surface. 
+        'data' plots the specified data points (jittered for factor variables) with MID values represented by color.
+    theme : str or pt.color_theme or None, default None
+        The color theme to use for the plot.
+    intercept : bool, default False
+        If True, the global intercept term is added to the component function values.
+    main_effects : bool, default False
+        If True, main effects are included when plotting two-way interaction terms.
+        Ignored for single-term plots.
+    data : pandas.DataFrame or None, default None
+        The data frame to plot. Required only if `style='data'`.
+    jitter : float, default 0.3
+        The amount of jitter to apply to factor variables when `style='data'` is used.
+    resolution : int or tuple[int, int], default 100
+        The resolution (number of grid points) for calculating the effect. 
+        If a single integer, it is used for both axes of a 2D interaction plot. 
+        If a tuple (int, int), it specifies the resolution for the first and 
+        second predictor in an interaction, respectively.
+    **kwargs : dict
+        Additional keyword arguments passed to the main layer of the plot.
+    
+    Returns
+    -------
+    plotnine.ggplot.ggplot
+        A plotnine object representing the visualization of the component function.
     """
     style = utils.match_arg(style, ['effect', 'data'])
     tags = term.split(':')
@@ -141,15 +167,31 @@ def plot_importance(
     max_nterms: int | None = 30,
     **kwargs
 ):
-    """
-    Plot MID importance with plotnine.
+    """Plot MID importance with plotnine.
     
-    This is a porting function for `midr::ggmid.mid.importance()`.
+    Visualize the importance scores of the component functions from a fitted MID model.
+    This is a porting function for the R function `midr::ggmid.mid.importance()`.
 
-    Args:
-        importance: A MIDImportance object.
-        style: The plotting style. One of "barplot" or "heatmap".
-        max_nterms: The maximum number of terms to display.
+    Parameters
+    ----------
+    importance : MIDImportance
+        A fitted :class:`MIDImportance` object containing the component importance scores.
+    style : {'barplot', 'heatmap'}, default 'barplot'
+        The plotting style.
+        'barplot' displays importance as horizontal bars, suitable for a large number of terms.
+        'heatmap' displays importance in a matrix format, suitable for visualizing main effects and two-way interactions simultaneously.
+    theme : str or pt.color_theme or None, default None
+        The color theme to use for the plot.
+    max_nterms : int or None, default 30
+        The maximum number of terms to display when `style='barplot'`. 
+        Terms are sorted by importance before truncation. If None, all terms are displayed.
+    **kwargs : dict
+        Additional keyword arguments passed to the main layer of the plot.
+
+    Returns
+    -------
+    plotnine.ggplot.ggplot
+        A plotnine object representing the visualization of component importance.
     """
     style = utils.match_arg(style, ['barplot', 'heatmap'])
     imp_df = importance.importance.copy()
@@ -199,17 +241,37 @@ def plot_breakdown(
     format: tuple[str, str] = ('%t=%v', '%t'),
     **kwargs
 ):
-    """
-    Plot MID breakdown with plotnine.
+    """Plot MID breakdown with plotnine.
 
-    This is a porting function for `midr::ggmid.mid.breakdown()`.
+    Visualize the decomposition of a single prediction into contributions from each component term.
+    This is a porting function for the R function `midr::ggmid.mid.breakdown()`.
 
-    Args:
-        breakdown: A MIDBreakdown object.
-        style: The plotting style. One of "waterfall" or "barplot".
-        max_nterms: The maximum number of terms to display.
-        catchall: The label for the grouped "catchall" category.
-        format: A tuple of two format strings for main effects and interactions.
+    Parameters
+    ----------
+    breakdown : MIDBreakdown
+        A fitted :class:`MIDBreakdown` object containing the term contributions for a specific data point.
+    style : {'waterfall', 'barplot'}, default 'waterfall'
+        The plotting style.
+        'waterfall' displays contributions as a cascading plot, showing how each term adds to the final prediction, starting from the intercept.
+        'barplot' displays contributions as simple horizontal bars, relative to zero.
+    theme : str or pt.color_theme or None, default None
+        The color theme to use for the plot.
+    max_nterms : int or None, default 15
+        The maximum number of terms to display. Terms beyond this limit are 
+        grouped into a single 'catchall' category. If None, all terms are displayed.
+    catchall : str, default 'others'
+        The label used for the grouped category when the number of terms exceeds `max_nterms`.
+    format : tuple[str, str], default ('%t=%v', '%t')
+        A tuple of two format strings for labeling terms on the y-axis.
+        The first string is for main effects (e.g., 'term=value'), and the second is for interaction terms (e.g., 'term').
+        %t is replaced by the term name, and %v is replaced by the predictor value.
+    **kwargs : dict
+        Additional keyword arguments passed to the main layer of the plot.
+
+    Returns
+    -------
+    plotnine.ggplot.ggplot
+        A plotnine object representing the breakdown visualization.
     """
     style = utils.match_arg(style, ['waterfall', 'barplot'])
     brk_df = breakdown.breakdown.copy()
@@ -269,17 +331,36 @@ def plot_conditional(
     reference: int = 0,
     **kwargs
 ):
-    """
-    Plot MID conditional expectations with plotnine.
+    """Plot MID conditional expectations with plotnine.
     
-    This is a porting function for `midr::ggmid.mid.conditional()`.
+    Visualize Individual Conditional Expectation (ICE) plots or Centered ICE (c-ICE) plots
+    to show how the predicted value changes if the specified variable's value varies across different data points.
+    This is a porting function for the R function `midr::ggmid.mid.conditional()`.
 
-    Args:
-        conditional: A MIDConditional object.
-        style: The plotting style. One of "ice" or "centered".
-        var_color: The name of a column to map to the line color.
-        dots: If True, plot points for the observed predictions.
-        reference: The index of the sample point to use for centering the c-ICE plot (0-indexed).
+Parameters
+    ----------
+    conditional : MIDConditional
+        A fitted :class:`MIDConditional` object containing the ICE data.
+    style : {'ice', 'centered'}, default 'ice'
+        The plotting style.
+        'ice' plots raw predicted values ($\hat{y}$) against the predictor variable.
+        'centered' plots centered predictions ($\hat{y} - \hat{y}_{ref}$) against the predictor variable,
+        where $\hat{y}_{ref}$ is the prediction at the `reference` point.
+    theme : str or pt.color_theme or None, default None
+        The color theme to use for the line colors.
+    var_color : str or None, default None
+        The name of a column (from the original data) to map to the color aesthetic of the ICE lines. This helps visualize heterogeneity.
+    dots : bool, default True
+        If True, plots points for the observed (original) predictions for each sample.
+    reference : int, default 0
+        The 0-indexed sample point used as the reference prediction for centering when `style='centered'` is used.
+    **kwargs : dict
+        Additional keyword arguments passed to the main layer of the plot.
+
+    Returns
+    -------
+    plotnine.ggplot.ggplot
+        A plotnine object representing the conditional expectation visualization.
     """
     style = utils.match_arg(style, ['ice', 'centered'])
     variable = conditional.variable

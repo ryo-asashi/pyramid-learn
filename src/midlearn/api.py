@@ -414,7 +414,7 @@ class MIDImportance(object):
         estimator: MIDRegressor | MIDExplainer,
         **kwargs
     ):
-        """Initializes the MIDImportance object.
+        """Initialize the MIDImportance object.
 
         Parameters
         ----------
@@ -456,7 +456,7 @@ class MIDBreakdown(object):
         row: int | None = None,
         **kwargs
     ):
-        """Initializes the MIDBreakdown object.
+        """Initialize the MIDBreakdown object.
 
         Parameters
         ----------
@@ -497,7 +497,7 @@ class MIDBreakdown(object):
 
 class MIDConditional(object):
     """
-    Class for MID Conditional.
+    Class for MID Conditional Expectations.
 
     This object is returned by the `MIDRegressor.conditional()` method and
     contains data for plotting conditional dependence.
@@ -508,7 +508,7 @@ class MIDConditional(object):
         variable: str,
         **kwargs
     ):
-        """Initializes the MIDConditional object.
+        """Initialize the MIDConditional object.
 
         Parameters
         ----------
