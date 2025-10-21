@@ -112,9 +112,7 @@
     <span class="n">resolution</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot MID component functions with plotnine.</span>
-<span class="sd">    </span>
-<span class="sd">    Visualize the estimated main or interaction effect of a fitted MID model.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Visualize the estimated main or interaction effect of a fitted MID model with plotnine.</span>
 <span class="sd">    This is a porting function for the R function `midr::ggmid.mid()`.</span>
 
 <span class="sd">    Parameters</span>
@@ -251,9 +249,7 @@
     <span class="n">max_nterms</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot MID importance with plotnine.</span>
-<span class="sd">    </span>
-<span class="sd">    Visualize the importance scores of the component functions from a fitted MID model.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Visualize the importance scores of the component functions from a fitted MID model with plotnine.</span>
 <span class="sd">    This is a porting function for the R function `midr::ggmid.mid.importance()`.</span>
 
 <span class="sd">    Parameters</span>
@@ -328,9 +324,7 @@
     <span class="nb">format</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;%t=%v&#39;</span><span class="p">,</span> <span class="s1">&#39;%t&#39;</span><span class="p">),</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot MID breakdown with plotnine.</span>
-
-<span class="sd">    Visualize the decomposition of a single prediction into contributions from each component term.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Visualize the decomposition of a single prediction into contributions from each component term with plotnine.</span>
 <span class="sd">    This is a porting function for the R function `midr::ggmid.mid.breakdown()`.</span>
 
 <span class="sd">    Parameters</span>
@@ -421,9 +415,7 @@
     <span class="n">reference</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot MID conditional expectations with plotnine.</span>
-<span class="sd">    </span>
-<span class="sd">    Visualize Individual Conditional Expectation (ICE) plots or Centered ICE (c-ICE) plots</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Visualize Individual Conditional Expectation (ICE) plots or Centered ICE (c-ICE) plots with plotnine.</span>
 <span class="sd">    to show how the predicted value changes if the specified variable&#39;s value varies across different data points.</span>
 <span class="sd">    This is a porting function for the R function `midr::ggmid.mid.conditional()`.</span>
 

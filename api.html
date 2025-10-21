@@ -113,10 +113,10 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="pythonapi/midlearn.MIDRegressor.html#midlearn.MIDRegressor" title="midlearn.MIDRegressor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MIDRegressor</span></code></a>([params_main, params_inter, ...])</p></td>
-<td><p>Class for stand-alone Maximum Interpretation Decomposition models.</p></td>
+<td><p>Stand-alone Maximum Interpretation Decomposition regressor.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="pythonapi/midlearn.MIDExplainer.html#midlearn.MIDExplainer" title="midlearn.MIDExplainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MIDExplainer</span></code></a>(estimator[, target_classes, ...])</p></td>
-<td><p>Class for surrogate Maximium Interpretation Decomposition models.</p></td>
+<td><p>Surrogate Maximium Interpretation Decomposition explainer.</p></td>
 </tr>
 </tbody>
 </table>
@@ -126,13 +126,13 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="pythonapi/midlearn.MIDImportance.html#midlearn.MIDImportance" title="midlearn.MIDImportance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MIDImportance</span></code></a>(estimator, **kwargs)</p></td>
-<td><p>Class for MID Importance.</p></td>
+<td><p>MID Importance.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="pythonapi/midlearn.MIDBreakdown.html#midlearn.MIDBreakdown" title="midlearn.MIDBreakdown"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MIDBreakdown</span></code></a>(estimator[, row])</p></td>
-<td><p>Class for MID Breakdown.</p></td>
+<td><p>MID Breakdown.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="pythonapi/midlearn.MIDConditional.html#midlearn.MIDConditional" title="midlearn.MIDConditional"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MIDConditional</span></code></a>(estimator, variable, **kwargs)</p></td>
-<td><p>Class for MID Conditional Expectations.</p></td>
+<td><p>MID Conditional Expectations.</p></td>
 </tr>
 </tbody>
 </table>
@@ -142,16 +142,16 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="pythonapi/midlearn.plot_effect.html#midlearn.plot_effect" title="midlearn.plot_effect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_effect</span></code></a>(estimator, term[, style, theme, ...])</p></td>
-<td><p>Plot MID component functions with plotnine.</p></td>
+<td><p>Visualize the estimated main or interaction effect of a fitted MID model with plotnine.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="pythonapi/midlearn.plot_importance.html#midlearn.plot_importance" title="midlearn.plot_importance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_importance</span></code></a>(importance[, style, theme, ...])</p></td>
-<td><p>Plot MID importance with plotnine.</p></td>
+<td><p>Visualize the importance scores of the component functions from a fitted MID model with plotnine.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="pythonapi/midlearn.plot_breakdown.html#midlearn.plot_breakdown" title="midlearn.plot_breakdown"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_breakdown</span></code></a>(breakdown[, style, theme, ...])</p></td>
-<td><p>Plot MID breakdown with plotnine.</p></td>
+<td><p>Visualize the decomposition of a single prediction into contributions from each component term with plotnine.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="pythonapi/midlearn.plot_conditional.html#midlearn.plot_conditional" title="midlearn.plot_conditional"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_conditional</span></code></a>(conditional[, style, ...])</p></td>
-<td><p>Plot MID conditional expectations with plotnine.</p></td>
+<td><p>Visualize Individual Conditional Expectation (ICE) plots or Centered ICE (c-ICE) plots with plotnine.</p></td>
 </tr>
 </tbody>
 </table>

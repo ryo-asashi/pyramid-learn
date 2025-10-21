@@ -93,7 +93,7 @@
 <div class="viewcode-block" id="MIDRegressor">
 <a class="viewcode-back" href="../../pythonapi/midlearn.MIDRegressor.html#midlearn.MIDRegressor">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MIDRegressor</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">RegressorMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for stand-alone Maximum Interpretation Decomposition models.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stand-alone Maximum Interpretation Decomposition regressor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="MIDRegressor.__init__">
 <a class="viewcode-back" href="../../pythonapi/midlearn.MIDRegressor.html#midlearn.MIDRegressor.__init__">[docs]</a>
@@ -342,7 +342,7 @@
 <div class="viewcode-block" id="MIDExplainer">
 <a class="viewcode-back" href="../../pythonapi/midlearn.MIDExplainer.html#midlearn.MIDExplainer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MIDExplainer</span><span class="p">(</span><span class="n">MIDRegressor</span><span class="p">,</span> <span class="n">MetaEstimatorMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for surrogate Maximium Interpretation Decomposition models.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Surrogate Maximium Interpretation Decomposition explainer.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="MIDExplainer.__init__">
 <a class="viewcode-back" href="../../pythonapi/midlearn.MIDExplainer.html#midlearn.MIDExplainer.__init__">[docs]</a>
@@ -497,7 +497,7 @@
 <div class="viewcode-block" id="MIDImportance">
 <a class="viewcode-back" href="../../pythonapi/midlearn.MIDImportance.html#midlearn.MIDImportance">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MIDImportance</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for MID Importance.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;MID Importance.</span>
 
 <span class="sd">    This object is returned by the `MIDRegressor.importance()` method and holds</span>
 <span class="sd">    the results of the feature importance calculation.</span>
@@ -544,7 +544,7 @@
 <div class="viewcode-block" id="MIDBreakdown">
 <a class="viewcode-back" href="../../pythonapi/midlearn.MIDBreakdown.html#midlearn.MIDBreakdown">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MIDBreakdown</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for MID Breakdown.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;MID Breakdown.</span>
 
 <span class="sd">    This object is returned by the `MIDRegressor.breakdown()` method and provides</span>
 <span class="sd">    a detailed breakdown of a single prediction.</span>
@@ -602,7 +602,7 @@
 <a class="viewcode-back" href="../../pythonapi/midlearn.MIDConditional.html#midlearn.MIDConditional">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MIDConditional</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class for MID Conditional Expectations.</span>
+<span class="sd">    MID Conditional Expectations.</span>
 
 <span class="sd">    This object is returned by the `MIDRegressor.conditional()` method and</span>
 <span class="sd">    contains data for plotting conditional dependence.</span>
