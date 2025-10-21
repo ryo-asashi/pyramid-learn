@@ -12,7 +12,7 @@ from sklearn.metrics import r2_score
 from . import _r_interface
 
 class MIDRegressor(BaseEstimator, RegressorMixin):
-    """Class for stand-alone Maximum Interpretation Decomposition models.
+    """Stand-alone Maximum Interpretation Decomposition regressor.
     """
     def __init__(
         self,
@@ -255,7 +255,7 @@ class MIDRegressor(BaseEstimator, RegressorMixin):
 
 
 class MIDExplainer(MIDRegressor, MetaEstimatorMixin):
-    """Class for surrogate Maximium Interpretation Decomposition models.
+    """Surrogate Maximium Interpretation Decomposition explainer.
     """
     def __init__(
         self,
@@ -404,7 +404,7 @@ class MIDExplainer(MIDRegressor, MetaEstimatorMixin):
 
 
 class MIDImportance(object):
-    """Class for MID Importance.
+    """MID Importance.
 
     This object is returned by the `MIDRegressor.importance()` method and holds
     the results of the feature importance calculation.
@@ -445,7 +445,7 @@ class MIDImportance(object):
 
 
 class MIDBreakdown(object):
-    """Class for MID Breakdown.
+    """MID Breakdown.
 
     This object is returned by the `MIDRegressor.breakdown()` method and provides
     a detailed breakdown of a single prediction.
@@ -497,7 +497,7 @@ class MIDBreakdown(object):
 
 class MIDConditional(object):
     """
-    Class for MID Conditional Expectations.
+    MID Conditional Expectations.
 
     This object is returned by the `MIDRegressor.conditional()` method and
     contains data for plotting conditional dependence.

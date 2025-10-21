@@ -31,9 +31,7 @@ def plot_effect(
     resolution: int | tuple[int, int] = 100,
     **kwargs
 ):
-    """Plot MID component functions with plotnine.
-    
-    Visualize the estimated main or interaction effect of a fitted MID model.
+    """Visualize the estimated main or interaction effect of a fitted MID model with plotnine.
     This is a porting function for the R function `midr::ggmid.mid()`.
 
     Parameters
@@ -167,9 +165,7 @@ def plot_importance(
     max_nterms: int | None = 30,
     **kwargs
 ):
-    """Plot MID importance with plotnine.
-    
-    Visualize the importance scores of the component functions from a fitted MID model.
+    """Visualize the importance scores of the component functions from a fitted MID model with plotnine.
     This is a porting function for the R function `midr::ggmid.mid.importance()`.
 
     Parameters
@@ -241,9 +237,7 @@ def plot_breakdown(
     format: tuple[str, str] = ('%t=%v', '%t'),
     **kwargs
 ):
-    """Plot MID breakdown with plotnine.
-
-    Visualize the decomposition of a single prediction into contributions from each component term.
+    """Visualize the decomposition of a single prediction into contributions from each component term with plotnine.
     This is a porting function for the R function `midr::ggmid.mid.breakdown()`.
 
     Parameters
@@ -331,9 +325,7 @@ def plot_conditional(
     reference: int = 0,
     **kwargs
 ):
-    """Plot MID conditional expectations with plotnine.
-    
-    Visualize Individual Conditional Expectation (ICE) plots or Centered ICE (c-ICE) plots
+    """Visualize Individual Conditional Expectation (ICE) plots or Centered ICE (c-ICE) plots with plotnine.
     to show how the predicted value changes if the specified variable's value varies across different data points.
     This is a porting function for the R function `midr::ggmid.mid.conditional()`.
 
