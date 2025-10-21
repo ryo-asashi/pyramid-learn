@@ -54,6 +54,7 @@ html_theme_options = {
     "logo_only": True,
 }
 html_logo = "../logo/logo_banner.png"
+html_favicon = "../logo/logo_favicon.ico"
 html_js_files = ["custom.js"]
 html_static_path = ["_static"]
 

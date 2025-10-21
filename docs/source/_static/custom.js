@@ -14,7 +14,7 @@ $(() => {
     /* Apply Custom CSS */
     const customCss = `
         .wy-side-nav-search {
-            background-color: #0c283b !important;
+            background-color: #8497B0 !important;
         }
     `;
     $('<style>').text(customCss).appendTo('body');
