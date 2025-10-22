@@ -326,10 +326,9 @@ def plot_conditional(
     **kwargs
 ):
     """Visualize Individual Conditional Expectation (ICE) plots or Centered ICE (c-ICE) plots with plotnine.
-    to show how the predicted value changes if the specified variable's value varies across different data points.
     This is a porting function for the R function `midr::ggmid.mid.conditional()`.
 
-Parameters
+    Parameters
     ----------
     conditional : MIDConditional
         A fitted :class:`MIDConditional` object containing the ICE data.
