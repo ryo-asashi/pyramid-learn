@@ -89,7 +89,7 @@
 <p>Here’s a basic example of how to use <strong>pyramid-learn</strong>, or <strong>midlearn</strong>, to explain a trained LightGBM model, utilizing the familiar scikit-learn API.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_california_housing</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_config</span>
@@ -99,16 +99,10 @@
 
 <span class="c1"># Set up plotnine theme for clean visualizations</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">plotnine</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">p9</span>
-<span class="n">p9</span><span class="o">.</span><span class="n">theme_set</span><span class="p">(</span><span class="n">p9</span><span class="o">.</span><span class="n">theme_bw</span><span class="p">())</span>
+<span class="n">p9</span><span class="o">.</span><span class="n">theme_set</span><span class="p">(</span><span class="n">p9</span><span class="o">.</span><span class="n">theme_bw</span><span class="p">(</span><span class="n">base_family</span><span class="o">=</span><span class="s1">&#39;Serif&#39;</span><span class="p">))</span>
 
 <span class="c1"># Configure scikit-learn display</span>
 <span class="n">set_config</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="s1">&#39;text&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error importing in API mode: ImportError(&#39;On Windows, cffi mode &quot;ANY&quot; is only &quot;ABI&quot;.&#39;)
-Trying to import in ABI mode.
 </pre></div>
 </div>
 </div>
@@ -118,7 +112,7 @@ Trying to import in ABI mode.
 <p>We use the California Housing dataset to train a LightGBM Regressor, which will serve as our black-box model.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load and prepare data</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load and prepare data</span>
 <span class="n">housing</span> <span class="o">=</span> <span class="n">fetch_california_housing</span><span class="p">()</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">housing</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">housing</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">housing</span><span class="o">.</span><span class="n">target</span>
@@ -133,7 +127,7 @@ Trying to import in ABI mode.
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000510 seconds.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000945 seconds.
 You can set `force_col_wise=true` to remove the overhead.
 [LightGBM] [Info] Total Bins 1838
 [LightGBM] [Info] Number of data points in the train set: 15480, number of used features: 8
@@ -149,12 +143,12 @@ LGBMRegressor(random_state=42)
 <p>We fit the <code class="docutils literal notranslate"><span class="pre">MIDExplainer</span></code> to the training data to create a globally faithful, interpretable surrogate model (MID).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize and fit the MID model</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize and fit the MID model</span>
 <span class="n">explainer</span> <span class="o">=</span> <span class="n">mid</span><span class="o">.</span><span class="n">MIDExplainer</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span>
     <span class="n">interaction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">params_main</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span>
-    <span class="n">penalty</span><span class="o">=</span><span class="mf">.01</span><span class="p">,</span>
+    <span class="n">params_main</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">penalty</span><span class="o">=</span><span class="mf">.05</span><span class="p">,</span>
     <span class="n">singular_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">explainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
@@ -165,21 +159,23 @@ LGBMRegressor(random_state=42)
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Generating predictions from the estimator...
-MIDExplainer(estimator=LGBMRegressor(random_state=42), params_main=70,
-             penalty=0.01)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MIDExplainer(estimator=LGBMRegressor(random_state=42), params_main=100,
+             penalty=0.05)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the fidelity of the surrogate model to the original model</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the fidelity of the surrogate model to the original model</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R-squared score:&quot;</span><span class="p">,</span> <span class="n">explainer</span><span class="o">.</span><span class="n">fidelity_score</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
 
 <span class="c1"># Visualize the fidelity</span>
 <span class="n">p</span> <span class="o">=</span> <span class="n">p9</span><span class="o">.</span><span class="n">ggplot</span><span class="p">()</span> \
     <span class="o">+</span> <span class="n">p9</span><span class="o">.</span><span class="n">geom_abline</span><span class="p">(</span><span class="n">slope</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span> \
-    <span class="o">+</span> <span class="n">p9</span><span class="o">.</span><span class="n">geom_point</span><span class="p">(</span><span class="n">p9</span><span class="o">.</span><span class="n">aes</span><span class="p">(</span><span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span> <span class="n">explainer</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span> \
+    <span class="o">+</span> <span class="n">p9</span><span class="o">.</span><span class="n">geom_point</span><span class="p">(</span><span class="n">p9</span><span class="o">.</span><span class="n">aes</span><span class="p">(</span><span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span> <span class="n">explainer</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> \
     <span class="o">+</span> <span class="n">p9</span><span class="o">.</span><span class="n">labs</span><span class="p">(</span>
         <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Prediction (LightGBM Regressor)&#39;</span><span class="p">,</span>
         <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Prediction (Surrogate MID Regressor)&#39;</span><span class="p">,</span>
@@ -191,10 +187,88 @@ MIDExplainer(estimator=LGBMRegressor(random_state=42), params_main=70,
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Generating predictions from the estimator...
-R-squared score: 0.955195534503637
 </pre></div>
 </div>
-<img alt="_images/746c72fd3fd2143fd8c0c1870f46f863302db4defebe24acf14da4011f8d72e7.png" src="_images/746c72fd3fd2143fd8c0c1870f46f863302db4defebe24acf14da4011f8d72e7.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R-squared score: 0.9493631147465892
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Font family &#39;Serif&#39; not found.
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/9bf01e629229c9280fab571178924b78a4bc480b5a980aa0b424312a5b8e78bd.png"><img alt="_images/9bf01e629229c9280fab571178924b78a4bc480b5a980aa0b424312a5b8e78bd.png" src="_images/9bf01e629229c9280fab571178924b78a4bc480b5a980aa0b424312a5b8e78bd.png" style="width: 640px; height: 480px;" />
+</a>
 </div>
 </div>
 </section>
@@ -203,102 +277,193 @@ R-squared score: 0.955195534503637
 <p>The MID model allows for clear visualization of feature importance, individual effects, and local prediction breakdowns.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate and plot overall feature importance (default bar plot and heatmap)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate and plot overall feature importance (default bar plot and heatmap)</span>
 <span class="n">imp</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">importance</span><span class="p">()</span>
-<span class="n">display</span><span class="p">(</span><span class="n">imp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="s1">&#39;highlight&#39;</span><span class="p">))</span>
-<span class="n">display</span><span class="p">(</span><span class="n">imp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;heatmap&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#808080&#39;</span><span class="p">))</span>
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">imp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">max_nterms</span><span class="o">=</span><span class="mi">20</span>
+    <span class="p">)</span> <span class="o">+</span>
+    <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;Importance Plot&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">imp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">style</span><span class="o">=</span><span class="s1">&#39;heatmap&#39;</span>
+    <span class="p">)</span> <span class="o">+</span>
+    <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;Importance Heatmap&quot;</span><span class="p">)</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/f4640ab77cd14dd701249464bca2aef4abd5d6aa90034c017863f2a5b8edbbcd.png" src="_images/f4640ab77cd14dd701249464bca2aef4abd5d6aa90034c017863f2a5b8edbbcd.png" />
-<img alt="_images/14deadc6e24a77fa4cb8c8f66777cb489617bbb7e7482ed77348e33ec3324f47.png" src="_images/14deadc6e24a77fa4cb8c8f66777cb489617bbb7e7482ed77348e33ec3324f47.png" />
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/pyramid-learn/pyramid-learn/src/midlearn/plotting.py:337: SyntaxWarning: invalid escape sequence &#39;\h&#39;
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NotImplementedError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">line</span> <span class="mi">4</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># Calculate and plot overall feature importance (default bar plot and heatmap)</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">imp</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">importance</span><span class="p">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">display</span><span class="p">(</span>
+<span class="ne">----&gt; </span><span class="mi">4</span>     <span class="n">imp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span>         <span class="n">max_nterms</span><span class="o">=</span><span class="mi">20</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="p">)</span> <span class="o">+</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span>     <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;Importance Plot&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="n">display</span><span class="p">(</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span>     <span class="n">imp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+<span class="g g-Whitespace">     </span><span class="mi">11</span>         <span class="n">style</span><span class="o">=</span><span class="s1">&#39;heatmap&#39;</span>
+<span class="g g-Whitespace">     </span><span class="mi">12</span>     <span class="p">)</span> <span class="o">+</span>
+<span class="g g-Whitespace">     </span><span class="mi">13</span>     <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;Importance Heatmap&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">14</span> <span class="p">)</span>
+
+<span class="nn">File ~/work/pyramid-learn/pyramid-learn/src/midlearn/plotting.py:193,</span> in <span class="ni">plot_importance</span><span class="nt">(importance, style, theme, max_nterms, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">168</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;Visualize the importance scores of the component functions from a fitted MID model with plotnine.</span>
+<span class="g g-Whitespace">    </span><span class="mi">169</span><span class="sd"> This is a porting function for the R function `midr::ggmid.mid.importance()`.</span>
+<span class="g g-Whitespace">    </span><span class="mi">170</span><span class="sd"> </span>
+<span class="sd">   (...)    190     A plotnine object representing the visualization of component importance.</span>
+<span class="g g-Whitespace">    </span><span class="mi">191</span><span class="sd"> &quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">192</span> <span class="n">style</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">match_arg</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;barplot&#39;</span><span class="p">,</span> <span class="s1">&#39;heatmap&#39;</span><span class="p">])</span>
+<span class="ne">--&gt; </span><span class="mi">193</span> <span class="n">imp_df</span> <span class="o">=</span> <span class="n">importance</span><span class="o">.</span><span class="n">importance</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">194</span> <span class="k">if</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;barplot&#39;</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">195</span>     <span class="k">if</span> <span class="n">max_nterms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+<span class="nn">File ~/work/pyramid-learn/pyramid-learn/src/midlearn/api.py:433,</span> in <span class="ni">MIDImportance.importance</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">431</span> <span class="nd">@property</span>
+<span class="g g-Whitespace">    </span><span class="mi">432</span> <span class="k">def</span><span class="w"> </span><span class="nf">importance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">433</span>     <span class="k">return</span> <span class="n">_r_interface</span><span class="o">.</span><span class="n">_extract_and_convert</span><span class="p">(</span><span class="n">r_object</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;importance&#39;</span><span class="p">)</span>
+
+<span class="nn">File ~/work/pyramid-learn/pyramid-learn/src/midlearn/_r_interface.py:204,</span> in <span class="ni">_extract_and_convert</span><span class="nt">(r_object, name)</span>
+<span class="g g-Whitespace">    </span><span class="mi">199</span> <span class="k">def</span><span class="w"> </span><span class="nf">_extract_and_convert</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">200</span>     <span class="n">r_object</span><span class="p">:</span> <span class="n">ListVector</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">201</span>     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="g g-Whitespace">    </span><span class="mi">202</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">203</span>     <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">204</span>         <span class="n">idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">r_object</span><span class="o">.</span><span class="n">names</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">205</span>         <span class="n">element</span> <span class="o">=</span> <span class="n">r_object</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+<span class="g g-Whitespace">    </span><span class="mi">206</span>     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/rpy2/robjects/vectors.py:309,</span> in <span class="ni">Vector.names</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">307</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;Names for the items in the vector.&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">308</span> <span class="n">res</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">names</span>
+<span class="ne">--&gt; </span><span class="mi">309</span> <span class="n">res</span> <span class="o">=</span> <span class="n">conversion</span><span class="o">.</span><span class="n">get_conversion</span><span class="p">()</span><span class="o">.</span><span class="n">rpy2py</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">310</span> <span class="k">return</span> <span class="n">res</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/functools.py:934,</span> in <span class="ni">singledispatch.&lt;locals&gt;.wrapper</span><span class="nt">(*args, **kw)</span>
+<span class="g g-Whitespace">    </span><span class="mi">931</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">932</span>     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">funcname</span><span class="si">}</span><span class="s1"> requires at least &#39;</span>
+<span class="g g-Whitespace">    </span><span class="mi">933</span>                     <span class="s1">&#39;1 positional argument&#39;</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">934</span> <span class="k">return</span> <span class="n">dispatch</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/rpy2/robjects/conversion.py:408,</span> in <span class="ni">_raise_missingconverter</span><span class="nt">(obj)</span>
+<span class="g g-Whitespace">    </span><span class="mi">401</span> <span class="k">def</span><span class="w"> </span><span class="nf">_raise_missingconverter</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">402</span>     <span class="n">_missingconverter_msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">403</span><span class="s2">     Conversion rules for `rpy2.robjects` appear to be missing. Those</span>
+<span class="g g-Whitespace">    </span><span class="mi">404</span><span class="s2">     rules are in a Python `contextvars.ContextVar`. This could be caused</span>
+<span class="g g-Whitespace">    </span><span class="mi">405</span><span class="s2">     by multithreading code not passing context to the thread.</span>
+<span class="g g-Whitespace">    </span><span class="mi">406</span><span class="s2">     Check rpy2&#39;s documentation about conversions.</span>
+<span class="g g-Whitespace">    </span><span class="mi">407</span><span class="s2">     &quot;&quot;&quot;</span>
+<span class="ne">--&gt; </span><span class="mi">408</span>     <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="n">_missingconverter_msg</span><span class="p">)</span>
+
+<span class="ne">NotImplementedError</span>: 
+    <span class="n">Conversion</span> <span class="n">rules</span> <span class="k">for</span> <span class="err">`</span><span class="n">rpy2</span><span class="o">.</span><span class="n">robjects</span><span class="err">`</span> <span class="n">appear</span> <span class="n">to</span> <span class="n">be</span> <span class="n">missing</span><span class="o">.</span> <span class="n">Those</span>
+    <span class="n">rules</span> <span class="n">are</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">Python</span> <span class="err">`</span><span class="n">contextvars</span><span class="o">.</span><span class="n">ContextVar</span><span class="err">`</span><span class="o">.</span> <span class="n">This</span> <span class="n">could</span> <span class="n">be</span> <span class="n">caused</span>
+    <span class="n">by</span> <span class="n">multithreading</span> <span class="n">code</span> <span class="ow">not</span> <span class="n">passing</span> <span class="n">context</span> <span class="n">to</span> <span class="n">the</span> <span class="n">thread</span><span class="o">.</span>
+    <span class="n">Check</span> <span class="n">rpy2</span><span class="s1">&#39;s documentation about conversions.</span>
+    
+</pre></div>
+</div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the top 3 important main effects (Component Functions)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- Top 3 Main Effects ---&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the top 3 important main effects (Component Functions)</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">imp</span><span class="o">.</span><span class="n">terms</span><span class="p">(</span><span class="n">interactions</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Plotting </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">term</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">explainer</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">term</span><span class="o">=</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span>
+        <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Main Effect of </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="n">display</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- Top 3 Main Effects ---
-Plotting 1: Latitude
-</pre></div>
-</div>
-<img alt="_images/bcbbe4a0e5c58da8c5cfa3c1015e526e2691dfbea11cba0d7a4a5bf2c5baf791.png" src="_images/bcbbe4a0e5c58da8c5cfa3c1015e526e2691dfbea11cba0d7a4a5bf2c5baf791.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Plotting 2: Longitude
-</pre></div>
-</div>
-<img alt="_images/78ceaa6c7ef8d68b93a30f398db48ed36c2e10a14aa3e3e7c008da913a351422.png" src="_images/78ceaa6c7ef8d68b93a30f398db48ed36c2e10a14aa3e3e7c008da913a351422.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Plotting 3: MedInc
-</pre></div>
-</div>
-<img alt="_images/4621eb3237cb5f571c89446359a1e543e513ee20543fad68e1fd59cfee627dc7.png" src="_images/4621eb3237cb5f571c89446359a1e543e513ee20543fad68e1fd59cfee627dc7.png" />
+<img alt="_images/be37f29d6cf376f96bd41b093c031f8e81454005d3ccf4d9226867a5ffb650b3.png" src="_images/be37f29d6cf376f96bd41b093c031f8e81454005d3ccf4d9226867a5ffb650b3.png" />
+<img alt="_images/7d78ea877559ac6797e5b0a2000d8881f7151c6e2709ae9e65fb148a018167ca.png" src="_images/7d78ea877559ac6797e5b0a2000d8881f7151c6e2709ae9e65fb148a018167ca.png" />
+<img alt="_images/115b82eb13025871fda0f5994af4c8007deb3581a5adf1ccf41b9a65c4d1c404.png" src="_images/115b82eb13025871fda0f5994af4c8007deb3581a5adf1ccf41b9a65c4d1c404.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the interaction of Longitude and Latitude (Component Functions)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the interaction of Longitude and Latitude (Component Functions)</span>
 <span class="n">display</span><span class="p">(</span>
-    <span class="n">explainer</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;Longitude:Latitude&quot;</span><span class="p">,</span> <span class="n">main_effects</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">explainer</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="s2">&quot;Longitude:Latitude&quot;</span><span class="p">,</span>
+        <span class="n">main_effects</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span> <span class="o">+</span>
+    <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;Total Effect of Longitude and Latitude&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="n">display</span><span class="p">(</span>
-    <span class="n">explainer</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;Longitude:Latitude&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">main_effects</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">explainer</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="s2">&quot;Longitude:Latitude&quot;</span><span class="p">,</span>
+        <span class="n">style</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
+        <span class="n">theme</span><span class="o">=</span><span class="s1">&#39;mako&#39;</span><span class="p">,</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span>
+        <span class="n">main_effects</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span> <span class="o">+</span>
+    <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;Total Effect of Longitude and Latitude&quot;</span><span class="p">)</span>
+
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/a48def39046459deee2db1541a5b0e80f72e0376c2e427930d18525737508f80.png" src="_images/a48def39046459deee2db1541a5b0e80f72e0376c2e427930d18525737508f80.png" />
-<img alt="_images/59491fe974f874697338d1169af0073e8f41cacb2b39a307de78feda16506412.png" src="_images/59491fe974f874697338d1169af0073e8f41cacb2b39a307de78feda16506412.png" />
+<img alt="_images/b7576149949e43d95240866f828d716a8118029b56a85441c31d625b522d8516.png" src="_images/b7576149949e43d95240866f828d716a8118029b56a85441c31d625b522d8516.png" />
+<img alt="_images/e165d1b808539af39ad1f2998e489f97dbbd4dede541eb3e65f54b9a61102c3d.png" src="_images/e165d1b808539af39ad1f2998e489f97dbbd4dede541eb3e65f54b9a61102c3d.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot prediction breakdowns for the first three test samples (Local Interpretability)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- Breakdown Plots for First 3 Test Samples ---&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot prediction breakdowns for the first three test samples (Local Interpretability)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Row </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> Breakdown:&quot;</span><span class="p">)</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">breakdown</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">X_test</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="s2">&quot;highlight_r&quot;</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">explainer</span><span class="o">.</span><span class="n">breakdown</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">X_test</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span> <span class="o">+</span>
+        <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Breakdown Plot for Row (</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="n">display</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- Breakdown Plots for First 3 Test Samples ---
-Row 0 Breakdown:
-</pre></div>
-</div>
-<img alt="_images/14c1631a72c35e9818077e832f169deff52d6b06863d765c93140e23584916d6.png" src="_images/14c1631a72c35e9818077e832f169deff52d6b06863d765c93140e23584916d6.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Row 1 Breakdown:
-</pre></div>
-</div>
-<img alt="_images/df2db0858ffe514f04f5cd9930bc4050396c0e7f7b057d1b1a2de79cbf0d61cd.png" src="_images/df2db0858ffe514f04f5cd9930bc4050396c0e7f7b057d1b1a2de79cbf0d61cd.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Row 2 Breakdown:
-</pre></div>
-</div>
-<img alt="_images/b51ef94f393ebdfbd2f672470c1d3bbb3ee5aeae78360e2f6eb5aba34bbca018.png" src="_images/b51ef94f393ebdfbd2f672470c1d3bbb3ee5aeae78360e2f6eb5aba34bbca018.png" />
+<img alt="_images/3d284e6248d324d79389bc3819debae02693ecfccd390a387147ae64c5f7559c.png" src="_images/3d284e6248d324d79389bc3819debae02693ecfccd390a387147ae64c5f7559c.png" />
+<img alt="_images/1e70a98019a6f4c68be53f5af7aab3ef434f38cb9e17d1c76aefd87ec503b83e.png" src="_images/1e70a98019a6f4c68be53f5af7aab3ef434f38cb9e17d1c76aefd87ec503b83e.png" />
+<img alt="_images/1761bce5f97ad56ef7f758277693e39c0a2365f3684552e1bdb92dd2724f16f0.png" src="_images/1761bce5f97ad56ef7f758277693e39c0a2365f3684552e1bdb92dd2724f16f0.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot individual conditional expectations (ICE) with color encoding</span>
-<span class="n">explainer</span><span class="o">.</span><span class="n">conditional</span><span class="p">(</span><span class="s1">&#39;Latitude&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">var_color</span><span class="o">=</span><span class="s1">&#39;Longitude&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot individual conditional expectations (ICE) with color encoding</span>
+<span class="n">ice</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">conditional</span><span class="p">(</span>
+    <span class="n">variable</span><span class="o">=</span><span class="s1">&#39;MedInc&#39;</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">ice</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.1</span><span class="p">)</span> <span class="o">+</span>
+    <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;ICE Plot of MedInc&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">ice</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">style</span><span class="o">=</span><span class="s1">&#39;centered&#39;</span><span class="p">,</span>
+        <span class="n">var_color</span><span class="o">=</span><span class="s1">&#39;HouseAge&#39;</span><span class="p">,</span>
+        <span class="n">theme</span><span class="o">=</span><span class="s1">&#39;mako&#39;</span>
+    <span class="p">)</span> <span class="o">+</span>
+    <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;Centered ICE Plot of MedInc&quot;</span><span class="p">)</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R callback write-console: the number of evaluation points exceeds the limit: the data is reduced to 1000 observations
-  
-</pre></div>
-</div>
-<img alt="_images/d64e3ca628924681a178a1608fb1ce52c4f1edd821a2c6a4160a637a1ed49aa5.png" src="_images/d64e3ca628924681a178a1608fb1ce52c4f1edd821a2c6a4160a637a1ed49aa5.png" />
+<img alt="_images/ee3a9e3536eeefabbcac9170baf7254762ab8bcad67bf9def7f3187cba4ed139.png" src="_images/ee3a9e3536eeefabbcac9170baf7254762ab8bcad67bf9def7f3187cba4ed139.png" />
+<img alt="_images/38cb1b7633d2c32a9dc90cfe59152b523a27dd7e5acf467c6184e76e320f0572.png" src="_images/38cb1b7633d2c32a9dc90cfe59152b523a27dd7e5acf467c6184e76e320f0572.png" />
 </div>
 </div>
 </section>
