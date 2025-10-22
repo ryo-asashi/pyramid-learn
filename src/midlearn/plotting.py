@@ -89,14 +89,14 @@ def plot_effect(
             if enc == 'linear':
                 p = p + p9.geom_line(**kwargs)
                 if theme is not None:
-                    p = p + p9.aes(color='mid') + pt.scale_pt.color_theme(theme)
+                    p = p + p9.aes(color='mid') + pt.scale_color_theme(theme)
             elif enc == 'constant':
                 xval = eff_df[[f'{term}_min', f'{term}_max']].to_numpy().ravel('C')
                 yval = np.repeat(eff_df['mid'].to_numpy(), 2)
                 path_df = pd.DataFrame({term: xval, 'mid': yval})
                 p += p9.geom_path(data=path_df, **kwargs)
                 if theme is not None:
-                    p = p + p9.aes(color='mid') + pt.scale_pt.color_theme(theme)
+                    p = p + p9.aes(color='mid') + pt.scale_color_theme(theme)
             else:
                 p += p9.geom_col(**kwargs)
                 if theme is not None:
@@ -376,5 +376,5 @@ Parameters
     if var_color is not None:
         p += p9.aes(color=var_color)
     if theme is not None:
-        p += pt.scale_pt.color_theme(theme)
+        p += pt.scale_color_theme(theme)
     return p

@@ -122,7 +122,7 @@ def scale_color_theme(
 
 
 def scale_fill_theme(
-    theme: str | list[str], color_theme,
+    theme: str | list[str] | color_theme,
     midpoint: float = 0,
     **kwargs
 ) -> scale_fill_theme_d | scale_fill_theme_c:
