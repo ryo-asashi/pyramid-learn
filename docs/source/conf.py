@@ -60,8 +60,16 @@ html_static_path = ["_static"]
 
 # Extension options
 
+# autosummary
+# https://www.sphinx-doc.org/ja/master/usage/extensions/autosummary.html
 autosummary_generate = True
+
+# intersphinx
+# https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html
 intersphinx_mapping = {
     "sklearn": ("https://scikit-learn.org/stable/", None),
 }
-nb_execute_notebooks = "off"
+
+# myst-nb
+# https://myst-nb.readthedocs.io/en/latest/configuration.html
+nb_execution_mode = "off"
