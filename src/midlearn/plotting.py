@@ -335,8 +335,8 @@ def plot_conditional(
     style : {'ice', 'centered'}, default 'ice'
         The plotting style.
         'ice' plots raw predicted values against the predictor variable.
-        'centered' plots predictions against the predictor variable,
-        from which the predictions at the `reference` point for each observation are subtracted.
+        'centered' displays the **change in prediction** relative to a `reference` point,
+        by subtracting the prediction at the `reference` point for each individual observation.
     theme : str or pt.color_theme or None, default None
         The color theme to use for the line colors.
     var_color : str or None, default None
