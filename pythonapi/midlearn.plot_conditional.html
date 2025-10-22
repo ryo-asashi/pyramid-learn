@@ -107,9 +107,9 @@ This is a porting function for the R function <cite>midr::ggmid.mid.conditional(
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>conditional</strong> (<a class="reference internal" href="midlearn.MIDConditional.html#midlearn.MIDConditional" title="midlearn.MIDConditional"><em>MIDConditional</em></a>) – A fitted <a class="reference internal" href="midlearn.MIDConditional.html#midlearn.MIDConditional" title="midlearn.MIDConditional"><code class="xref py py-class docutils literal notranslate"><span class="pre">MIDConditional</span></code></a> object containing the ICE data.</p></li>
 <li><p><strong>style</strong> (<em>{'ice'</em><em>, </em><em>'centered'}</em><em>, </em><em>default 'ice'</em>) – The plotting style.
-‘ice’ plots raw predicted values ($hat{y}$) against the predictor variable.
-‘centered’ plots centered predictions ($hat{y} - hat{y}_{ref}$) against the predictor variable,
-where $hat{y}_{ref}$ is the prediction at the <cite>reference</cite> point.</p></li>
+‘ice’ plots raw predicted values against the predictor variable.
+‘centered’ displays the <strong>change in prediction</strong> relative to a <cite>reference</cite> point,
+by subtracting the prediction at the <cite>reference</cite> point for each individual observation.</p></li>
 <li><p><strong>theme</strong> (<em>str</em><em> or </em><em>pt.color_theme</em><em> or </em><em>None</em><em>, </em><em>default None</em>) – The color theme to use for the line colors.</p></li>
 <li><p><strong>var_color</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>default None</em>) – The name of a column (from the original data) to map to the color aesthetic of the ICE lines. This helps visualize heterogeneity.</p></li>
 <li><p><strong>dots</strong> (<em>bool</em><em>, </em><em>default True</em>) – If True, plots points for the observed (original) predictions for each sample.</p></li>

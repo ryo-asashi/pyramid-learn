@@ -424,9 +424,9 @@
 <span class="sd">        A fitted :class:`MIDConditional` object containing the ICE data.</span>
 <span class="sd">    style : {&#39;ice&#39;, &#39;centered&#39;}, default &#39;ice&#39;</span>
 <span class="sd">        The plotting style.</span>
-<span class="sd">        &#39;ice&#39; plots raw predicted values ($\hat{y}$) against the predictor variable.</span>
-<span class="sd">        &#39;centered&#39; plots centered predictions ($\hat{y} - \hat{y}_{ref}$) against the predictor variable,</span>
-<span class="sd">        where $\hat{y}_{ref}$ is the prediction at the `reference` point.</span>
+<span class="sd">        &#39;ice&#39; plots raw predicted values against the predictor variable.</span>
+<span class="sd">        &#39;centered&#39; displays the **change in prediction** relative to a `reference` point,</span>
+<span class="sd">        by subtracting the prediction at the `reference` point for each individual observation.</span>
 <span class="sd">    theme : str or pt.color_theme or None, default None</span>
 <span class="sd">        The color theme to use for the line colors.</span>
 <span class="sd">    var_color : str or None, default None</span>
