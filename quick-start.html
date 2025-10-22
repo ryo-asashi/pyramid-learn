@@ -99,7 +99,7 @@
 
 <span class="c1"># Set up plotnine theme for clean visualizations</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">plotnine</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">p9</span>
-<span class="n">p9</span><span class="o">.</span><span class="n">theme_set</span><span class="p">(</span><span class="n">p9</span><span class="o">.</span><span class="n">theme_bw</span><span class="p">())</span>
+<span class="n">p9</span><span class="o">.</span><span class="n">theme_set</span><span class="p">(</span><span class="n">p9</span><span class="o">.</span><span class="n">theme_bw</span><span class="p">(</span><span class="n">base_family</span><span class="o">=</span><span class="s1">&#39;serif&#39;</span><span class="p">))</span>
 
 <span class="c1"># Configure scikit-learn display</span>
 <span class="n">set_config</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="s1">&#39;text&#39;</span><span class="p">)</span>
@@ -127,7 +127,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000259 seconds.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000309 seconds.
 You can set `force_col_wise=true` to remove the overhead.
 [LightGBM] [Info] Total Bins 1838
 [LightGBM] [Info] Number of data points in the train set: 15480, number of used features: 8
@@ -188,7 +188,7 @@ MIDExplainer(estimator=LGBMRegressor(random_state=42), params_main=100,
 R-squared score: 0.9493631147465892
 </pre></div>
 </div>
-<img alt="_images/c8b09ac72a18e292b35d5ca61c29a4f328c83701d4d6776012f1bd2671aa7767.png" src="_images/c8b09ac72a18e292b35d5ca61c29a4f328c83701d4d6776012f1bd2671aa7767.png" />
+<img alt="_images/110574123c91f3c0de2dafdd9699015e62b04fcc56434072c99b7f17d0727c01.png" src="_images/110574123c91f3c0de2dafdd9699015e62b04fcc56434072c99b7f17d0727c01.png" />
 </div>
 </div>
 </section>
@@ -211,8 +211,8 @@ R-squared score: 0.9493631147465892
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/49cd689cc629151657233b39fd833fccc632e793e3d1322255180f9af500d5b6.png" src="_images/49cd689cc629151657233b39fd833fccc632e793e3d1322255180f9af500d5b6.png" />
-<img alt="_images/f75c9522dc34419bc4cd57d8ec0e76b435a0a249515677358455a186b8cb6ae1.png" src="_images/f75c9522dc34419bc4cd57d8ec0e76b435a0a249515677358455a186b8cb6ae1.png" />
+<img alt="_images/8116148c14714e36c5e370d9a859fbaa24c8147f88a412ee62fd9ac10d2ebf99.png" src="_images/8116148c14714e36c5e370d9a859fbaa24c8147f88a412ee62fd9ac10d2ebf99.png" />
+<img alt="_images/c4da6f49997d495679168688c76f097ef125106e23713012f7ba27b2f12dd27f.png" src="_images/c4da6f49997d495679168688c76f097ef125106e23713012f7ba27b2f12dd27f.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -228,9 +228,9 @@ R-squared score: 0.9493631147465892
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/5d612c587ed8a5c24920fd902a710e6843e303801ab260c6dcc106bfe97f7ab1.png" src="_images/5d612c587ed8a5c24920fd902a710e6843e303801ab260c6dcc106bfe97f7ab1.png" />
-<img alt="_images/511a2ba5eec2b95882b3141d44ba423e8651f92131efb39bbcbde60b61050531.png" src="_images/511a2ba5eec2b95882b3141d44ba423e8651f92131efb39bbcbde60b61050531.png" />
-<img alt="_images/69a9e27655531a3cc1a028de86c1e3a4f917ed990cce915558bf7e79a366de05.png" src="_images/69a9e27655531a3cc1a028de86c1e3a4f917ed990cce915558bf7e79a366de05.png" />
+<img alt="_images/be37f29d6cf376f96bd41b093c031f8e81454005d3ccf4d9226867a5ffb650b3.png" src="_images/be37f29d6cf376f96bd41b093c031f8e81454005d3ccf4d9226867a5ffb650b3.png" />
+<img alt="_images/7d78ea877559ac6797e5b0a2000d8881f7151c6e2709ae9e65fb148a018167ca.png" src="_images/7d78ea877559ac6797e5b0a2000d8881f7151c6e2709ae9e65fb148a018167ca.png" />
+<img alt="_images/115b82eb13025871fda0f5994af4c8007deb3581a5adf1ccf41b9a65c4d1c404.png" src="_images/115b82eb13025871fda0f5994af4c8007deb3581a5adf1ccf41b9a65c4d1c404.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -239,6 +239,7 @@ R-squared score: 0.9493631147465892
 <span class="n">display</span><span class="p">(</span>
     <span class="n">explainer</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="s2">&quot;Longitude:Latitude&quot;</span><span class="p">,</span>
+        <span class="n">theme</span><span class="o">=</span><span class="s1">&#39;mako&#39;</span><span class="p">,</span>
         <span class="n">main_effects</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span> <span class="o">+</span>
     <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;Total Effect of Longitude and Latitude&quot;</span><span class="p">)</span>
@@ -258,8 +259,8 @@ R-squared score: 0.9493631147465892
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/619f156ee237cc776da25cbb182d4c942788d0b0acd49a1d48dc505ab0c9cce0.png" src="_images/619f156ee237cc776da25cbb182d4c942788d0b0acd49a1d48dc505ab0c9cce0.png" />
-<img alt="_images/7ddc23f9f2672eed51a3547bf932cf34bcabbd133c26a678113e29b52e4e201b.png" src="_images/7ddc23f9f2672eed51a3547bf932cf34bcabbd133c26a678113e29b52e4e201b.png" />
+<img alt="_images/fc23cccc4cb282f039c83a9ea8f340ac3cdce6dd49cda75561be357d4d545dcb.png" src="_images/fc23cccc4cb282f039c83a9ea8f340ac3cdce6dd49cda75561be357d4d545dcb.png" />
+<img alt="_images/e165d1b808539af39ad1f2998e489f97dbbd4dede541eb3e65f54b9a61102c3d.png" src="_images/e165d1b808539af39ad1f2998e489f97dbbd4dede541eb3e65f54b9a61102c3d.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -275,9 +276,9 @@ R-squared score: 0.9493631147465892
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/f4831c3cf545f8d9a8d8e0989494c33beb300386319d325435bacb4a232b7791.png" src="_images/f4831c3cf545f8d9a8d8e0989494c33beb300386319d325435bacb4a232b7791.png" />
-<img alt="_images/bd3a50e522bf602216055a3186995ea57f1c32ce097a9a5441e2a2c5fd50f843.png" src="_images/bd3a50e522bf602216055a3186995ea57f1c32ce097a9a5441e2a2c5fd50f843.png" />
-<img alt="_images/54c066f9844569d97b5bf3e065b978e4c4eb2d062c5f4db86e78efe35d46b0b4.png" src="_images/54c066f9844569d97b5bf3e065b978e4c4eb2d062c5f4db86e78efe35d46b0b4.png" />
+<img alt="_images/3d284e6248d324d79389bc3819debae02693ecfccd390a387147ae64c5f7559c.png" src="_images/3d284e6248d324d79389bc3819debae02693ecfccd390a387147ae64c5f7559c.png" />
+<img alt="_images/1e70a98019a6f4c68be53f5af7aab3ef434f38cb9e17d1c76aefd87ec503b83e.png" src="_images/1e70a98019a6f4c68be53f5af7aab3ef434f38cb9e17d1c76aefd87ec503b83e.png" />
+<img alt="_images/1761bce5f97ad56ef7f758277693e39c0a2365f3684552e1bdb92dd2724f16f0.png" src="_images/1761bce5f97ad56ef7f758277693e39c0a2365f3684552e1bdb92dd2724f16f0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -303,8 +304,8 @@ R-squared score: 0.9493631147465892
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/077112f4c3f5f1aa760bb6e7a9b5b148e318f44558e4d2b26e19375f8966675f.png" src="_images/077112f4c3f5f1aa760bb6e7a9b5b148e318f44558e4d2b26e19375f8966675f.png" />
-<img alt="_images/ed3a9b3ed0ebbd341a1e3115535c898c9ecd0e03648236eda5d5924160938742.png" src="_images/ed3a9b3ed0ebbd341a1e3115535c898c9ecd0e03648236eda5d5924160938742.png" />
+<img alt="_images/ee3a9e3536eeefabbcac9170baf7254762ab8bcad67bf9def7f3187cba4ed139.png" src="_images/ee3a9e3536eeefabbcac9170baf7254762ab8bcad67bf9def7f3187cba4ed139.png" />
+<img alt="_images/38cb1b7633d2c32a9dc90cfe59152b523a27dd7e5acf467c6184e76e320f0572.png" src="_images/38cb1b7633d2c32a9dc90cfe59152b523a27dd7e5acf467c6184e76e320f0572.png" />
 </div>
 </div>
 </section>
