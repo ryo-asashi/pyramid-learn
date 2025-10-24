@@ -27,7 +27,7 @@ def plot_effect(
     intercept: bool = False,
     main_effects: bool = False,
     data: pd.DataFrame | None = None,
-    jitter: float = 0.3,
+    jitter: float | list[float] = 0.3,
     resolution: int | tuple[int, int] = 100,
     **kwargs
 ):
@@ -53,7 +53,7 @@ def plot_effect(
         Ignored for single-term plots.
     data : pandas.DataFrame or None, default None
         The data frame to plot. Required only if `style='data'`.
-    jitter : float, default 0.3
+    jitter : float or list of float, default 0.3
         The amount of jitter to apply to factor variables when `style='data'` is used.
     resolution : int or tuple[int, int], default 100
         The resolution (number of grid points) for calculating the effect. 
@@ -71,6 +71,8 @@ def plot_effect(
     style = utils.match_arg(style, ['effect', 'data'])
     tags = term.split(':')
     if style == 'data':
+        if not isinstance(jitter, list):
+            jitter = [jitter] * len(tags)
         if data is None:
             raise ValueError("The 'data' argument is required when style='data'. Please provide the pandas.DataFrame to use for plotting.")
         data = data.copy()
