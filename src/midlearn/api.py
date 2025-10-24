@@ -434,17 +434,25 @@ class MIDImportance(object):
     
     @property
     def importance(self):
+        """pd.DataFrame with the calculated importance values.
+        """
         return _r_interface._extract_and_convert(r_object=self._obj, name='importance')
 
     @property
     def predictions(self):
+        """pd.DataFrame of the fitted or predicted MID values.
+        """
         return _r_interface._extract_and_convert(r_object=self._obj, name='predictions')
 
     @property
     def measure(self):
+        """The type of the importance measure used.
+        """
         return _r_interface._extract_and_convert(r_object=self._obj, name='measure')
 
     def terms(self, **kwargs):
+        """Extract term labels from the fitted model. See midr's mid.terms().
+        """
         return list(_r_interface._call_r_mid_terms(r_object=self._obj, **kwargs))
 
 MIDImportance.plot = plotting.plot_importance
@@ -484,21 +492,31 @@ class MIDBreakdown(object):
     
     @property
     def breakdown(self):
+        """pd.DataFrame containing the breakdown of the prediction.
+        """
         return _r_interface._extract_and_convert(r_object=self._obj, name='breakdown')
 
     @property
     def data(self):
+        """pd.DataFrame containing the predictor variable values used for the prediction.
+        """
         return _r_interface._extract_and_convert(r_object=self._obj, name='data')
 
     @property
     def intercept(self):
+        """The intercept of the MID model.
+        """
         return _r_interface._extract_and_convert(r_object=self._obj, name='intercept')
 
     @property
     def prediction(self):
+        """The predicted value from the MID model.
+        """
         return _r_interface._extract_and_convert(r_object=self._obj, name='prediction')
 
     def terms(self, **kwargs):
+        """Extract term labels from the fitted model. See midr's mid.terms().
+        """
         return list(_r_interface._call_r_mid_terms(r_object=self._obj, **kwargs))
 
 MIDBreakdown.plot = plotting.plot_breakdown
@@ -538,17 +556,25 @@ class MIDConditional(object):
 
     @property
     def observed(self):
+        """pd.DataFrame of the original observations used.
+        """
         return _r_interface._extract_and_convert(r_object=self._obj, name='observed')
 
     @property
     def conditional(self):
+        """pd.DataFrame of the hypothetical observations and their corresponding predictions.
+        """
         return _r_interface._extract_and_convert(r_object=self._obj, name='conditional')
 
     @property
     def values(self):
+        """A vector or the sample points for the 'variable' used in the ICE calculation.
+        """
         return _r_interface._extract_and_convert(r_object=self._obj, name='values')
     
     def terms(self, **kwargs):
+        """Extract term labels from the fitted model. See midr's mid.terms().
+        """
         return list(_r_interface._call_r_mid_terms(r_object=self._obj, **kwargs))
 
 MIDConditional.plot = plotting.plot_conditional
