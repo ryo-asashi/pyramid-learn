@@ -33,7 +33,8 @@ class color_theme(object):
         **kwargs : dict
             Additional keyword arguments passed to the `midr::color.theme()` function in R.
         """
-        theme_type = utils.match_arg(theme_type, ['diverging', 'qualitative', 'sequential'])
+        if theme_type is not None:
+            theme_type = utils.match_arg(theme_type, ['diverging', 'qualitative', 'sequential'])
         self._obj = _r_interface._call_r_color_theme(
             theme = theme,
             theme_type = theme_type,
