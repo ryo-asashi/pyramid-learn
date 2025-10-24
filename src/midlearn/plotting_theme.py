@@ -18,7 +18,7 @@ class color_theme(object):
     def __init__(
         self,
         theme: str | list[str] | color_theme,
-        theme_type: Literal['diverging', 'qualitative', 'sequential'] = 'sequential',
+        theme_type: Literal['diverging', 'qualitative', 'sequential'] | None = None,
         **kwargs
     ):
         """Initialize color theme object
@@ -40,7 +40,8 @@ class color_theme(object):
             **kwargs
         )
         self.name = self._obj['name'][0]
-        self.theme_type = self._obj['type'][0]
+        self.type = self._obj['type'][0]
+        self.theme_type = self.type # alias
         self._ramp = self._obj['ramp']
         self._palette = self._obj['palette']
     
