@@ -1,6 +1,6 @@
 <!-- README.md is generated from README.ipynb. Please edit that file -->
 
-# pyramid-learn <img src="docs/logo/logo_banner.png" align="right" height="95" style="background-color: #fedcba"/>
+# pyramid-learn <img src="docs/logo/logo_hex.png" align="right" height="138"/>
 
 A [{rpy2}](https://rpy2.github.io/doc/latest/html/)-based Python wrapper for the [{midr}](https://ryo-asashi.github.io/midr/) R package to explain black-box models, with a [{scikit-learn}](https://scikit-learn.org/stable/) compatible API.
 
@@ -251,7 +251,7 @@ display(p + p9.ggtitle("Interaction of Time and Season"))
 # Plot prediction breakdowns for the first three rows in the testing dataset
 for i in range(3):
     p = explainer.breakdown(row=i, data=X_test).plot()
-    display(p + p9.ggtitle(f"Breakdown Plot for the Instance ({i})"))
+    display(p + p9.ggtitle(f"Breakdown Plot for the Instance no.{i}"))
 ```
 
 
