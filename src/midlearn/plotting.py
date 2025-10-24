@@ -1,15 +1,7 @@
 # src/midlearn/plotting.py
 
 from __future__ import annotations
-
-import numpy as np
-import pandas as pd
-import plotnine as p9
 from typing import TYPE_CHECKING, Literal
-
-from . import plotting_theme as pt
-from . import utils
-
 if TYPE_CHECKING:
     from .api import (
         MIDRegressor, 
@@ -18,6 +10,13 @@ if TYPE_CHECKING:
         MIDBreakdown, 
         MIDConditional
     )
+
+import numpy as np
+import pandas as pd
+import plotnine as p9
+
+from . import plotting_theme as pt
+from . import utils
 
 def plot_effect(
     estimator: MIDRegressor | MIDExplainer,

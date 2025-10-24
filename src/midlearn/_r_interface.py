@@ -3,13 +3,11 @@
 import numpy as np
 import pandas as pd
 from rpy2 import robjects as ro
-from rpy2.robjects import conversion, pandas2ri, numpy2ri, ListVector
+from rpy2.robjects import conversion, pandas2ri, numpy2ri
 from rpy2.robjects.packages import importr, PackageNotInstalledError
 from rpy2.rinterface_lib.embedded import RRuntimeError
 
 from .exceptions import RPackageError, RExecutionError
-from .plotting_theme import color_theme
-
 
 # Setup
 
@@ -35,9 +33,17 @@ except (RRuntimeError, PackageNotInstalledError):
 
 cv = conversion.Converter('custom_converter', template=ro.default_converter)
 
-@cv.rpy2py.register(ListVector)
+@cv.rpy2py.register(ro.ListVector)
 def _(obj):
     return obj
+
+@cv.py2rpy.register(dict)
+def _(obj):
+    return ro.ListVector(obj)
+
+@cv.py2rpy.register(list)
+def _(obj):
+    return _as_r_vector(obj)
 
 
 
@@ -75,7 +81,7 @@ def _call_r_interpret(
 
 
 def _call_r_predict(
-    r_object: ListVector,
+    r_object: ro.ListVector,
     X: pd.DataFrame,
     output_type: str = 'response',
     terms: list[str] | None = None,
@@ -99,7 +105,7 @@ def _call_r_predict(
 
 
 def _call_r_mid_terms(
-    r_object: ListVector,
+    r_object: ro.ListVector,
     **kwargs
 ) -> np.ndarray:
     """ Wrapper function for midr::mid.terms() """
@@ -116,7 +122,7 @@ def _call_r_mid_terms(
 
 
 def _call_r_mid_effect(
-    r_object: ListVector,
+    r_object: ro.ListVector,
     term: str,
     x: np.ndarray | pd.DataFrame,
     y: np.ndarray | None = None
@@ -137,7 +143,7 @@ def _call_r_mid_effect(
 
 
 def _call_r_mid_importance(
-    r_object: ListVector,
+    r_object: ro.ListVector,
     **kwargs
 ) -> object:
     """ Wrapper function for midr::mid.importance() """
@@ -154,7 +160,7 @@ def _call_r_mid_importance(
 
 
 def _call_r_mid_breakdown(
-    r_object: ListVector,
+    r_object: ro.ListVector,
     data: pd.DataFrame | None,
     row: int | None,
     **kwargs
@@ -178,7 +184,7 @@ def _call_r_mid_breakdown(
 
 
 def _call_r_mid_conditional(
-    r_object: ListVector,
+    r_object: ro.ListVector,
     variable: str,
     **kwargs
 ) -> object:
@@ -197,7 +203,7 @@ def _call_r_mid_conditional(
 
 
 def _extract_and_convert(
-    r_object: ListVector,
+    r_object: ro.ListVector,
     name: str
 ) -> object:
     try:
@@ -222,7 +228,7 @@ def _extract_and_convert(
         res = pd.DataFrame(np.asarray(element), columns=list(element.colnames))
         return res
     # (named) list to ListVector
-    if isinstance(element, ListVector):
+    if isinstance(element, ro.ListVector):
         return element
     # others to np.ndarray if applicable
     try:
@@ -232,11 +238,15 @@ def _extract_and_convert(
 
 
 def _call_r_color_theme(
-    theme: str | list[str] | color_theme,
+    theme,
+    scheme_type: str,
     **kwargs
 ) -> object:
     """ Wrapper function for midr::color.theme() """
-    r_kwargs = {**kwargs}
+    r_kwargs = {
+        'type': scheme_type,
+        **kwargs
+    }
     if isinstance(theme, str):
         r_kwargs['object'] = theme
     elif isinstance(theme, list):
@@ -253,19 +263,32 @@ def _call_r_color_theme(
 
 
 def _as_r_vector(
-    x,
-    mode: str = 'numeric'
+    obj,
+    mode: str | None = None
 ) -> object:
+    if mode is None:
+        if all(isinstance(x, str) for x in obj):
+            mode = 'character'
+        elif all(isinstance(x, bool) for x in obj):
+            mode = 'logical'
+        elif all(isinstance(x, int) for x in obj):
+            mode = 'integer'
+        elif all(isinstance(x, (int, float)) for x in obj):
+            mode = 'numeric'
+        else:
+            mode = 'list'
     if mode == 'numeric':
-        return ro.FloatVector(x)
+        return ro.FloatVector(obj)
     if mode == 'integer':
-        return ro.IntVector(x)
+        return ro.IntVector(obj)
     if mode == 'character':
-        return ro.StrVector(x)
+        return ro.StrVector(obj)
     if mode == 'factor':
-        return ro.FactorVector(x)
+        return ro.FactorVector(obj)
     if mode == 'logical':
-        return ro.BoolVector(x)
+        return ro.BoolVector(obj)
+    if mode == 'list':
+        return ro.ListVector(obj)
     raise ValueError(f"Invalid mode '{mode}'.")
 
 

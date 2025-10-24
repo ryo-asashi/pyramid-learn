@@ -1,14 +1,16 @@
 # src/midlearn/plotting_theme.py
 
 from __future__ import annotations
-
+from typing import Literal
 from dataclasses import dataclass, InitVar, KW_ONLY
+
 from plotnine.scales.scale_continuous import scale_continuous
 from plotnine.scales.scale_discrete import scale_discrete
 from plotnine._utils.registry import alias
 from mizani.bounds import rescale_mid
-from typing import Literal
+
 from . import _r_interface
+from . import utils
 
 class color_theme(object):
     """Color themes for graphics.
@@ -16,6 +18,7 @@ class color_theme(object):
     def __init__(
         self,
         theme: str | list[str] | color_theme,
+        scheme_type: Literal['diverging', 'qualitative', 'sequential'] = 'sequential',
         **kwargs
     ):
         """Initialize color theme object
@@ -25,11 +28,15 @@ class color_theme(object):
         theme : str or list of str or color_theme
             The name of the theme (str), a list of custom colors (list[str]),
             or an existing color_theme object.
+        scheme_type: {'diverging', 'qualitative', 'sequential'}, default 'sequential'
+            The type of the color scheme.
         **kwargs : dict
             Additional keyword arguments passed to the `midr::color.theme()` function in R.
         """
+        scheme_type = utils.match_arg(scheme_type, ['diverging', 'qualitative', 'sequential'])
         self._obj = _r_interface._call_r_color_theme(
             theme = theme,
+            scheme_type = scheme_type,
             **kwargs
         )
         self.name = self._obj['name'][0]

@@ -10,15 +10,16 @@ from sklearn.utils.validation import check_is_fitted
 from sklearn.metrics import r2_score
 
 from . import _r_interface
+from . import plotting
 
 class MIDRegressor(BaseEstimator, RegressorMixin):
     """Stand-alone Maximum Interpretation Decomposition regressor.
     """
     def __init__(
         self,
-        params_main=None,
-        params_inter=None,
-        penalty=0,
+        params_main: int | None = None,
+        params_inter: int | None = None,
+        penalty: float = 0,
         **kwargs
     ):
         """Create a MID model.
@@ -253,6 +254,9 @@ class MIDRegressor(BaseEstimator, RegressorMixin):
         """
         return MIDConditional(estimator=self, variable=variable, **kwargs)
 
+MIDRegressor.plot = plotting.plot_effect
+
+
 
 class MIDExplainer(MIDRegressor, MetaEstimatorMixin):
     """Surrogate Maximium Interpretation Decomposition explainer.
@@ -261,9 +265,9 @@ class MIDExplainer(MIDRegressor, MetaEstimatorMixin):
         self,
         estimator,
         target_classes: str | list[str] | None = None,
-        params_main=None,
-        params_inter=None,
-        penalty=0,
+        params_main: int | None = None,
+        params_inter: int | None = None,
+        penalty: float = 0,
         **kwargs
     ):
         """Create a surrogate MID model to explain a pre-trained black-box model.
@@ -443,6 +447,9 @@ class MIDImportance(object):
     def terms(self, **kwargs):
         return list(_r_interface._call_r_mid_terms(r_object=self._obj, **kwargs))
 
+MIDImportance.plot = plotting.plot_importance
+
+
 
 class MIDBreakdown(object):
     """MID Breakdown.
@@ -494,6 +501,9 @@ class MIDBreakdown(object):
     def terms(self, **kwargs):
         return list(_r_interface._call_r_mid_terms(r_object=self._obj, **kwargs))
 
+MIDBreakdown.plot = plotting.plot_breakdown
+
+
 
 class MIDConditional(object):
     """
@@ -540,3 +550,5 @@ class MIDConditional(object):
     
     def terms(self, **kwargs):
         return list(_r_interface._call_r_mid_terms(r_object=self._obj, **kwargs))
+
+MIDConditional.plot = plotting.plot_conditional
