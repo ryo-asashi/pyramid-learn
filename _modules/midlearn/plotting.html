@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>midlearn.plotting &mdash; pyramid-learn 0.1.1 documentation</title>
+  <title>midlearn.plotting &mdash; pyramid-learn 0.1.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="../../_static/logo_favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+      <script src="../../_static/documentation_options.js?v=92734c54"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/custom.js?v=71f91e34"></script>
@@ -80,15 +80,7 @@
 <span></span><span class="c1"># src/midlearn/plotting.py</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">plotnine</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">p9</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Literal</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">plotting_theme</span> <span class="k">as</span> <span class="n">pt</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
-
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">.api</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
         <span class="n">MIDRegressor</span><span class="p">,</span> 
@@ -97,6 +89,13 @@
         <span class="n">MIDBreakdown</span><span class="p">,</span> 
         <span class="n">MIDConditional</span>
     <span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotnine</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">p9</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">plotting_theme</span> <span class="k">as</span> <span class="n">pt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
 
 <div class="viewcode-block" id="plot_effect">
 <a class="viewcode-back" href="../../pythonapi/midlearn.plot_effect.html#midlearn.plot_effect">[docs]</a>
@@ -108,7 +107,7 @@
     <span class="n">intercept</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">main_effects</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">jitter</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span>
+    <span class="n">jitter</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span>
     <span class="n">resolution</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
@@ -134,7 +133,7 @@
 <span class="sd">        Ignored for single-term plots.</span>
 <span class="sd">    data : pandas.DataFrame or None, default None</span>
 <span class="sd">        The data frame to plot. Required only if `style=&#39;data&#39;`.</span>
-<span class="sd">    jitter : float, default 0.3</span>
+<span class="sd">    jitter : float or list of float, default 0.3</span>
 <span class="sd">        The amount of jitter to apply to factor variables when `style=&#39;data&#39;` is used.</span>
 <span class="sd">    resolution : int or tuple[int, int], default 100</span>
 <span class="sd">        The resolution (number of grid points) for calculating the effect. </span>
@@ -152,6 +151,8 @@
     <span class="n">style</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">match_arg</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;effect&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">])</span>
     <span class="n">tags</span> <span class="o">=</span> <span class="n">term</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">jitter</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">jitter</span> <span class="o">=</span> <span class="p">[</span><span class="n">jitter</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;data&#39; argument is required when style=&#39;data&#39;. Please provide the pandas.DataFrame to use for plotting.&quot;</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -286,7 +287,7 @@
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">theme</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">theme</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">color_theme</span><span class="p">(</span><span class="n">theme</span><span class="p">)</span>
-            <span class="n">var_fill</span> <span class="o">=</span> <span class="s1">&#39;order&#39;</span> <span class="k">if</span> <span class="n">theme</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;qualitative&#39;</span> <span class="k">else</span> <span class="s1">&#39;importance&#39;</span>
+            <span class="n">var_fill</span> <span class="o">=</span> <span class="s1">&#39;order&#39;</span> <span class="k">if</span> <span class="n">theme</span><span class="o">.</span><span class="n">theme_type</span> <span class="o">==</span> <span class="s1">&#39;qualitative&#39;</span> <span class="k">else</span> <span class="s1">&#39;importance&#39;</span>
             <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="n">p9</span><span class="o">.</span><span class="n">aes</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="n">var_fill</span><span class="p">)</span> <span class="o">+</span> <span class="n">pt</span><span class="o">.</span><span class="n">scale_fill_theme</span><span class="p">(</span><span class="n">theme</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;heatmap&#39;</span><span class="p">:</span>
         <span class="n">terms</span> <span class="o">=</span> <span class="n">imp_df</span><span class="p">[</span><span class="s1">&#39;term&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -395,7 +396,7 @@
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">theme</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">theme</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">color_theme</span><span class="p">(</span><span class="n">theme</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">theme</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;qualitative&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">theme</span><span class="o">.</span><span class="n">theme_type</span> <span class="o">==</span> <span class="s1">&#39;qualitative&#39;</span><span class="p">:</span>
             <span class="n">mid_sign</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">brk_df</span><span class="p">[</span><span class="s1">&#39;mid&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;&gt; 0&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt; 0&#39;</span><span class="p">)</span>
             <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="n">p9</span><span class="o">.</span><span class="n">aes</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="n">mid_sign</span><span class="p">)</span> <span class="o">+</span> <span class="n">pt</span><span class="o">.</span><span class="n">scale_fill_theme</span><span class="p">(</span><span class="n">theme</span><span class="p">)</span> <span class="o">+</span> <span class="n">p9</span><span class="o">.</span><span class="n">labs</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="s1">&#39;mid&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>

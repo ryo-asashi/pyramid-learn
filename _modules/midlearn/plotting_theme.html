@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>midlearn.plotting_theme &mdash; pyramid-learn 0.1.1 documentation</title>
+  <title>midlearn.plotting_theme &mdash; pyramid-learn 0.1.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="../../_static/logo_favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+      <script src="../../_static/documentation_options.js?v=92734c54"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/custom.js?v=71f91e34"></script>
@@ -80,14 +80,16 @@
 <span></span><span class="c1"># src/midlearn/plotting_theme.py</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
-
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">InitVar</span><span class="p">,</span> <span class="n">KW_ONLY</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">plotnine.scales.scale_continuous</span><span class="w"> </span><span class="kn">import</span> <span class="n">scale_continuous</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">plotnine.scales.scale_discrete</span><span class="w"> </span><span class="kn">import</span> <span class="n">scale_discrete</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">plotnine._utils.registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">alias</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mizani.bounds</span><span class="w"> </span><span class="kn">import</span> <span class="n">rescale_mid</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">_r_interface</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
 
 <div class="viewcode-block" id="color_theme">
 <a class="viewcode-back" href="../../pythonapi/midlearn.color_theme.html#midlearn.color_theme">[docs]</a>
@@ -99,6 +101,7 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">theme</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="n">color_theme</span><span class="p">,</span>
+        <span class="n">theme_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;diverging&#39;</span><span class="p">,</span> <span class="s1">&#39;qualitative&#39;</span><span class="p">,</span> <span class="s1">&#39;sequential&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize color theme object</span>
@@ -108,15 +111,21 @@
 <span class="sd">        theme : str or list of str or color_theme</span>
 <span class="sd">            The name of the theme (str), a list of custom colors (list[str]),</span>
 <span class="sd">            or an existing color_theme object.</span>
+<span class="sd">        theme_type: {&#39;diverging&#39;, &#39;qualitative&#39;, &#39;sequential&#39;}, default &#39;sequential&#39;</span>
+<span class="sd">            The type of the color theme.</span>
 <span class="sd">        **kwargs : dict</span>
 <span class="sd">            Additional keyword arguments passed to the `midr::color.theme()` function in R.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">theme_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">theme_type</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">match_arg</span><span class="p">(</span><span class="n">theme_type</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;diverging&#39;</span><span class="p">,</span> <span class="s1">&#39;qualitative&#39;</span><span class="p">,</span> <span class="s1">&#39;sequential&#39;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span> <span class="o">=</span> <span class="n">_r_interface</span><span class="o">.</span><span class="n">_call_r_color_theme</span><span class="p">(</span>
             <span class="n">theme</span> <span class="o">=</span> <span class="n">theme</span><span class="p">,</span>
+            <span class="n">theme_type</span> <span class="o">=</span> <span class="n">theme_type</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theme_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="c1"># alias</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ramp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">[</span><span class="s1">&#39;ramp&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_palette</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">[</span><span class="s1">&#39;palette&#39;</span><span class="p">]</span></div>
 
@@ -163,7 +172,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">_r_interface</span><span class="o">.</span><span class="n">_convert_r_color</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ramp</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;color_theme name=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; type=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">&#39;&gt;&quot;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;color_theme name=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; theme_type=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">theme_type</span><span class="si">}</span><span class="s2">&#39;&gt;&quot;</span></div>
 
 
 
@@ -191,7 +200,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    scale_color_theme_d or scale_color_theme_c</span>
-<span class="sd">        A `plotnine` color scale object based on the theme&#39;s type.</span>
+<span class="sd">        A plotnine color scale object based on the theme type.</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
@@ -203,7 +212,7 @@
 <span class="sd">    Otherwise, it returns :class:`scale_color_theme_c`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">theme</span> <span class="o">=</span> <span class="n">color_theme</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="n">theme</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">theme</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;qualitative&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">theme</span><span class="o">.</span><span class="n">theme_type</span> <span class="o">==</span> <span class="s1">&#39;qualitative&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">scale_color_theme_d</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="n">theme</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">scale_color_theme_c</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="n">theme</span><span class="p">,</span> <span class="n">midpoint</span><span class="o">=</span><span class="n">midpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -233,14 +242,14 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    scale_fill_theme_d or scale_fill_theme_c</span>
-<span class="sd">        A `plotnine` color scale object based on the theme&#39;s type.</span>
+<span class="sd">        A `plotnine` color scale object based on the theme type.</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
 <span class="sd">    scale_color_theme : The corresponding scale function for the &#39;color&#39; aesthetic.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">theme</span> <span class="o">=</span> <span class="n">color_theme</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="n">theme</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">theme</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;qualitative&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">theme</span><span class="o">.</span><span class="n">theme_type</span> <span class="o">==</span> <span class="s1">&#39;qualitative&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">scale_fill_theme_d</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="n">theme</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">scale_fill_theme_c</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="n">theme</span><span class="p">,</span> <span class="n">midpoint</span><span class="o">=</span><span class="n">midpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -273,7 +282,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theme</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">color_theme</span><span class="p">,</span> <span class="n">midpoint</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__post_init__</span><span class="p">()</span>
         <span class="n">theme</span> <span class="o">=</span> <span class="n">color_theme</span><span class="p">(</span><span class="n">theme</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">theme</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;diverging&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">theme</span><span class="o">.</span><span class="n">theme_type</span> <span class="o">==</span> <span class="s1">&#39;diverging&#39;</span><span class="p">:</span>
             <span class="k">def</span><span class="w"> </span><span class="nf">_rescale_mid</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">rescale_mid</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">mid</span><span class="o">=</span><span class="n">midpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rescaler</span> <span class="o">=</span> <span class="n">_rescale_mid</span>
