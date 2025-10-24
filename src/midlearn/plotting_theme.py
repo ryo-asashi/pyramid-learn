@@ -18,7 +18,7 @@ class color_theme(object):
     def __init__(
         self,
         theme: str | list[str] | color_theme,
-        scheme_type: Literal['diverging', 'qualitative', 'sequential'] = 'sequential',
+        theme_type: Literal['diverging', 'qualitative', 'sequential'] = 'sequential',
         **kwargs
     ):
         """Initialize color theme object
@@ -28,19 +28,19 @@ class color_theme(object):
         theme : str or list of str or color_theme
             The name of the theme (str), a list of custom colors (list[str]),
             or an existing color_theme object.
-        scheme_type: {'diverging', 'qualitative', 'sequential'}, default 'sequential'
-            The type of the color scheme.
+        theme_type: {'diverging', 'qualitative', 'sequential'}, default 'sequential'
+            The type of the color theme.
         **kwargs : dict
             Additional keyword arguments passed to the `midr::color.theme()` function in R.
         """
-        scheme_type = utils.match_arg(scheme_type, ['diverging', 'qualitative', 'sequential'])
+        theme_type = utils.match_arg(theme_type, ['diverging', 'qualitative', 'sequential'])
         self._obj = _r_interface._call_r_color_theme(
             theme = theme,
-            scheme_type = scheme_type,
+            theme_type = theme_type,
             **kwargs
         )
         self.name = self._obj['name'][0]
-        self.type = self._obj['type'][0]
+        self.theme_type = self._obj['type'][0]
         self._ramp = self._obj['ramp']
         self._palette = self._obj['palette']
     
@@ -86,7 +86,7 @@ class color_theme(object):
         return [_r_interface._convert_r_color(v) for v in self._ramp(x)]
 
     def __repr__(self) -> str:
-        return f"<color_theme name='{self.name}' type='{self.type}'>"
+        return f"<color_theme name='{self.name}' theme_type='{self.theme_type}'>"
 
 
 def scale_color_theme(
@@ -111,7 +111,7 @@ def scale_color_theme(
     Returns
     -------
     scale_color_theme_d or scale_color_theme_c
-        A `plotnine` color scale object based on the theme's type.
+        A plotnine color scale object based on the theme type.
 
     See Also
     --------
@@ -123,7 +123,7 @@ def scale_color_theme(
     Otherwise, it returns :class:`scale_color_theme_c`.
     """
     theme = color_theme(theme=theme)
-    if theme.type == 'qualitative':
+    if theme.theme_type == 'qualitative':
         return scale_color_theme_d(theme=theme, **kwargs)
     return scale_color_theme_c(theme=theme, midpoint=midpoint, **kwargs)
 
@@ -150,14 +150,14 @@ def scale_fill_theme(
     Returns
     -------
     scale_fill_theme_d or scale_fill_theme_c
-        A `plotnine` color scale object based on the theme's type.
+        A `plotnine` color scale object based on the theme type.
 
     See Also
     --------
     scale_color_theme : The corresponding scale function for the 'color' aesthetic.
     """
     theme = color_theme(theme=theme)
-    if theme.type == 'qualitative':
+    if theme.theme_type == 'qualitative':
         return scale_fill_theme_d(theme=theme, **kwargs)
     return scale_fill_theme_c(theme=theme, midpoint=midpoint, **kwargs)
 
@@ -189,7 +189,7 @@ class scale_color_theme_c(scale_continuous):
     def __post_init__(self, theme: str | color_theme, midpoint: float):
         super().__post_init__()
         theme = color_theme(theme)
-        if theme.type == 'diverging':
+        if theme.theme_type == 'diverging':
             def _rescale_mid(*args, **kwargs):
                 return rescale_mid(*args, mid=midpoint, **kwargs)
             self.rescaler = _rescale_mid

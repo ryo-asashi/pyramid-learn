@@ -239,12 +239,12 @@ def _extract_and_convert(
 
 def _call_r_color_theme(
     theme,
-    scheme_type: str,
+    theme_type: str,
     **kwargs
 ) -> object:
     """ Wrapper function for midr::color.theme() """
     r_kwargs = {
-        'type': scheme_type,
+        'type': theme_type,
         **kwargs
     }
     if isinstance(theme, str):

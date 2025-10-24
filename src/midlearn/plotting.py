@@ -203,7 +203,7 @@ def plot_importance(
         )
         if theme is not None:
             theme = pt.color_theme(theme)
-            var_fill = 'order' if theme.type == 'qualitative' else 'importance'
+            var_fill = 'order' if theme.theme_type == 'qualitative' else 'importance'
             p = p + p9.aes(fill=var_fill) + pt.scale_fill_theme(theme)
     elif style == 'heatmap':
         terms = imp_df['term'].str.split(':', expand=True)
@@ -309,7 +309,7 @@ def plot_breakdown(
         )
     if theme is not None:
         theme = pt.color_theme(theme)
-        if theme.type == 'qualitative':
+        if theme.theme_type == 'qualitative':
             mid_sign = np.where(brk_df['mid'] > 0, '> 0', '< 0')
             p = p + p9.aes(fill=mid_sign) + pt.scale_fill_theme(theme) + p9.labs(fill='mid')
         else:
