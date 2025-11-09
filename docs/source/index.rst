@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. image:: ../logo/logo_banner.png
+.. #image:: ../logo/logo_banner.png
    :align: center
    :width: 600
    :alt: midlearn logo

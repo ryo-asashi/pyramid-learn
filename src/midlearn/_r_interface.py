@@ -56,6 +56,7 @@ def _call_r_interpret(
     params_main=None,
     params_inter=None,
     penalty=0,
+    terms=None,
     **kwargs
 ) -> object:
     """ Wrapper function for midr::interpret.default() """
@@ -63,6 +64,8 @@ def _call_r_interpret(
         ro.NA_Integer if params_main is None else int(params_main),
         ro.NA_Integer if params_inter is None else int(params_inter)
     ]
+    if isinstance(terms, str):
+        terms = ro.Formula(terms)
     r_kwargs = {
         'object': ro.NULL,
         'x': X,
@@ -70,6 +73,7 @@ def _call_r_interpret(
         'weights': ro.NULL if sample_weight is None else sample_weight,
         'k': ro.IntVector(k_list),
         'lambda': penalty,
+        'terms': ro.NULL if terms is None else terms,
         **kwargs
     }
     try:
