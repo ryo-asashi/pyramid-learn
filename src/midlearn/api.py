@@ -20,28 +20,118 @@ class MIDRegressor(BaseEstimator, RegressorMixin):
         params_main: int | None = None,
         params_inter: int | None = None,
         penalty: float = 0,
+        link: str | None = None,
+        kernel_type: int | list[int] = 1,
+        encoding_frames: dict = dict(),
+        model_terms: str | list[str] | None = None,
+        singular_ok: bool = False,
+        mode: int = 1,
+        method: int | None = None,
+        centering_penalty: float = 1e+06,
+        na_action: str | None = 'na.omit',
+        verbosity: int = 1,
+        encoding_digits: int | None = 3,
+        use_catchall: bool = False,
+        catchall: str = '(others)',
+        max_ncol: int | None = 10000,
+        nil: float = 1e-07,
+        tol: float = 1e-07,
         **kwargs
     ):
         """Create a MID model.
 
         Parameters
         ----------
-        params_main : int, optional
+        params_main : int or None, optional
             An integer specifying the maximum number of sample points for main effects.
             This corresponds to the 'k[1]' argument in R's `midr::interpret()`.
-        params_inter : int, optional
+        params_inter : int or None, optional
             An integer specifying the maximum number of sample points for interactions.
             This corresponds to the 'k[2]' argument in R's `midr::interpret()`.
         penalty : float, optional
             The regularization penalty for pseudo-smoothing, corresponding to the
             'lambda' argument in R's `midr::interpret()`. Defaults to 0.
+        link : str or None, optional
+            A character string specifying the link function, e.g., "logit", 
+            "probit", "identity", "log", "sqrt", "inverse".
+            Corresponds to the 'link' argument in R.
+        kernel_type : int or list[int], optional
+            The type of encoding. Effects of quantitative variables are modeled as 
+            piecewise linear functions if 1 (default), and as step functions if 0.
+            If a list, `kernel_type[0]` is for main effects and `kernel_type[1]`
+            is for interactions. Corresponds to the 'type' argument in R.
+        encoding_frames : dict, optional
+            A dictionary of encoding frames to apply to specific variables.
+            Advanced feature corresponding to the 'frames' argument in R.
+        model_terms : str (in R's formula syntax), list[str] or None, optional
+            A list of term labels (e.g., ["x1", "x2", "x1:x2"]) specifying the 
+            set of component functions to be modeled.
+            Corresponds to the 'terms' argument in R.
+        singular_ok : bool, optional
+            If False (default), a singular fit is an error.
+            Corresponds to the 'singular.ok' argument in R.
+        mode : int, optional
+            An integer specifying the method of calculation. If 1 (default), 
+            centralization constraints are treated as penalties. If 2, 
+            constraints are used to reduce the number of free parameters.
+            Corresponds to the 'mode' argument in R.
+        method : int or None, optional
+            An integer specifying the method for solving the least squares problem.
+            Non-negative values are passed to RcppEigen::fastLmPure(), 
+            negative to stats::lm.fit(). None uses R default.
+            Corresponds to the 'method' argument in R.
+        centering_penalty : float, optional
+            The penalty factor for centering constraints (used only when `mode=1`).
+            Corresponds to the 'kappa' argument in R. Defaults to 1e+06.
+        na_action : str or None, optional
+            A string specifying the method of NA handling.
+            Corresponds to the 'na.action' argument in R. Defaults to 'na.omit'.
+        verbosity : int, optional
+            The level of verbosity. 0: fatal, 1: warning (default), 2: info, 3: debug.
+            Corresponds to the 'verbosity' argument in R.
+        encoding_digits : int or None, optional
+            The rounding digits for encoding numeric variables (used when `kernel_type=1`).
+            Corresponds to the 'encoding.digits' argument in R. Defaults to 3.
+        use_catchall : bool, optional
+            If True, less frequent levels of qualitative variables are replaced 
+            by the 'catchall' level. Corresponds to 'use.catchall' in R. Defaults to False.
+        catchall : str, optional
+            The catchall level string to use when `use_catchall=True`.
+            Corresponds to the 'catchall' argument in R. Defaults to '(others)'.
+        max_ncol : int or None, optional
+            The maximum number of columns of the design matrix.
+            Corresponds to the 'max.ncol' argument in R. Defaults to 10000.
+        nil : float, optional
+            A threshold for the intercept and coefficients to be treated as zero.
+            Corresponds to the 'nil' argument in R. Defaults to 1e-07.
+        tol : float, optional
+            A tolerance for the singular value decomposition.
+            Corresponds to the 'tol' argument in R. Defaults to 1e-07.
         **kwargs : dict
-            Additional keyword arguments to be passed directly to the underlying
-            `midr::interpret()` function for advanced fitting options.
+            Additional keyword arguments to be passed directly to the underlying 
+            `midr::interpret()` function. This can include arguments not 
+            explicitly listed here, such as `interactions: bool` to auto-include 
+            all second-order interactions.
         """
         self.params_main = params_main
         self.params_inter = params_inter
         self.penalty = penalty
+        self.link = link
+        self.kernel_type = kernel_type
+        self.encoding_frames = encoding_frames
+        self.model_terms = model_terms
+        self.singular_ok = singular_ok
+        self.mode = mode
+        self.method = method
+        self.centering_penalty = centering_penalty
+        self.na_action = na_action
+        self.verbosity = verbosity
+        self.encoding_digits = encoding_digits
+        self.use_catchall = use_catchall
+        self.catchall = catchall
+        self.max_ncol = max_ncol
+        self.nil = nil
+        self.tol = tol
         self.kwargs = kwargs
 
     def fit(
@@ -77,6 +167,22 @@ class MIDRegressor(BaseEstimator, RegressorMixin):
             params_main=self.params_main,
             params_inter=self.params_inter,
             penalty=self.penalty,
+            link=self.link,
+            kernel_type=self.kernel_type,
+            encoding_frames=self.encoding_frames,
+            model_terms=self.model_terms,
+            singular_ok=self.singular_ok,
+            mode=self.mode,
+            method=self.method,
+            centering_penalty=self.centering_penalty,
+            na_action=self.na_action,
+            verbosity=self.verbosity,
+            encoding_digits=self.encoding_digits,
+            use_catchall=self.use_catchall,
+            catchall=self.catchall,
+            max_ncol=self.max_ncol,
+            nil=self.nil,
+            tol=self.tol,
             **self.kwargs
         )
         self.is_fitted_ = True
@@ -268,31 +374,56 @@ class MIDExplainer(MIDRegressor, MetaEstimatorMixin):
         params_main: int | None = None,
         params_inter: int | None = None,
         penalty: float = 0,
+        link: str | None = None,
+        kernel_type: int | list[int] = 1,
+        encoding_frames: dict = dict(),
+        model_terms: str | list[str] | None = None,
+        singular_ok: bool = False,
+        mode: int = 1,
+        method: int | None = None,
+        centering_penalty: float = 1e+06,
+        na_action: str | None = 'na.omit',
+        verbosity: int = 1,
+        encoding_digits: int | None = 3,
+        use_catchall: bool = False,
+        catchall: str = '(others)',
+        max_ncol: int | None = 10000,
+        nil: float = 1e-07,
+        tol: float = 1e-07,
         **kwargs
     ):
         """Create a surrogate MID model to explain a pre-trained black-box model.
-        
-        Parameters
-        ----------
-        estimator : object
+        estimator : scikit-learn compatible estimator
             The pre-trained black-box model to be explained.
-        target_classes: list of str, optional
-            For classification estimators only.
+        target_classes : str or list[str], optional
             Specifies the target class or classes for which the probability is to be explained.
             If a list is provided, the sum of probabilities is used.
-            If None (the default), the model explains 1 - P(class 0).
-        params_main : int, optional
-            An integer specifying the maximum number of sample points for main effects.
-            This corresponds to the 'k[1]' argument in R's `midr::interpret()`.
-        params_inter : int, optional
-            An integer specifying the maximum number of sample points for interactions.
-            This corresponds to the 'k[2]' argument in R's `midr::interpret()`.
+            This parameter is ignored if the estimator is not a classifier.
+
+        params_main : int or None, optional
+        params_inter : int or None, optional
         penalty : float, optional
-            The regularization penalty for pseudo-smoothing, corresponding to the
-            'lambda' argument in R's `midr::interpret()`. Defaults to 0.
+        link : str, optional
+        kernel_type : int or list[int], optional
+        encoding_frames : dict, optional
+        model_terms : str or list[str], optional
+        singular_ok : bool, optional
+        mode : int, optional
+        method : int, optional
+        centering_penalty : float, optional
+        na_action : str, optional
+        verbosity : int, optional
+        encoding_digits : int, optional
+        use_catchall : bool, optional
+        catchall : str, optional
+        max_ncol : int, optional
+        nil : float, optional
+        tol : float, optional
+            Arguments passed to the parent `MIDRegressor` constructor. 
+            See the `MIDRegressor` documentation for details.
         **kwargs : dict
-            Additional keyword arguments to be passed directly to the underlying
-            `midr::interpret()` function for advanced fitting options.
+            Additional keyword arguments passed to `midr::interpret()`.
+            See `MIDRegressor` documentation.
         """
         self.estimator = estimator
         self.target_classes = target_classes
@@ -302,9 +433,25 @@ class MIDExplainer(MIDRegressor, MetaEstimatorMixin):
                 UserWarning
             )
         super().__init__(
-            params_main = params_main,
-            params_inter = params_inter,
-            penalty = penalty,
+            params_main=params_main,
+            params_inter=params_inter,
+            penalty=penalty,
+            link=link,
+            kernel_type=kernel_type,
+            encoding_frames=encoding_frames,
+            model_terms=model_terms,
+            singular_ok=singular_ok,
+            mode=mode,
+            method=method,
+            centering_penalty=centering_penalty,
+            na_action=na_action,
+            verbosity=verbosity,
+            encoding_digits=encoding_digits,
+            use_catchall=use_catchall,
+            catchall=catchall,
+            max_ncol=max_ncol,
+            nil=nil,
+            tol=tol,
             **kwargs
         )
 

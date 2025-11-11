@@ -45,6 +45,10 @@ def _(obj):
 def _(obj):
     return _as_r_vector(obj)
 
+@cv.py2rpy.register(type(None))
+def _(obj):
+    return ro.NULL
+
 
 
 # Wrapper Functions
@@ -56,7 +60,17 @@ def _call_r_interpret(
     params_main=None,
     params_inter=None,
     penalty=0,
-    terms=None,
+    kernel_type=[1,1],
+    encoding_frames=dict(),
+    model_terms=None,
+    singular_ok=False,
+    mode=1,
+    method=None,
+    centering_penalty=1e06,
+    na_action='na.omit',
+    encoding_digits=3,
+    use_catchall=False,
+    max_ncol=10000,
     **kwargs
 ) -> object:
     """ Wrapper function for midr::interpret.default() """
@@ -64,16 +78,21 @@ def _call_r_interpret(
         ro.NA_Integer if params_main is None else int(params_main),
         ro.NA_Integer if params_inter is None else int(params_inter)
     ]
-    if isinstance(terms, str):
-        terms = ro.Formula(terms)
     r_kwargs = {
         'object': ro.NULL,
         'x': X,
         'y': y,
-        'weights': ro.NULL if sample_weight is None else sample_weight,
+        'weights': sample_weight,
         'k': ro.IntVector(k_list),
         'lambda': penalty,
-        'terms': ro.NULL if terms is None else terms,
+        'type': kernel_type,
+        'frames': encoding_frames,
+        'terms': ro.Formula(model_terms) if isinstance(model_terms, str) else model_terms,
+        'singular.ok': singular_ok,
+        'na.action': na_action,
+        'encoding.digits': encoding_digits,
+        'use_catchall': use_catchall,
+        'max.ncol': max_ncol,
         **kwargs
     }
     try:
@@ -136,7 +155,7 @@ def _call_r_mid_effect(
         'object': r_object,
         'term': term,
         'x': x,
-        'y': ro.NULL if y is None else y
+        'y': y
     }
     try:
         with conversion.localconverter(pandas2ri.converter + numpy2ri.converter + cv):
@@ -175,7 +194,7 @@ def _call_r_mid_breakdown(
         row = None
     r_kwargs = {
         'object': r_object,
-        'data': ro.NULL if data is None else data,
+        'data': data,
         'row': ro.NULL if row is None else (row + 1),
         **kwargs
     }
@@ -248,7 +267,7 @@ def _call_r_color_theme(
 ) -> object:
     """ Wrapper function for midr::color.theme() """
     r_kwargs = {
-        'type': ro.NULL if theme_type is None else theme_type,
+        'type': theme_type,
         **kwargs
     }
     if isinstance(theme, str):

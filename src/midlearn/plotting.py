@@ -163,6 +163,7 @@ def plot_importance(
     importance: MIDImportance,
     style: Literal['barplot', 'heatmap'] = 'barplot',
     theme: str | pt.color_theme | None = None,
+    terms: list[str] | None = None,
     max_nterms: int | None = 30,
     **kwargs
 ):
@@ -179,6 +180,9 @@ def plot_importance(
         'heatmap' displays importance in a matrix format, suitable for visualizing main effects and two-way interactions simultaneously.
     theme : str or pt.color_theme or None, default None
         The color theme to use for the plot.
+    terms : list[str] or None, default None
+        An explicit list of term names to display.
+        If provided, only the terms in this list are plotted.
     max_nterms : int or None, default 30
         The maximum number of terms to display when `style='barplot'`. 
         Terms are sorted by importance before truncation. If None, all terms are displayed.
@@ -192,6 +196,9 @@ def plot_importance(
     """
     style = utils.match_arg(style, ['barplot', 'heatmap'])
     imp_df = importance.importance.copy()
+    if terms is not None:
+        in_terms = imp_df['term'].isin(terms)
+        imp_df = imp_df[in_terms]
     if style == 'barplot':
         if max_nterms is not None:
             imp_df = imp_df.head(max_nterms)
@@ -233,6 +240,7 @@ def plot_breakdown(
     breakdown: MIDBreakdown,
     style: Literal['waterfall', 'barplot'] = 'waterfall',
     theme: str | pt.color_theme | None = None,
+    terms: list[str] | None = None,
     max_nterms: int | None = 15,
     catchall: str = 'others',
     format: tuple[str, str] = ('%t=%v', '%t'),
@@ -251,6 +259,10 @@ def plot_breakdown(
         'barplot' displays contributions as simple horizontal bars, relative to zero.
     theme : str or pt.color_theme or None, default None
         The color theme to use for the plot.
+    terms : list[str] or None, default None
+        An explicit list of term names to display.
+        If provided, only the terms in this list are plotted individually and
+        all other contributions are aggregated into a single category defined by `catchall`.
     max_nterms : int or None, default 15
         The maximum number of terms to display. Terms beyond this limit are 
         grouped into a single 'catchall' category. If None, all terms are displayed.
@@ -270,6 +282,17 @@ def plot_breakdown(
     """
     style = utils.match_arg(style, ['waterfall', 'barplot'])
     brk_df = breakdown.breakdown.copy()
+    use_catchall = False
+    catchall_value = 0
+    if terms is not None:
+        in_terms = brk_df['term'].isin(terms)
+        catchall_value += brk_df[~in_terms]['mid'].sum()
+        brk_df = brk_df[in_terms]
+        use_catchall = True
+    if max_nterms is not None and max_nterms < (len(brk_df) + int(catchall_value > 0)):
+        catchall_value += brk_df.iloc[max_nterms - 1:]['mid'].sum()
+        brk_df = brk_df.head(max_nterms - 1)
+        use_catchall = True
     if 'value' in brk_df.columns:
         def _format_row(row):
             _t = str(row['term'])
@@ -277,10 +300,8 @@ def plot_breakdown(
             fmt = format[1 if ':' in _t else 0]
             return fmt.replace('%t', _t).replace('%v', _v)
         brk_df['term'] = brk_df.apply(_format_row, axis=1)
-    if max_nterms is not None and max_nterms < len(brk_df):
-        resid = brk_df.iloc[max_nterms - 1:]['mid'].sum()
-        brk_df = brk_df.head(max_nterms - 1)
-        catchall_row = pd.DataFrame([{'term': catchall, 'mid': resid}])
+    if use_catchall > 0:
+        catchall_row = pd.DataFrame({'term': [catchall], 'mid': [catchall_value]})
         brk_df = pd.concat([brk_df, catchall_row], ignore_index=True)
     brk_df['term'] = pd.Categorical(
         brk_df['term'], categories=brk_df['term'].iloc[::-1]
