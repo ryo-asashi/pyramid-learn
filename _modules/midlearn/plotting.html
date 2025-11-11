@@ -247,6 +247,7 @@
     <span class="n">importance</span><span class="p">:</span> <span class="n">MIDImportance</span><span class="p">,</span>
     <span class="n">style</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;barplot&#39;</span><span class="p">,</span> <span class="s1">&#39;heatmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;barplot&#39;</span><span class="p">,</span>
     <span class="n">theme</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pt</span><span class="o">.</span><span class="n">color_theme</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">terms</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">max_nterms</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
@@ -263,6 +264,9 @@
 <span class="sd">        &#39;heatmap&#39; displays importance in a matrix format, suitable for visualizing main effects and two-way interactions simultaneously.</span>
 <span class="sd">    theme : str or pt.color_theme or None, default None</span>
 <span class="sd">        The color theme to use for the plot.</span>
+<span class="sd">    terms : list[str] or None, default None</span>
+<span class="sd">        An explicit list of term names to display.</span>
+<span class="sd">        If provided, only the terms in this list are plotted.</span>
 <span class="sd">    max_nterms : int or None, default 30</span>
 <span class="sd">        The maximum number of terms to display when `style=&#39;barplot&#39;`. </span>
 <span class="sd">        Terms are sorted by importance before truncation. If None, all terms are displayed.</span>
@@ -276,6 +280,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">style</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">match_arg</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;barplot&#39;</span><span class="p">,</span> <span class="s1">&#39;heatmap&#39;</span><span class="p">])</span>
     <span class="n">imp_df</span> <span class="o">=</span> <span class="n">importance</span><span class="o">.</span><span class="n">importance</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">terms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">in_terms</span> <span class="o">=</span> <span class="n">imp_df</span><span class="p">[</span><span class="s1">&#39;term&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+        <span class="n">imp_df</span> <span class="o">=</span> <span class="n">imp_df</span><span class="p">[</span><span class="n">in_terms</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;barplot&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">max_nterms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">imp_df</span> <span class="o">=</span> <span class="n">imp_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">max_nterms</span><span class="p">)</span>
@@ -320,6 +327,7 @@
     <span class="n">breakdown</span><span class="p">:</span> <span class="n">MIDBreakdown</span><span class="p">,</span>
     <span class="n">style</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;waterfall&#39;</span><span class="p">,</span> <span class="s1">&#39;barplot&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;waterfall&#39;</span><span class="p">,</span>
     <span class="n">theme</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pt</span><span class="o">.</span><span class="n">color_theme</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">terms</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">max_nterms</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
     <span class="n">catchall</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;others&#39;</span><span class="p">,</span>
     <span class="nb">format</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;%t=%v&#39;</span><span class="p">,</span> <span class="s1">&#39;%t&#39;</span><span class="p">),</span>
@@ -338,6 +346,10 @@
 <span class="sd">        &#39;barplot&#39; displays contributions as simple horizontal bars, relative to zero.</span>
 <span class="sd">    theme : str or pt.color_theme or None, default None</span>
 <span class="sd">        The color theme to use for the plot.</span>
+<span class="sd">    terms : list[str] or None, default None</span>
+<span class="sd">        An explicit list of term names to display.</span>
+<span class="sd">        If provided, only the terms in this list are plotted individually and</span>
+<span class="sd">        all other contributions are aggregated into a single category defined by `catchall`.</span>
 <span class="sd">    max_nterms : int or None, default 15</span>
 <span class="sd">        The maximum number of terms to display. Terms beyond this limit are </span>
 <span class="sd">        grouped into a single &#39;catchall&#39; category. If None, all terms are displayed.</span>
@@ -357,6 +369,17 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">style</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">match_arg</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;waterfall&#39;</span><span class="p">,</span> <span class="s1">&#39;barplot&#39;</span><span class="p">])</span>
     <span class="n">brk_df</span> <span class="o">=</span> <span class="n">breakdown</span><span class="o">.</span><span class="n">breakdown</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">use_catchall</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">catchall_value</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">terms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">in_terms</span> <span class="o">=</span> <span class="n">brk_df</span><span class="p">[</span><span class="s1">&#39;term&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+        <span class="n">catchall_value</span> <span class="o">+=</span> <span class="n">brk_df</span><span class="p">[</span><span class="o">~</span><span class="n">in_terms</span><span class="p">][</span><span class="s1">&#39;mid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">brk_df</span> <span class="o">=</span> <span class="n">brk_df</span><span class="p">[</span><span class="n">in_terms</span><span class="p">]</span>
+        <span class="n">use_catchall</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">max_nterms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">max_nterms</span> <span class="o">&lt;</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">brk_df</span><span class="p">)</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">catchall_value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)):</span>
+        <span class="n">catchall_value</span> <span class="o">+=</span> <span class="n">brk_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">max_nterms</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:][</span><span class="s1">&#39;mid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">brk_df</span> <span class="o">=</span> <span class="n">brk_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">max_nterms</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">use_catchall</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">if</span> <span class="s1">&#39;value&#39;</span> <span class="ow">in</span> <span class="n">brk_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">_format_row</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
             <span class="n">_t</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;term&#39;</span><span class="p">])</span>
@@ -364,10 +387,8 @@
             <span class="n">fmt</span> <span class="o">=</span> <span class="nb">format</span><span class="p">[</span><span class="mi">1</span> <span class="k">if</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">_t</span> <span class="k">else</span> <span class="mi">0</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;%t&#39;</span><span class="p">,</span> <span class="n">_t</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;%v&#39;</span><span class="p">,</span> <span class="n">_v</span><span class="p">)</span>
         <span class="n">brk_df</span><span class="p">[</span><span class="s1">&#39;term&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">brk_df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">_format_row</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">max_nterms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">max_nterms</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">brk_df</span><span class="p">):</span>
-        <span class="n">resid</span> <span class="o">=</span> <span class="n">brk_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">max_nterms</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:][</span><span class="s1">&#39;mid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-        <span class="n">brk_df</span> <span class="o">=</span> <span class="n">brk_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">max_nterms</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">catchall_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([{</span><span class="s1">&#39;term&#39;</span><span class="p">:</span> <span class="n">catchall</span><span class="p">,</span> <span class="s1">&#39;mid&#39;</span><span class="p">:</span> <span class="n">resid</span><span class="p">}])</span>
+    <span class="k">if</span> <span class="n">use_catchall</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">catchall_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;term&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">catchall</span><span class="p">],</span> <span class="s1">&#39;mid&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">catchall_value</span><span class="p">]})</span>
         <span class="n">brk_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">brk_df</span><span class="p">,</span> <span class="n">catchall_row</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">brk_df</span><span class="p">[</span><span class="s1">&#39;term&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span>
         <span class="n">brk_df</span><span class="p">[</span><span class="s1">&#39;term&#39;</span><span class="p">],</span> <span class="n">categories</span><span class="o">=</span><span class="n">brk_df</span><span class="p">[</span><span class="s1">&#39;term&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>

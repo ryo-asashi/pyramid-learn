@@ -91,7 +91,8 @@
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_california_housing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">root_mean_squared_error</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_openml</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_config</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">lightgbm</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">lgb</span>
@@ -100,9 +101,16 @@
 <span class="c1"># Set up plotnine theme for clean visualizations</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">plotnine</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">p9</span>
 <span class="n">p9</span><span class="o">.</span><span class="n">theme_set</span><span class="p">(</span><span class="n">p9</span><span class="o">.</span><span class="n">theme_bw</span><span class="p">(</span><span class="n">base_family</span><span class="o">=</span><span class="s1">&#39;serif&#39;</span><span class="p">))</span>
+<span class="n">p9</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">figure_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 
 <span class="c1"># Configure scikit-learn display</span>
 <span class="n">set_config</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="s1">&#39;text&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error importing in API mode: ImportError(&#39;On Windows, cffi mode &quot;ANY&quot; is only &quot;ABI&quot;.&#39;)
+Trying to import in ABI mode.
 </pre></div>
 </div>
 </div>
@@ -113,26 +121,42 @@
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load and prepare data</span>
-<span class="n">housing</span> <span class="o">=</span> <span class="n">fetch_california_housing</span><span class="p">()</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">housing</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">housing</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">housing</span><span class="o">.</span><span class="n">target</span>
+<span class="n">bikeshare</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">data_id</span><span class="o">=</span><span class="mi">42712</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">bikeshare</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">bikeshare</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">bikeshare</span><span class="o">.</span><span class="n">target</span>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
 <span class="c1"># Fit a LightGBM regression model</span>
-<span class="n">estimator</span> <span class="o">=</span> <span class="n">lgb</span><span class="o">.</span><span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">estimator</span> <span class="o">=</span> <span class="n">lgb</span><span class="o">.</span><span class="n">LGBMRegressor</span><span class="p">(</span>
+    <span class="n">force_col_wise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">n_estimators</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+<span class="p">)</span>
 <span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">estimator</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000309 seconds.
-You can set `force_col_wise=true` to remove the overhead.
-[LightGBM] [Info] Total Bins 1838
-[LightGBM] [Info] Number of data points in the train set: 15480, number of used features: 8
-[LightGBM] [Info] Start training from score 2.070349
-LGBMRegressor(random_state=42)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Total Bins 283
+[LightGBM] [Info] Number of data points in the train set: 13034, number of used features: 12
+[LightGBM] [Info] Start training from score 190.379623
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LGBMRegressor(force_col_wise=True, n_estimators=500, random_state=42)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_pred</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">rmse</span> <span class="o">=</span> <span class="n">root_mean_squared_error</span><span class="p">(</span><span class="n">model_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RMSE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RMSE: 37.615267
 </pre></div>
 </div>
 </div>
@@ -146,21 +170,29 @@ LGBMRegressor(random_state=42)
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize and fit the MID model</span>
 <span class="n">explainer</span> <span class="o">=</span> <span class="n">mid</span><span class="o">.</span><span class="n">MIDExplainer</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span>
-    <span class="n">interaction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">params_main</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
     <span class="n">penalty</span><span class="o">=</span><span class="mf">.05</span><span class="p">,</span>
     <span class="n">singular_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">interactions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">encoding_frames</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;hour&#39;</span><span class="p">:</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">24</span><span class="p">))}</span>
 <span class="p">)</span>
 <span class="n">explainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">explainer</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Generating predictions from the estimator...
-MIDExplainer(estimator=LGBMRegressor(random_state=42), params_main=100,
-             penalty=0.05)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R callback write-console: singular fit encountered
+  
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MIDExplainer(encoding_frames={&#39;hour&#39;: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+                                       13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+                                       23]},
+             estimator=LGBMRegressor(force_col_wise=True, n_estimators=500,
+                                     random_state=42),
+             penalty=0.05, singular_ok=True)
 </pre></div>
 </div>
 </div>
@@ -168,16 +200,14 @@ MIDExplainer(estimator=LGBMRegressor(random_state=42), params_main=100,
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the fidelity of the surrogate model to the original model</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R-squared score:&quot;</span><span class="p">,</span> <span class="n">explainer</span><span class="o">.</span><span class="n">fidelity_score</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
-
-<span class="c1"># Visualize the fidelity</span>
 <span class="n">p</span> <span class="o">=</span> <span class="n">p9</span><span class="o">.</span><span class="n">ggplot</span><span class="p">()</span> \
     <span class="o">+</span> <span class="n">p9</span><span class="o">.</span><span class="n">geom_abline</span><span class="p">(</span><span class="n">slope</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span> \
     <span class="o">+</span> <span class="n">p9</span><span class="o">.</span><span class="n">geom_point</span><span class="p">(</span><span class="n">p9</span><span class="o">.</span><span class="n">aes</span><span class="p">(</span><span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span> <span class="n">explainer</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> \
     <span class="o">+</span> <span class="n">p9</span><span class="o">.</span><span class="n">labs</span><span class="p">(</span>
         <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Prediction (LightGBM Regressor)&#39;</span><span class="p">,</span>
         <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Prediction (Surrogate MID Regressor)&#39;</span><span class="p">,</span>
-        <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Surrogate Model Fidelity Check&#39;</span>
+        <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Surrogate Model Fidelity Check&#39;</span><span class="p">,</span>
+        <span class="n">subtitle</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;R-squared score: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">fidelity_score</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
     <span class="p">)</span>
 <span class="n">p</span>
 </pre></div>
@@ -185,10 +215,9 @@ MIDExplainer(estimator=LGBMRegressor(random_state=42), params_main=100,
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Generating predictions from the estimator...
-R-squared score: 0.9493631147465892
 </pre></div>
 </div>
-<img alt="_images/110574123c91f3c0de2dafdd9699015e62b04fcc56434072c99b7f17d0727c01.png" src="_images/110574123c91f3c0de2dafdd9699015e62b04fcc56434072c99b7f17d0727c01.png" />
+<img alt="_images/6f98b83c2ad152abfbf20c679b38a36002acba1288336deb4fbe5034f8bbb144.png" src="_images/6f98b83c2ad152abfbf20c679b38a36002acba1288336deb4fbe5034f8bbb144.png" />
 </div>
 </div>
 </section>
@@ -204,15 +233,16 @@ R-squared score: 0.9493631147465892
     <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;Importance Plot&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="n">display</span><span class="p">(</span>
-    <span class="n">imp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;heatmap&#39;</span><span class="p">)</span> <span class="o">+</span>
-    <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;Importance Heatmap&quot;</span><span class="p">)</span>
+    <span class="n">imp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;heatmap&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linetype</span><span class="o">=</span><span class="s1">&#39;dotted&#39;</span><span class="p">)</span> <span class="o">+</span>
+    <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;Importance Heatmap&quot;</span><span class="p">)</span> <span class="o">+</span>
+    <span class="n">p9</span><span class="o">.</span><span class="n">theme</span><span class="p">(</span><span class="n">legend_key_height</span><span class="o">=</span><span class="mi">225</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/8116148c14714e36c5e370d9a859fbaa24c8147f88a412ee62fd9ac10d2ebf99.png" src="_images/8116148c14714e36c5e370d9a859fbaa24c8147f88a412ee62fd9ac10d2ebf99.png" />
-<img alt="_images/c4da6f49997d495679168688c76f097ef125106e23713012f7ba27b2f12dd27f.png" src="_images/c4da6f49997d495679168688c76f097ef125106e23713012f7ba27b2f12dd27f.png" />
+<img alt="_images/c7c6e4ec6b12e5262772234c8f1cf0ff6cde69493dc6c1bf2618194b5eb6ba3a.png" src="_images/c7c6e4ec6b12e5262772234c8f1cf0ff6cde69493dc6c1bf2618194b5eb6ba3a.png" />
+<img alt="_images/ab0fb3047e3a36795deb9a717464c053ce28b151f74c510ec6db88be07a867d2.png" src="_images/ab0fb3047e3a36795deb9a717464c053ce28b151f74c510ec6db88be07a867d2.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -221,46 +251,47 @@ R-squared score: 0.9493631147465892
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">imp</span><span class="o">.</span><span class="n">terms</span><span class="p">(</span><span class="n">interactions</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]):</span>
     <span class="n">p</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">explainer</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">term</span><span class="o">=</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span>
-        <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Main Effect of </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Main Effect of </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="n">display</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/be37f29d6cf376f96bd41b093c031f8e81454005d3ccf4d9226867a5ffb650b3.png" src="_images/be37f29d6cf376f96bd41b093c031f8e81454005d3ccf4d9226867a5ffb650b3.png" />
-<img alt="_images/7d78ea877559ac6797e5b0a2000d8881f7151c6e2709ae9e65fb148a018167ca.png" src="_images/7d78ea877559ac6797e5b0a2000d8881f7151c6e2709ae9e65fb148a018167ca.png" />
-<img alt="_images/115b82eb13025871fda0f5994af4c8007deb3581a5adf1ccf41b9a65c4d1c404.png" src="_images/115b82eb13025871fda0f5994af4c8007deb3581a5adf1ccf41b9a65c4d1c404.png" />
+<img alt="_images/d5aa456bc5a8b42a31b44cbde00b1eaced06b70a69746e6c707e37c0e70fc5b8.png" src="_images/d5aa456bc5a8b42a31b44cbde00b1eaced06b70a69746e6c707e37c0e70fc5b8.png" />
+<img alt="_images/17a7326c593c62e184db435fbed99bb0f753aee83bb8091798ea82c16014da8a.png" src="_images/17a7326c593c62e184db435fbed99bb0f753aee83bb8091798ea82c16014da8a.png" />
+<img alt="_images/53e7922af4a89ca5abb36bcfb3b66abe98c0c10a27c5a47027460fb9ae230a7a.png" src="_images/53e7922af4a89ca5abb36bcfb3b66abe98c0c10a27c5a47027460fb9ae230a7a.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the interaction of Longitude and Latitude (Component Functions)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the interaction of pairs of variables (Component Functions)</span>
 <span class="n">display</span><span class="p">(</span>
     <span class="n">explainer</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="s2">&quot;Longitude:Latitude&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;hour:workingday&quot;</span><span class="p">,</span>
         <span class="n">theme</span><span class="o">=</span><span class="s1">&#39;mako&#39;</span><span class="p">,</span>
         <span class="n">main_effects</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span> <span class="o">+</span>
-    <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;Total Effect of Longitude and Latitude&quot;</span><span class="p">)</span>
+    <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;Total Effect of Hour and Workingday&quot;</span><span class="p">)</span> <span class="o">+</span>
+    <span class="n">p9</span><span class="o">.</span><span class="n">theme</span><span class="p">(</span><span class="n">legend_key_height</span><span class="o">=</span><span class="mi">225</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="n">display</span><span class="p">(</span>
     <span class="n">explainer</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="s2">&quot;Longitude:Latitude&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;hour:feel_temp&quot;</span><span class="p">,</span>
         <span class="n">style</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
         <span class="n">theme</span><span class="o">=</span><span class="s1">&#39;mako&#39;</span><span class="p">,</span>
         <span class="n">data</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span>
         <span class="n">main_effects</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span> <span class="o">+</span>
-    <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;Total Effect of Longitude and Latitude&quot;</span><span class="p">)</span>
-
+    <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;Total Effect of Hour and Feeling Temperature&quot;</span><span class="p">)</span> <span class="o">+</span>
+    <span class="n">p9</span><span class="o">.</span><span class="n">theme</span><span class="p">(</span><span class="n">legend_key_height</span><span class="o">=</span><span class="mi">225</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/fc23cccc4cb282f039c83a9ea8f340ac3cdce6dd49cda75561be357d4d545dcb.png" src="_images/fc23cccc4cb282f039c83a9ea8f340ac3cdce6dd49cda75561be357d4d545dcb.png" />
-<img alt="_images/e165d1b808539af39ad1f2998e489f97dbbd4dede541eb3e65f54b9a61102c3d.png" src="_images/e165d1b808539af39ad1f2998e489f97dbbd4dede541eb3e65f54b9a61102c3d.png" />
+<img alt="_images/a93397f0e049f0133a2b09841616a2807bd0b5eeaeb6d11d168877b05731197c.png" src="_images/a93397f0e049f0133a2b09841616a2807bd0b5eeaeb6d11d168877b05731197c.png" />
+<img alt="_images/326fdccab2abb03ee1df6f5e105d712071961e1f0e07a63f9ac0ae71fa2af495.png" src="_images/326fdccab2abb03ee1df6f5e105d712071961e1f0e07a63f9ac0ae71fa2af495.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -269,43 +300,47 @@ R-squared score: 0.9493631147465892
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
     <span class="n">p</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">explainer</span><span class="o">.</span><span class="n">breakdown</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">X_test</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span> <span class="o">+</span>
-        <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Breakdown Plot for Row (</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Breakdown Plot for Row </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="n">display</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/3d284e6248d324d79389bc3819debae02693ecfccd390a387147ae64c5f7559c.png" src="_images/3d284e6248d324d79389bc3819debae02693ecfccd390a387147ae64c5f7559c.png" />
-<img alt="_images/1e70a98019a6f4c68be53f5af7aab3ef434f38cb9e17d1c76aefd87ec503b83e.png" src="_images/1e70a98019a6f4c68be53f5af7aab3ef434f38cb9e17d1c76aefd87ec503b83e.png" />
-<img alt="_images/1761bce5f97ad56ef7f758277693e39c0a2365f3684552e1bdb92dd2724f16f0.png" src="_images/1761bce5f97ad56ef7f758277693e39c0a2365f3684552e1bdb92dd2724f16f0.png" />
+<img alt="_images/18bb5ec72f8b327dd22265ba9f59062a05202b71da2ad9def419bbaebb3fbdd5.png" src="_images/18bb5ec72f8b327dd22265ba9f59062a05202b71da2ad9def419bbaebb3fbdd5.png" />
+<img alt="_images/7a0e138522ea372b5677e03ca14b320ca24d772573e1b31b9fc1ba55829f9955.png" src="_images/7a0e138522ea372b5677e03ca14b320ca24d772573e1b31b9fc1ba55829f9955.png" />
+<img alt="_images/9742df362fc505da65eef98d201cf0c78cd6a6b45997f99f09ad84194d7783f0.png" src="_images/9742df362fc505da65eef98d201cf0c78cd6a6b45997f99f09ad84194d7783f0.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot individual conditional expectations (ICE) with color encoding</span>
 <span class="n">ice</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">conditional</span><span class="p">(</span>
-    <span class="n">variable</span><span class="o">=</span><span class="s1">&#39;MedInc&#39;</span><span class="p">,</span>
+    <span class="n">variable</span><span class="o">=</span><span class="s1">&#39;hour&#39;</span><span class="p">,</span>
     <span class="n">data</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="n">display</span><span class="p">(</span>
     <span class="n">ice</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.1</span><span class="p">)</span> <span class="o">+</span>
-    <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;ICE Plot of MedInc&quot;</span><span class="p">)</span>
+    <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;ICE Plot of Hour&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="n">display</span><span class="p">(</span>
     <span class="n">ice</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">style</span><span class="o">=</span><span class="s1">&#39;centered&#39;</span><span class="p">,</span>
-        <span class="n">var_color</span><span class="o">=</span><span class="s1">&#39;HouseAge&#39;</span><span class="p">,</span>
-        <span class="n">theme</span><span class="o">=</span><span class="s1">&#39;mako&#39;</span>
+        <span class="n">var_color</span><span class="o">=</span><span class="s1">&#39;workingday&#39;</span><span class="p">,</span>
+        <span class="n">theme</span><span class="o">=</span><span class="s1">&#39;muted&#39;</span>
     <span class="p">)</span> <span class="o">+</span>
-    <span class="n">p9</span><span class="o">.</span><span class="n">ggtitle</span><span class="p">(</span><span class="s2">&quot;Centered ICE Plot of MedInc&quot;</span><span class="p">)</span>
+    <span class="n">p9</span><span class="o">.</span><span class="n">labs</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Centered ICE Plot of Hour&quot;</span><span class="p">,</span>
+        <span class="n">subtitle</span><span class="o">=</span><span class="s2">&quot;Colored by the value of Workingday&quot;</span>
+    <span class="p">)</span> <span class="o">+</span>
+    <span class="n">p9</span><span class="o">.</span><span class="n">theme</span><span class="p">(</span><span class="n">legend_position</span><span class="o">=</span><span class="s2">&quot;bottom&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/ee3a9e3536eeefabbcac9170baf7254762ab8bcad67bf9def7f3187cba4ed139.png" src="_images/ee3a9e3536eeefabbcac9170baf7254762ab8bcad67bf9def7f3187cba4ed139.png" />
-<img alt="_images/38cb1b7633d2c32a9dc90cfe59152b523a27dd7e5acf467c6184e76e320f0572.png" src="_images/38cb1b7633d2c32a9dc90cfe59152b523a27dd7e5acf467c6184e76e320f0572.png" />
+<img alt="_images/6bc879bcfcda0d3ac0c596b4c5dbac9fc61f6e9217b1127a672b30464d22da3c.png" src="_images/6bc879bcfcda0d3ac0c596b4c5dbac9fc61f6e9217b1127a672b30464d22da3c.png" />
+<img alt="_images/d2878c07e4cc98a9b4f64f9067044acc927d3e0fa3ad50e8c71105cb809d9d60.png" src="_images/d2878c07e4cc98a9b4f64f9067044acc927d3e0fa3ad50e8c71105cb809d9d60.png" />
 </div>
 </div>
 </section>

@@ -103,28 +103,118 @@
         <span class="n">params_main</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">params_inter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">penalty</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">link</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">kernel_type</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">encoding_frames</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(),</span>
+        <span class="n">model_terms</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">singular_ok</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">method</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">centering_penalty</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e+06</span><span class="p">,</span>
+        <span class="n">na_action</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s1">&#39;na.omit&#39;</span><span class="p">,</span>
+        <span class="n">verbosity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">encoding_digits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">use_catchall</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">catchall</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;(others)&#39;</span><span class="p">,</span>
+        <span class="n">max_ncol</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
+        <span class="n">nil</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-07</span><span class="p">,</span>
+        <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-07</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a MID model.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        params_main : int, optional</span>
+<span class="sd">        params_main : int or None, optional</span>
 <span class="sd">            An integer specifying the maximum number of sample points for main effects.</span>
 <span class="sd">            This corresponds to the &#39;k[1]&#39; argument in R&#39;s `midr::interpret()`.</span>
-<span class="sd">        params_inter : int, optional</span>
+<span class="sd">        params_inter : int or None, optional</span>
 <span class="sd">            An integer specifying the maximum number of sample points for interactions.</span>
 <span class="sd">            This corresponds to the &#39;k[2]&#39; argument in R&#39;s `midr::interpret()`.</span>
 <span class="sd">        penalty : float, optional</span>
 <span class="sd">            The regularization penalty for pseudo-smoothing, corresponding to the</span>
 <span class="sd">            &#39;lambda&#39; argument in R&#39;s `midr::interpret()`. Defaults to 0.</span>
+<span class="sd">        link : str or None, optional</span>
+<span class="sd">            A character string specifying the link function, e.g., &quot;logit&quot;, </span>
+<span class="sd">            &quot;probit&quot;, &quot;identity&quot;, &quot;log&quot;, &quot;sqrt&quot;, &quot;inverse&quot;.</span>
+<span class="sd">            Corresponds to the &#39;link&#39; argument in R.</span>
+<span class="sd">        kernel_type : int or list[int], optional</span>
+<span class="sd">            The type of encoding. Effects of quantitative variables are modeled as </span>
+<span class="sd">            piecewise linear functions if 1 (default), and as step functions if 0.</span>
+<span class="sd">            If a list, `kernel_type[0]` is for main effects and `kernel_type[1]`</span>
+<span class="sd">            is for interactions. Corresponds to the &#39;type&#39; argument in R.</span>
+<span class="sd">        encoding_frames : dict, optional</span>
+<span class="sd">            A dictionary of encoding frames to apply to specific variables.</span>
+<span class="sd">            Advanced feature corresponding to the &#39;frames&#39; argument in R.</span>
+<span class="sd">        model_terms : str (in R&#39;s formula syntax), list[str] or None, optional</span>
+<span class="sd">            A list of term labels (e.g., [&quot;x1&quot;, &quot;x2&quot;, &quot;x1:x2&quot;]) specifying the </span>
+<span class="sd">            set of component functions to be modeled.</span>
+<span class="sd">            Corresponds to the &#39;terms&#39; argument in R.</span>
+<span class="sd">        singular_ok : bool, optional</span>
+<span class="sd">            If False (default), a singular fit is an error.</span>
+<span class="sd">            Corresponds to the &#39;singular.ok&#39; argument in R.</span>
+<span class="sd">        mode : int, optional</span>
+<span class="sd">            An integer specifying the method of calculation. If 1 (default), </span>
+<span class="sd">            centralization constraints are treated as penalties. If 2, </span>
+<span class="sd">            constraints are used to reduce the number of free parameters.</span>
+<span class="sd">            Corresponds to the &#39;mode&#39; argument in R.</span>
+<span class="sd">        method : int or None, optional</span>
+<span class="sd">            An integer specifying the method for solving the least squares problem.</span>
+<span class="sd">            Non-negative values are passed to RcppEigen::fastLmPure(), </span>
+<span class="sd">            negative to stats::lm.fit(). None uses R default.</span>
+<span class="sd">            Corresponds to the &#39;method&#39; argument in R.</span>
+<span class="sd">        centering_penalty : float, optional</span>
+<span class="sd">            The penalty factor for centering constraints (used only when `mode=1`).</span>
+<span class="sd">            Corresponds to the &#39;kappa&#39; argument in R. Defaults to 1e+06.</span>
+<span class="sd">        na_action : str or None, optional</span>
+<span class="sd">            A string specifying the method of NA handling.</span>
+<span class="sd">            Corresponds to the &#39;na.action&#39; argument in R. Defaults to &#39;na.omit&#39;.</span>
+<span class="sd">        verbosity : int, optional</span>
+<span class="sd">            The level of verbosity. 0: fatal, 1: warning (default), 2: info, 3: debug.</span>
+<span class="sd">            Corresponds to the &#39;verbosity&#39; argument in R.</span>
+<span class="sd">        encoding_digits : int or None, optional</span>
+<span class="sd">            The rounding digits for encoding numeric variables (used when `kernel_type=1`).</span>
+<span class="sd">            Corresponds to the &#39;encoding.digits&#39; argument in R. Defaults to 3.</span>
+<span class="sd">        use_catchall : bool, optional</span>
+<span class="sd">            If True, less frequent levels of qualitative variables are replaced </span>
+<span class="sd">            by the &#39;catchall&#39; level. Corresponds to &#39;use.catchall&#39; in R. Defaults to False.</span>
+<span class="sd">        catchall : str, optional</span>
+<span class="sd">            The catchall level string to use when `use_catchall=True`.</span>
+<span class="sd">            Corresponds to the &#39;catchall&#39; argument in R. Defaults to &#39;(others)&#39;.</span>
+<span class="sd">        max_ncol : int or None, optional</span>
+<span class="sd">            The maximum number of columns of the design matrix.</span>
+<span class="sd">            Corresponds to the &#39;max.ncol&#39; argument in R. Defaults to 10000.</span>
+<span class="sd">        nil : float, optional</span>
+<span class="sd">            A threshold for the intercept and coefficients to be treated as zero.</span>
+<span class="sd">            Corresponds to the &#39;nil&#39; argument in R. Defaults to 1e-07.</span>
+<span class="sd">        tol : float, optional</span>
+<span class="sd">            A tolerance for the singular value decomposition.</span>
+<span class="sd">            Corresponds to the &#39;tol&#39; argument in R. Defaults to 1e-07.</span>
 <span class="sd">        **kwargs : dict</span>
-<span class="sd">            Additional keyword arguments to be passed directly to the underlying</span>
-<span class="sd">            `midr::interpret()` function for advanced fitting options.</span>
+<span class="sd">            Additional keyword arguments to be passed directly to the underlying </span>
+<span class="sd">            `midr::interpret()` function. This can include arguments not </span>
+<span class="sd">            explicitly listed here, such as `interactions: bool` to auto-include </span>
+<span class="sd">            all second-order interactions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">params_main</span> <span class="o">=</span> <span class="n">params_main</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">params_inter</span> <span class="o">=</span> <span class="n">params_inter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">penalty</span> <span class="o">=</span> <span class="n">penalty</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="n">link</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kernel_type</span> <span class="o">=</span> <span class="n">kernel_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoding_frames</span> <span class="o">=</span> <span class="n">encoding_frames</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_terms</span> <span class="o">=</span> <span class="n">model_terms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">singular_ok</span> <span class="o">=</span> <span class="n">singular_ok</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centering_penalty</span> <span class="o">=</span> <span class="n">centering_penalty</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">na_action</span> <span class="o">=</span> <span class="n">na_action</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="n">verbosity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoding_digits</span> <span class="o">=</span> <span class="n">encoding_digits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_catchall</span> <span class="o">=</span> <span class="n">use_catchall</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">catchall</span> <span class="o">=</span> <span class="n">catchall</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_ncol</span> <span class="o">=</span> <span class="n">max_ncol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nil</span> <span class="o">=</span> <span class="n">nil</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="o">=</span> <span class="n">tol</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span></div>
 
 
@@ -161,6 +251,22 @@
             <span class="n">params_main</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_main</span><span class="p">,</span>
             <span class="n">params_inter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_inter</span><span class="p">,</span>
             <span class="n">penalty</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">penalty</span><span class="p">,</span>
+            <span class="n">link</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">,</span>
+            <span class="n">kernel_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_type</span><span class="p">,</span>
+            <span class="n">encoding_frames</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding_frames</span><span class="p">,</span>
+            <span class="n">model_terms</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_terms</span><span class="p">,</span>
+            <span class="n">singular_ok</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">singular_ok</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+            <span class="n">centering_penalty</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">centering_penalty</span><span class="p">,</span>
+            <span class="n">na_action</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">na_action</span><span class="p">,</span>
+            <span class="n">verbosity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span><span class="p">,</span>
+            <span class="n">encoding_digits</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding_digits</span><span class="p">,</span>
+            <span class="n">use_catchall</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">use_catchall</span><span class="p">,</span>
+            <span class="n">catchall</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">catchall</span><span class="p">,</span>
+            <span class="n">max_ncol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_ncol</span><span class="p">,</span>
+            <span class="n">nil</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nil</span><span class="p">,</span>
+            <span class="n">tol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">,</span>
             <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="kc">True</span>
@@ -357,31 +463,56 @@
         <span class="n">params_main</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">params_inter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">penalty</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">link</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">kernel_type</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">encoding_frames</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(),</span>
+        <span class="n">model_terms</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">singular_ok</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">method</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">centering_penalty</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e+06</span><span class="p">,</span>
+        <span class="n">na_action</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s1">&#39;na.omit&#39;</span><span class="p">,</span>
+        <span class="n">verbosity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">encoding_digits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">use_catchall</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">catchall</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;(others)&#39;</span><span class="p">,</span>
+        <span class="n">max_ncol</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
+        <span class="n">nil</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-07</span><span class="p">,</span>
+        <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-07</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a surrogate MID model to explain a pre-trained black-box model.</span>
-<span class="sd">        </span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        estimator : object</span>
+<span class="sd">        estimator : scikit-learn compatible estimator</span>
 <span class="sd">            The pre-trained black-box model to be explained.</span>
-<span class="sd">        target_classes: list of str, optional</span>
-<span class="sd">            For classification estimators only.</span>
+<span class="sd">        target_classes : str or list[str], optional</span>
 <span class="sd">            Specifies the target class or classes for which the probability is to be explained.</span>
 <span class="sd">            If a list is provided, the sum of probabilities is used.</span>
-<span class="sd">            If None (the default), the model explains 1 - P(class 0).</span>
-<span class="sd">        params_main : int, optional</span>
-<span class="sd">            An integer specifying the maximum number of sample points for main effects.</span>
-<span class="sd">            This corresponds to the &#39;k[1]&#39; argument in R&#39;s `midr::interpret()`.</span>
-<span class="sd">        params_inter : int, optional</span>
-<span class="sd">            An integer specifying the maximum number of sample points for interactions.</span>
-<span class="sd">            This corresponds to the &#39;k[2]&#39; argument in R&#39;s `midr::interpret()`.</span>
+<span class="sd">            This parameter is ignored if the estimator is not a classifier.</span>
+
+<span class="sd">        params_main : int or None, optional</span>
+<span class="sd">        params_inter : int or None, optional</span>
 <span class="sd">        penalty : float, optional</span>
-<span class="sd">            The regularization penalty for pseudo-smoothing, corresponding to the</span>
-<span class="sd">            &#39;lambda&#39; argument in R&#39;s `midr::interpret()`. Defaults to 0.</span>
+<span class="sd">        link : str, optional</span>
+<span class="sd">        kernel_type : int or list[int], optional</span>
+<span class="sd">        encoding_frames : dict, optional</span>
+<span class="sd">        model_terms : str or list[str], optional</span>
+<span class="sd">        singular_ok : bool, optional</span>
+<span class="sd">        mode : int, optional</span>
+<span class="sd">        method : int, optional</span>
+<span class="sd">        centering_penalty : float, optional</span>
+<span class="sd">        na_action : str, optional</span>
+<span class="sd">        verbosity : int, optional</span>
+<span class="sd">        encoding_digits : int, optional</span>
+<span class="sd">        use_catchall : bool, optional</span>
+<span class="sd">        catchall : str, optional</span>
+<span class="sd">        max_ncol : int, optional</span>
+<span class="sd">        nil : float, optional</span>
+<span class="sd">        tol : float, optional</span>
+<span class="sd">            Arguments passed to the parent `MIDRegressor` constructor. </span>
+<span class="sd">            See the `MIDRegressor` documentation for details.</span>
 <span class="sd">        **kwargs : dict</span>
-<span class="sd">            Additional keyword arguments to be passed directly to the underlying</span>
-<span class="sd">            `midr::interpret()` function for advanced fitting options.</span>
+<span class="sd">            Additional keyword arguments passed to `midr::interpret()`.</span>
+<span class="sd">            See `MIDRegressor` documentation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">estimator</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">target_classes</span> <span class="o">=</span> <span class="n">target_classes</span>
@@ -391,9 +522,25 @@
                 <span class="ne">UserWarning</span>
             <span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">params_main</span> <span class="o">=</span> <span class="n">params_main</span><span class="p">,</span>
-            <span class="n">params_inter</span> <span class="o">=</span> <span class="n">params_inter</span><span class="p">,</span>
-            <span class="n">penalty</span> <span class="o">=</span> <span class="n">penalty</span><span class="p">,</span>
+            <span class="n">params_main</span><span class="o">=</span><span class="n">params_main</span><span class="p">,</span>
+            <span class="n">params_inter</span><span class="o">=</span><span class="n">params_inter</span><span class="p">,</span>
+            <span class="n">penalty</span><span class="o">=</span><span class="n">penalty</span><span class="p">,</span>
+            <span class="n">link</span><span class="o">=</span><span class="n">link</span><span class="p">,</span>
+            <span class="n">kernel_type</span><span class="o">=</span><span class="n">kernel_type</span><span class="p">,</span>
+            <span class="n">encoding_frames</span><span class="o">=</span><span class="n">encoding_frames</span><span class="p">,</span>
+            <span class="n">model_terms</span><span class="o">=</span><span class="n">model_terms</span><span class="p">,</span>
+            <span class="n">singular_ok</span><span class="o">=</span><span class="n">singular_ok</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+            <span class="n">centering_penalty</span><span class="o">=</span><span class="n">centering_penalty</span><span class="p">,</span>
+            <span class="n">na_action</span><span class="o">=</span><span class="n">na_action</span><span class="p">,</span>
+            <span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span>
+            <span class="n">encoding_digits</span><span class="o">=</span><span class="n">encoding_digits</span><span class="p">,</span>
+            <span class="n">use_catchall</span><span class="o">=</span><span class="n">use_catchall</span><span class="p">,</span>
+            <span class="n">catchall</span><span class="o">=</span><span class="n">catchall</span><span class="p">,</span>
+            <span class="n">max_ncol</span><span class="o">=</span><span class="n">max_ncol</span><span class="p">,</span>
+            <span class="n">nil</span><span class="o">=</span><span class="n">nil</span><span class="p">,</span>
+            <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span>
         <span class="p">)</span></div>
 
