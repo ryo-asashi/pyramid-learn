@@ -45,71 +45,80 @@ Here’s a basic example of how to use **pyramid-learn** (namespace: **midlearn*
 ```python
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import root_mean_squared_error
 from sklearn.datasets import fetch_openml
 from sklearn import set_config
 
 import lightgbm as lgb
-import midlearn as mid # pyramid-learn
+import midlearn as mid 
 
+# Set up plotnine theme for clean visualizations
 import plotnine as p9
-
-set_config(display='text')
 p9.theme_set(p9.theme_bw(base_family='serif'))
 p9.options.figure_size = (5, 4)
+
+# Configure scikit-learn display
+set_config(display='text')
 ```
 
-### Train a black-box model
+    Error importing in API mode: ImportError('On Windows, cffi mode "ANY" is only "ABI".')
+    Trying to import in ABI mode.
+    
+
+## 1. Train a Black-Box Model
+We use the California Housing dataset to train a LightGBM Regressor, which will serve as our black-box model.
 
 
 ```python
-bikeshare = fetch_openml(data_id=1414)
+# Load and prepare data
+bikeshare = fetch_openml(data_id=42712)
 X = pd.DataFrame(bikeshare.data, columns=bikeshare.feature_names)
 y = bikeshare.target
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
-print(pd.concat([X_train.head(), y_train.head()], axis=1).to_markdown(index=False))
-```
 
-    | time     |   season |   holiday |   workingday |   weather |   temp |   atemp |   humidity |   windspeed | dayOfWeek   |   count |
-    |:---------|---------:|----------:|-------------:|----------:|-------:|--------:|-----------:|------------:|:------------|--------:|
-    | 00:00:00 |        3 |         0 |            1 |         1 |  28.7  |  32.575 |         65 |      12.998 | woensdag    |      35 |
-    | 22:00:00 |        2 |         0 |            1 |         1 |  22.96 |  26.515 |         52 |     220.028 | zondag      |     251 |
-    | 23:00:00 |        2 |         0 |            1 |         1 |  12.3  |  15.91  |         61 |      60.032 | vrijdag     |      53 |
-    | 09:00:00 |        3 |         0 |            0 |         1 |  23.78 |  27.275 |         60 |      89.981 | dinsdag     |     296 |
-    | 23:00:00 |        1 |         0 |            1 |         3 |   8.2  |   9.85  |         93 |      12.998 | dinsdag     |      16 |
-    
-
-
-```python
 # Fit a LightGBM regression model
-estimator = lgb.LGBMRegressor(random_state=42)
+estimator = lgb.LGBMRegressor(
+    force_col_wise=True,
+    n_estimators=500,
+    random_state=42
+)
 estimator.fit(X_train, y_train)
 ```
 
-    [LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.000103 seconds.
-    You can set `force_row_wise=true` to remove the overhead.
-    And if memory is not enough, you can set `force_col_wise=true`.
-    [LightGBM] [Info] Total Bins 260
-    [LightGBM] [Info] Number of data points in the train set: 8164, number of used features: 10
-    [LightGBM] [Info] Start training from score 191.339784
+    [LightGBM] [Info] Total Bins 283
+    [LightGBM] [Info] Number of data points in the train set: 13034, number of used features: 12
+    [LightGBM] [Info] Start training from score 190.379623
     
 
 
 
 
-    LGBMRegressor(random_state=42)
+    LGBMRegressor(force_col_wise=True, n_estimators=500, random_state=42)
 
 
-
-### Use pyramid-learn to explain the model
 
 
 ```python
-# Fit a MID model as a global surrogate explainer
+model_pred = estimator.predict(X_test)
+rmse = root_mean_squared_error(model_pred, y_test)
+print(f"RMSE: {round(rmse, 6)}")
+```
+
+    RMSE: 37.615267
+    
+
+## 2. Create an Explaination Model
+We fit the `MIDExplainer` to the training data to create a globally faithful, interpretable surrogate model (MID).
+
+
+```python
+# Initialize and fit the MID model
 explainer = mid.MIDExplainer(
     estimator=estimator,
-    interaction=True,
-    params_main=50,
-    penalty=.5
+    penalty=.05,
+    singular_ok=True,
+    interactions=True,
+    encoding_frames={'hour':list(range(24))}
 )
 explainer.fit(X_train)
 ```
@@ -117,55 +126,69 @@ explainer.fit(X_train)
     Generating predictions from the estimator...
     
 
-
-
-
-    MIDExplainer(estimator=LGBMRegressor(random_state=42), params_main=50,
-                 penalty=0.5)
-
-
-
-
-```python
-# Check the uninterpreted variation ratio of the explainer
-explainer.ratio
-```
+    R callback write-console: singular fit encountered
+      
+    
 
 
 
 
-    0.03612861020533493
+    MIDExplainer(encoding_frames={'hour': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+                                           13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+                                           23]},
+                 estimator=LGBMRegressor(force_col_wise=True, n_estimators=500,
+                                         random_state=42),
+                 penalty=0.05, singular_ok=True)
 
-
-
-
-```python
-# Show the main effect of Time
-print(explainer.main_effects('time').head().to_markdown(index=False))
-```
-
-
-    '| time     |   time_level |   density |      mid |\n|:---------|-------------:|----------:|---------:|\n| 00:00:00 |            1 | 0.0428711 | -129.537 |\n| 01:00:00 |            2 | 0.0410338 | -146.968 |\n| 02:00:00 |            3 | 0.0422587 | -153.064 |\n| 03:00:00 |            4 | 0.0400539 | -167.218 |\n| 04:00:00 |            5 | 0.0412788 | -164.439 |'
 
 
 
 ```python
 # Check the fidelity of the surrogate model to the original model
-print("R-squared score:", explainer.fidelity_score(X_test))
-
 p = p9.ggplot() \
-    + p9.geom_abline(slope=1) \
-    + p9.geom_point(p9.aes(estimator.predict(X_test), explainer.predict(X_test)), shape='.') \
+    + p9.geom_abline(slope=1, color='gray') \
+    + p9.geom_point(p9.aes(estimator.predict(X_test), explainer.predict(X_test)), alpha=0.5, shape=".") \
     + p9.labs(
         x='Prediction (LightGBM Regressor)',
-        y='Prediction (Surrogate MID Regressor)'
+        y='Prediction (Surrogate MID Regressor)',
+        title='Surrogate Model Fidelity Check',
+        subtitle=f'R-squared score: {round(explainer.fidelity_score(X_test), 6)}',
     )
-display(p + p9.ggtitle("Interpretation Model Fidelity"))
+p
 ```
 
     Generating predictions from the estimator...
-    R-squared score: 0.9604320788152169
     
+
+
+    
+![png](README_files/README_11_1.png)
+    
+
+
+## 3. Visualize the Explanation Model
+The MID model allows for clear visualization of feature importance, individual effects, and local prediction breakdowns.
+
+
+```python
+# Calculate and plot overall feature importance (default bar plot and heatmap)
+imp = explainer.importance()
+display(
+    imp.plot(max_nterms=20) +
+    p9.ggtitle("Importance Plot")
+)
+display(
+    imp.plot(style='heatmap', color='black', linetype='dotted') +
+    p9.ggtitle("Importance Heatmap") +
+    p9.theme(legend_key_height=225)
+)
+```
+
+
+    
+![png](README_files/README_13_0.png)
+    
+
 
 
     
@@ -173,13 +196,58 @@ display(p + p9.ggtitle("Interpretation Model Fidelity"))
     
 
 
-### Visualize and analyze the results
+
+```python
+# Plot the top 3 important main effects (Component Functions)
+for i, t in enumerate(imp.terms(interactions=False)[:3]):
+    p = (
+        explainer.plot(term=t) +
+        p9.ggtitle(f"Main Effect of {t.capitalize()}")
+    )
+    display(p)
+```
+
+
+    
+![png](README_files/README_14_0.png)
+    
+
+
+
+    
+![png](README_files/README_14_1.png)
+    
+
+
+
+    
+![png](README_files/README_14_2.png)
+    
+
 
 
 ```python
-# Plot overall feature importance
-imp = explainer.importance()
-display(imp.plot(max_nterms=20) + p9.ggtitle("Feature Importance"))
+# Plot the interaction of pairs of variables (Component Functions)
+display(
+    explainer.plot(
+        "hour:workingday",
+        theme='mako',
+        main_effects=True
+    ) +
+    p9.ggtitle("Total Effect of Hour and Workingday") +
+    p9.theme(legend_key_height=225)
+)
+display(
+    explainer.plot(
+        "hour:feel_temp",
+        style='data',
+        theme='mako',
+        data=X_train,
+        main_effects=True
+    ) +
+    p9.ggtitle("Total Effect of Hour and Feeling Temperature") +
+    p9.theme(legend_key_height=225)
+)
 ```
 
 
@@ -189,10 +257,20 @@ display(imp.plot(max_nterms=20) + p9.ggtitle("Feature Importance"))
 
 
 
+    
+![png](README_files/README_15_1.png)
+    
+
+
+
 ```python
-# Plot overall feature importance as a heatmap
-p = imp.plot(style='heatmap', color='#808080')
-display(p + p9.ggtitle("Feature Importance Map"))
+# Plot prediction breakdowns for the first three test samples (Local Interpretability)
+for i in range(3):
+    p = (
+        explainer.breakdown(row=i, data=X_test).plot() +
+        p9.ggtitle(f"Breakdown Plot for Row {i}")
+    )
+    display(p)
 ```
 
 
@@ -202,11 +280,40 @@ display(p + p9.ggtitle("Feature Importance Map"))
 
 
 
+    
+![png](README_files/README_16_1.png)
+    
+
+
+
+    
+![png](README_files/README_16_2.png)
+    
+
+
+
 ```python
-# Plot important main effects
-for i, t in enumerate(imp.terms(interactions=False)[:3]):
-    p = explainer.plot(term=str(t)) + p9.lims(y = [-200, 260])
-    display(p + p9.ggtitle(f"Main Effect of {t.capitalize()}"))
+# Plot individual conditional expectations (ICE) with color encoding
+ice = explainer.conditional(
+    variable='hour',
+    data=X_train.head(500)
+)
+display(
+    ice.plot(alpha=.1) +
+    p9.ggtitle("ICE Plot of Hour")
+)
+display(
+    ice.plot(
+        style='centered',
+        var_color='workingday',
+        theme='muted'
+    ) +
+    p9.labs(
+        title="Centered ICE Plot of Hour",
+        subtitle="Colored by the value of Workingday"
+    ) +
+    p9.theme(legend_position="bottom")
+)
 ```
 
 
@@ -218,70 +325,5 @@ for i, t in enumerate(imp.terms(interactions=False)[:3]):
 
     
 ![png](README_files/README_17_1.png)
-    
-
-
-
-    
-![png](README_files/README_17_2.png)
-    
-
-
-
-```python
-# Plot important two-way interactions (with main effects)
-p = explainer.plot(
-    'time:season',
-    style='data',
-    data=X_train,
-    main_effects=True,
-    theme='mako'
-)
-display(p + p9.ggtitle("Interaction of Time and Season"))
-```
-
-
-    
-![png](README_files/README_18_0.png)
-    
-
-
-
-```python
-# Plot prediction breakdowns for the first three rows in the testing dataset
-for i in range(3):
-    p = explainer.breakdown(row=i, data=X_test).plot()
-    display(p + p9.ggtitle(f"Breakdown Plot for the Instance no.{i}"))
-```
-
-
-    
-![png](README_files/README_19_0.png)
-    
-
-
-
-    
-![png](README_files/README_19_1.png)
-    
-
-
-
-    
-![png](README_files/README_19_2.png)
-    
-
-
-
-```python
-# Plot individual conditional expectations
-p = explainer.conditional('time', data=X_test.head(300)). \
-    plot(var_color='workingday', theme='midr@q', alpha=.5)
-display(p + p9.ggtitle("Conditional Expectation Plot"))
-```
-
-
-    
-![png](README_files/README_20_0.png)
     
 
