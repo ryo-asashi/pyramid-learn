@@ -53,17 +53,12 @@ import lightgbm as lgb
 import midlearn as mid 
 
 # Set up plotnine theme for clean visualizations
-import plotnine as p9
-p9.theme_set(p9.theme_bw(base_family='serif'))
-p9.options.figure_size = (5, 4)
+import plotnine as p9 # require plotnine >= 0.15.0
+p9.theme_set(p9.theme_538(base_family='serif'))
 
 # Configure scikit-learn display
 set_config(display='text')
 ```
-
-    Error importing in API mode: ImportError('On Windows, cffi mode "ANY" is only "ABI".')
-    Trying to import in ABI mode.
-    
 
 ## 1. Train a Black-Box Model
 We use the California Housing dataset to train a LightGBM Regressor, which will serve as our black-box model.
@@ -154,7 +149,7 @@ p = p9.ggplot() \
         title='Surrogate Model Fidelity Check',
         subtitle=f'R-squared score: {round(explainer.fidelity_score(X_test), 6)}',
     )
-p
+display(p + p9.theme(figure_size=(5,5)))
 ```
 
     Generating predictions from the estimator...
@@ -173,15 +168,15 @@ The MID model allows for clear visualization of feature importance, individual e
 ```python
 # Calculate and plot overall feature importance (default bar plot and heatmap)
 imp = explainer.importance()
-display(
-    imp.plot(max_nterms=20) +
-    p9.ggtitle("Importance Plot")
+p1 = (
+    imp.plot(max_nterms=20, theme="muted") +
+    p9.labs(title="Feature Imortance Plot", subtitle="colored by order")
 )
-display(
+p2 = (
     imp.plot(style='heatmap', color='black', linetype='dotted') +
-    p9.ggtitle("Importance Heatmap") +
-    p9.theme(legend_key_height=225)
+    p9.labs(title="Feature Importance Map", subtitle="colored by importance")
 )
+display((p1 | p2) & p9.theme(figure_size=(8, 4), legend_position="bottom"))
 ```
 
 
@@ -191,20 +186,28 @@ display(
 
 
 
-    
-![png](README_files/README_13_1.png)
-    
-
-
-
 ```python
 # Plot the top 3 important main effects (Component Functions)
-for i, t in enumerate(imp.terms(interactions=False)[:3]):
+plots = list()
+for i, t in enumerate(imp.terms(interactions=False)):
     p = (
         explainer.plot(term=t) +
-        p9.ggtitle(f"Main Effect of {t.capitalize()}")
+        p9.lims(y=[-180, 250]) +
+        p9.labs(
+            subtitle=f"Main Effect of {t.capitalize()}",
+            x="",
+            y="effect size"
+        )
     )
-    display(p)
+    plots.append(p)
+
+p1 = (
+    (plots[0] | plots[1] | plots[2]) /
+    (plots[3] | plots[4] | plots[5]) /
+    (plots[6] | plots[7] | plots[8]) /
+    (plots[9] | plots[10] | plots[11])
+)
+display(p1 + p9.theme(figure_size=(9, 12)))
 ```
 
 
@@ -214,40 +217,28 @@ for i, t in enumerate(imp.terms(interactions=False)[:3]):
 
 
 
-    
-![png](README_files/README_14_1.png)
-    
-
-
-
-    
-![png](README_files/README_14_2.png)
-    
-
-
-
 ```python
 # Plot the interaction of pairs of variables (Component Functions)
-display(
+p1 = (
     explainer.plot(
         "hour:workingday",
         theme='mako',
         main_effects=True
     ) +
-    p9.ggtitle("Total Effect of Hour and Workingday") +
-    p9.theme(legend_key_height=225)
+    p9.labs(subtitle="Total Effect of Hour and Workingday")
 )
-display(
+p2 = (
     explainer.plot(
         "hour:feel_temp",
         style='data',
         theme='mako',
         data=X_train,
-        main_effects=True
+        main_effects=True,
+        size=2
     ) +
-    p9.ggtitle("Total Effect of Hour and Feeling Temperature") +
-    p9.theme(legend_key_height=225)
+    p9.labs(subtitle="Total Effect of Hour and Feel_temp")
 )
+display((p1 | p2) & p9.theme(figure_size=(8, 4), legend_position="bottom"))
 ```
 
 
@@ -257,37 +248,26 @@ display(
 
 
 
-    
-![png](README_files/README_15_1.png)
-    
-
-
-
 ```python
 # Plot prediction breakdowns for the first three test samples (Local Interpretability)
-for i in range(3):
+plots = list()
+for i in range(4):
     p = (
         explainer.breakdown(row=i, data=X_test).plot() +
-        p9.ggtitle(f"Breakdown Plot for Row {i}")
+        p9.labs(subtitle=f"Breakdown Plot for Row {i}")
     )
-    display(p)
+    plots.append(p)
+
+p1 = (
+    (plots[0] | plots[1]) /
+    (plots[2] | plots[3])
+)
+display(p1 + p9.theme(figure_size=(8, 8)))
 ```
 
 
     
 ![png](README_files/README_16_0.png)
-    
-
-
-
-    
-![png](README_files/README_16_1.png)
-    
-
-
-
-    
-![png](README_files/README_16_2.png)
     
 
 
@@ -298,11 +278,11 @@ ice = explainer.conditional(
     variable='hour',
     data=X_train.head(500)
 )
-display(
+p1 = (
     ice.plot(alpha=.1) +
     p9.ggtitle("ICE Plot of Hour")
 )
-display(
+p2 = (
     ice.plot(
         style='centered',
         var_color='workingday',
@@ -310,20 +290,15 @@ display(
     ) +
     p9.labs(
         title="Centered ICE Plot of Hour",
-        subtitle="Colored by the value of Workingday"
+        subtitle="Colored by Workingday"
     ) +
     p9.theme(legend_position="bottom")
 )
+display((p1 | p2) & p9.theme(figure_size=(8, 4), legend_position="bottom"))
 ```
 
 
     
 ![png](README_files/README_17_0.png)
-    
-
-
-
-    
-![png](README_files/README_17_1.png)
     
 
